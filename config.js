@@ -14,7 +14,8 @@ window.CONFIG = {
   videoPoster: "assets/poster.jpg",
 
   // ---- BALLOON PAGE (3 ta balloon, 3 ta reason) ----
-  balloonTitle: "3 balloons. Each one holds a reason you're loved. Pop them all",
+  balloonTitle: "Only 3 balloons hold a reason you're loved. Find and pop them all",
+  decoyBalloons: 5,   // koyta khali (decoy) balloon thakbe. Beshi dile aro confusing
   balloons: [
     "You believed in me when I didn't",          // balloon 1 -> REASON NO.1
     "My worst days get shorter when you call",   // balloon 2 -> REASON NO.2

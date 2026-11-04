@@ -270,3 +270,15 @@ h1.bn.bn,h2.bn.bn{font-family:'Galada','Hind Siliguri',cursive;font-weight:400;z
 .toast{position:absolute;left:0;right:0;top:52%;text-align:center;font:700 1.6rem Caveat;color:#d6407f;text-shadow:0 2px 10px #fff;opacity:0;pointer-events:none}
 .toast.show{animation:toast 1.9s ease both}
 @keyframes toast{0%{opacity:0;translate:0 14px}15%,70%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -10px}}
+
+/* video: tap-for-sound chip */
+#unm{position:absolute;top:10px;left:50%;translate:-50% 0;padding:.45rem 1rem;font-size:.9rem;z-index:4}
+
+/* balloon game */
+#p6{justify-content:flex-start;padding-top:calc(6vh + 3.4rem);gap:.6rem}
+#p6 .bcnt{font:600 1.05rem Fredoka;color:#ffe9a8;min-height:1.5rem}
+#p6 #bfield{width:min(94vw,440px);height:min(40vh,370px);border:1.5px dashed #ffffff55;border-radius:22px;background:#ffffff12;overflow:hidden;touch-action:none}
+.bal.mv{left:0;top:0;margin:0;animation:none;transform-origin:50% 45%;pointer-events:none;will-change:translate,rotate}
+.bal.mv svg .body{pointer-events:auto;cursor:pointer}
+#p6 #cards{gap:.4rem}
+#p6 .card{padding:.45rem 1rem}
