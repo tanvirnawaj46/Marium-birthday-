@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>A little something, for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Caveat:wght@500;700&family=Archivo+Black&family=Hind+Siliguri:wght@400;500;600&family=Galada&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<canvas id="fx"></canvas><div id="stars"></div>
+<button id="mus" aria-label="Music">♪ On</button>
+
+<!-- 0: surprise intro -->
+<section class="pg dark" id="p0">
+<div class="gcard"><div class="gift">🎁</div><small>A SURPRISE FOR</small><h2 id="n0"></h2><p id="f0"></p></div>
+<div class="scr"><button class="btn" id="unwrap">Unwrap it ✨</button><canvas id="sc1"></canvas><span class="hand" id="hand1">👆</span></div>
+<p class="cap tiny">🔊 Sound on for the full magic</p></section>
+
+<!-- 1: bow & arrow -->
+<section class="pg light" id="p1"><h2 class="top">a little something, for you</h2>
+<div id="arena">
+<div id="heart"><svg viewBox="0 0 100 90"><defs><radialGradient id="hg" cx="35%" cy="25%"><stop offset="0" stop-color="#ffd0e0"/><stop offset=".5" stop-color="#f06292"/><stop offset="1" stop-color="#c2185b"/></radialGradient></defs><path d="M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z" fill="url(#hg)"/><ellipse cx="26" cy="20" rx="10" ry="6" fill="#fff" opacity=".8"/></svg></div>
+<svg id="aim" width="100%" height="100%">
+<path id="bowArc" fill="none" stroke="#8b4a2b" stroke-width="7" stroke-linecap="round"/>
+<polyline id="str" fill="none" stroke="#6b3a28" stroke-width="2"/>
+<g id="arrow"><line id="shaft" stroke="#c0763f" stroke-width="4" stroke-linecap="round"/><path id="head" fill="#e11d48"/><path id="fth" stroke="#e11d48" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+</svg></div>
+<p class="hint">PULL &amp; RELEASE</p></section>
+
+<section class="pg pink" id="p2"><p class="pre">make a wish...</p><h1 class="big" id="hb"></h1><p class="sub">someone worth celebrating</p></section>
+
+<section class="pg light" id="p3"><div id="tree"></div>
+<div class="txt3"><p>it's officially your day</p><h2 id="t3n"></h2><p id="t3a"></p><button class="btn go">Keep going ✨</button></div></section>
+
+<!-- 4: cake builds -->
+<section class="pg dark" id="p4"><h2 class="top">First things first 🎂</h2>
+<div class="cakestack"><div id="cake1" class="ck"></div><p id="bake" class="cap">Baking something sweet...</p></div></section>
+
+<!-- 5: candle, wish -->
+<section class="pg dark" id="p5"><h2 class="top">First things first 🎂</h2>
+<div class="cakestack"><div id="cake2" class="ck"></div><h2 class="gold fade" id="hb5"></h2><p class="cap fade" id="wish">Make a wish 🕯️</p><p class="cap tiny fade" id="tap">tap anywhere to continue</p></div></section>
+
+<section class="pg dark" id="p6"><h2 class="top">Pop the balloons 🎈</h2><p class="cap" id="bsub"></p><div id="bfield"></div><div id="cards"></div><button class="btn go hid" id="g6">Keep going ✨</button></section>
+
+<!-- 7: gallery -->
+<section class="pg dark" id="p7"><h2 class="top">A walk down memory lane</h2><p class="cap">swipe through 📸</p>
+<div class="lights" id="lights"></div><div id="car"></div><div id="dots"></div><button class="btn" id="g7">Keep going ✨</button></section>
+<div id="lb"><img alt=""><p></p></div>
+
+<section class="pg blue" id="p8"><h2 class="top" id="h8"></h2><p class="cap" id="s8"></p>
+<div class="env" id="env1"><div class="back"></div><div class="flap"></div><div class="front"></div><div class="seal" id="seal"></div></div><p class="cap tap">👆<br>Tap to open your letter</p></section>
+
+<section class="pg blue" id="p9"><div class="env open" id="env2"><div class="back"></div><div class="paper"><span>🎂</span><i></i><i></i></div><div class="flap"></div><div class="front"></div></div></section>
+
+<section class="pg dark" id="p10"><div class="lw"><div id="letter"><h3 id="ldear"></h3><p id="ltxt"></p><div class="sign" id="lsign"></div></div><span class="badge">🎂</span></div><button class="btn go hid" id="g10">Continue</button></section>
+
+<section class="pg dark" id="p11"><div class="bunting"></div><div id="vf"><video id="vid" playsinline preload="metadata"></video><button id="vplay" class="btn">▶ Tap to play</button></div>
+<button class="skip" id="skip">Skip ›</button><button class="btn go hid" id="g11">Continue</button></section>
+
+<section class="pg dark" id="p12"><h1 class="glow">HAPPY<br>BIRTHDAY</h1><h2 class="gold big2" id="n12"></h2><div class="flowers">🌷🌸🌼🌺🌷🌸🌼</div><div class="cat">🐱🎈🎉</div><button class="btn" id="replay">↺ Replay</button></section>
+
+<section class="pg dark" id="p13"><h2 class="top" id="vtxt"></h2>
+<div class="vcard"><div class="vin"><div class="vmic">🎙️</div><p class="cap">a little voice message<br>just for you</p><button class="btn" id="vo">▶ Tap to listen</button><div class="wave" id="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p class="cap tiny" id="vmsg"></p></div><canvas id="sc2"></canvas><span class="hand" id="hand2">👆</span></div>
+<div id="rec"><p class="cap">🎙️ Record mode — apnar voice-e "Happy Birthday" bolo</p><button class="btn" id="recbtn">● Start recording</button><audio id="recplay" controls class="hid"></audio><a class="btn hid" id="recdl">⬇ Save</a><p class="cap tiny" id="recnote"></p></div>
+<button class="btn hid" id="g13">Continue ✨</button></section>
+<section class="pg rose" id="p14"><h2 class="top" id="t14"></h2><p class="cap" id="s14"></p><div id="g2"></div><button class="btn hid" id="g14">Keep going ✨</button></section>
+<div id="hnd">👆</div>
+<script src="config.js"></script><script src="main.js"></script></body></html>
