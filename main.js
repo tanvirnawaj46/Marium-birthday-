@@ -5,22 +5,41 @@ let cur=0,timers=[];const later=(f,t)=>timers.push(setTimeout(f,t));
 for(let i=0;i<70;i++){const s=document.createElement('i');s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;opacity:${.3+Math.random()*.7}`;$('#stars').append(s)}
 // ---------- audio ----------
 const AC=new(window.AudioContext||window.webkitAudioContext)();
-try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){} // iPhone silent-switch: still play effects
-// master bus: gain -> compressor (keeps loud effects clean) ; plus a small reverb send for sparkle tails
-const MB=AC.createGain();MB.gain.value=.95;
-const CP=AC.createDynamicsCompressor();CP.threshold.value=-16;CP.knee.value=18;CP.ratio.value=5;CP.attack.value=.002;CP.release.value=.18;
-MB.connect(CP);CP.connect(AC.destination);
-const RV=AC.createConvolver(),RG=AC.createGain();RG.gain.value=.55;
+try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){} // iPhone: play even with silent switch on
+// ================= MIXER =================
+// priority: voice > scratch > typing > arrow/heart/click > music
+// effects -> SB -> compressor ; music -> MG ; voice -> VG ; all -> sum -> hard limiter -> speakers
+const SB=AC.createGain();SB.gain.value=1.5;
+const CP=AC.createDynamicsCompressor();CP.threshold.value=-5;CP.knee.value=10;CP.ratio.value=2.5;CP.attack.value=.002;CP.release.value=.16;
+const MG=AC.createGain();MG.gain.value=.26;
+const VG=AC.createGain();VG.gain.value=5.5;
+const VC=AC.createDynamicsCompressor();VC.threshold.value=-26;VC.knee.value=10;VC.ratio.value=5;VC.attack.value=.003;VC.release.value=.15;
+const MXB=AC.createGain();
+const LM=AC.createDynamicsCompressor();LM.threshold.value=-2;LM.knee.value=0;LM.ratio.value=20;LM.attack.value=.001;LM.release.value=.08;
+SB.connect(CP);CP.connect(MXB);MG.connect(MXB);VG.connect(VC);VC.connect(MXB);const PG=AC.createGain();PG.gain.value=.5;
+const SAT=AC.createWaveShaper();(()=>{const N=4096,c=new Float32Array(N);for(let i=0;i<N;i++){const x=(i/(N-1)*2-1)*2,a=Math.abs(x);c[i]=Math.sign(x)*(a<=.6?a:.6+.4*Math.tanh((a-.6)/.4))}SAT.curve=c})();
+MXB.connect(LM);LM.connect(PG);PG.connect(SAT);SAT.connect(AC.destination);
+const RV=AC.createConvolver(),RG=AC.createGain();RG.gain.value=.5;
 (()=>{const n=Math.floor(AC.sampleRate*1.8),b=AC.createBuffer(2,n,AC.sampleRate);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.6)}RV.buffer=b})();
-RV.connect(RG);RG.connect(MB);
+RV.connect(RG);RG.connect(SB);
 const NB=(()=>{const n=AC.sampleRate*2,b=AC.createBuffer(1,n,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;return b})();
-function out(g,rv){g.connect(MB);if(rv){const s=AC.createGain();s.gain.value=rv;g.connect(s);s.connect(RV)}}
-function tone(f,d,type='sine',v=.12,sl=0,dl=0,rv=.25){if(AC.state!=='running')return;const t=AC.currentTime+dl,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(sl,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);out(g,rv);o.start(t);o.stop(t+d+.03)}
-function noise(d,v=.2,o={}){if(AC.state!=='running')return;const t=AC.currentTime+(o.dl||0),s=AC.createBufferSource(),g=AC.createGain();s.buffer=NB;s.loop=true;let n=s;
+let LVL=1;
+function out(g,rv){g.connect(SB);if(rv){const s=AC.createGain();s.gain.value=rv;g.connect(s);s.connect(RV)}}
+function tone(f,d,type='sine',v=.12,sl=0,dl=0,rv=.25){if(AC.state!=='running')return;v*=LVL;const t=AC.currentTime+dl,o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(sl,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);out(g,rv);o.start(t);o.stop(t+d+.03)}
+function noise(d,v=.2,o={}){if(AC.state!=='running')return;v*=LVL;const t=AC.currentTime+(o.dl||0),s=AC.createBufferSource(),g=AC.createGain();s.buffer=NB;s.loop=true;let n=s;
  if(o.hp){const f=AC.createBiquadFilter();f.type='highpass';f.frequency.value=o.hp;n.connect(f);n=f}
  if(o.bp){const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(o.bp,t);if(o.bp2)f.frequency.exponentialRampToValueAtTime(o.bp2,t+d);f.Q.value=o.q||1;n.connect(f);n=f}
  if(o.lp){const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=o.lp;n.connect(f);n=f}
  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,v),t+(o.a||.004));g.gain.exponentialRampToValueAtTime(.0001,t+d);n.connect(g);out(g,o.rv||0);s.start(t,Math.random()*1.5);s.stop(t+d+.03)}
+// ---- music level state: voice/video push music way down, effects dip it briefly ----
+const WA=/^https?:/.test(location.protocol); // WebAudio routing needs same-origin (https / localhost)
+const MIXS={voice:0,video:0,dip:1,base:.3,vduck:.035,dt:0};
+let MUSIC_WA=false;
+function musicLevel(){return !musOn?0:MIXS.voice?MIXS.vduck:MIXS.video?.03:MIXS.base*MIXS.dip}
+function applyMix(tc=.25){const t=AC.currentTime,v=musicLevel();
+ if(MUSIC_WA)MG.gain.setTargetAtTime(v,t,tc);else if(typeof bgm!=='undefined')bgm.volume=Math.min(1,v*2.4);
+ SB.gain.setTargetAtTime(MIXS.voice?.6:1.5,t,.12)}
+function dip(d,ms){if(MIXS.voice||MIXS.video)return;MIXS.dip=d;applyMix(.04);clearTimeout(MIXS.dt);MIXS.dt=setTimeout(()=>{MIXS.dip=1;applyMix(.35)},ms)}
 const SFX={
  tap(){tone(680,.14,'sine',.2,980,0,.15);tone(1360,.07,'triangle',.06,0,0,.1);tone(150,.14,'sine',.22,55,0,0)},
  btn(){tone(130,.28,'sine',.36,46,0,0);noise(.04,.1,{hp:3500});tone(880,.4,'sine',.14,0,.02,.35);tone(1320,.5,'sine',.1,0,.07,.4);tone(1760,.6,'triangle',.05,0,.12,.4)},
@@ -33,22 +52,37 @@ const SFX={
  open(){noise(.5,.32,{bp:1800,bp2:600,q:.6,a:.1,rv:.2});tone(200,.6,'sawtooth',.09,500,0,.1);tone(800,.8,'sine',.11,0,0,.4);tone(1320,.9,'sine',.08,0,.25,.5)},
  chime(){[660,880,1100].forEach((f,i)=>tone(f,.6,'sine',.17,0,i*.09,.4))},
  shoot(){tone(420,.35,'triangle',.2,120,0,.1);tone(210,.5,'sine',.16,90,0,0);noise(.22,.25,{bp:2500,bp2:6000,q:.9,rv:.1})},
- stretch(p){tone(150+p*2.2,.07,'sawtooth',.02,0,0,0)},
- scrF(sp,pr){const c=2800+pr*3200+Math.random()*600;noise(.1,.17+.2*sp,{bp:c,q:1.4,a:.01,hp:1500});if(Math.random()<.35)tone(3200+Math.random()*2800,.08,'sine',.06,0,0,.3)},
- scrM(sp){noise(.14,.12+.16*sp,{bp:1300+Math.random()*500,q:.5,lp:3500,a:.03});if(Math.random()<.25)noise(.03,.09,{hp:7000})},
+ stretch(p){tone(150+p*2.2,.09,'sawtooth',.03,0,0,0);noise(.1,.1,{bp:650+p*7,q:2.2,a:.01})},
+ scrF(sp,pr){const c=2800+pr*3200+Math.random()*600;noise(.17,.2+.22*sp,{bp:c,q:1.1,a:.03,hp:1400});noise(.15,.16+.16*sp,{bp:1100+Math.random()*500,q:.8,a:.03});if(Math.random()<.4)tone(3200+Math.random()*2800,.09,'sine',.05,0,0,.3)},
+ scrM(sp){noise(.2,.18+.22*sp,{bp:1300+Math.random()*500,q:.5,lp:3800,a:.05});noise(.15,.12+.12*sp,{bp:4200,q:.6,a:.04});if(Math.random()<.3)noise(.03,.12,{hp:7000})},
  foilDone(){tone(80,.9,'sine',.45,30,0,0);noise(.9,.3,{bp:500,bp2:5000,q:.6,a:.25,rv:.35});[1046,1318,1568,2093,2637].forEach((f,i)=>tone(f,.9,'triangle',.11,0,.1+i*.07,.55));tone(3136,1.2,'sine',.06,0,.5,.6)},
+ key(){const f=1700+Math.random()*900;noise(.03,.4,{bp:f,q:.9,a:.002});tone(150+Math.random()*60,.055,'square',.16,70,0,0);tone(f*1.5,.03,'triangle',.07,0,0,0)},
+ keyS(){noise(.05,.4,{bp:900,q:.7,a:.002});tone(110,.1,'sine',.3,58,0,0);noise(.02,.15,{hp:4000})},
+ sign(){noise(.3,.28,{bp:2500,bp2:6500,q:.9,a:.05,rv:.2});[1568,2093,2637].forEach((f,i)=>tone(f,.5,'sine',.1,0,.12+i*.08,.5))},
+ seal(){noise(.07,.5,{hp:1500});tone(240,.22,'sine',.4,70,0,0);tone(1800,.16,'triangle',.12,900,0,.2);noise(.25,.2,{bp:3000,bp2:1500,q:.6,dl:.05})},
+ whoosh(){noise(.7,.32,{bp:400,bp2:3200,q:.5,a:.18,rv:.3});tone(300,.6,'sine',.1,900,0,.3)},
+ paper(){noise(.4,.34,{bp:2600,bp2:1200,q:.4,a:.05});noise(.28,.24,{hp:5000,dl:.12})},
  frostDone(){noise(.5,.18,{bp:3000,bp2:1200,q:.7,a:.1,rv:.4});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.09/(1+i*.3),0,i*.09,.7));tone(659,1.2,'sine',.1,0,0,.6)}
 };
-const bgm=new Audio(C.music);bgm.loop=true;bgm.volume=.42;let musOn=true,started=false,bgmOk=true,hold=0;
+// priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
+const CAT={scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4};
+const DIP={scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500]};
+Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
+const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
-function startMusic(){if(started)return;started=true;AC.resume();if(musOn)bgm.play().catch(()=>{})}
+if(WA){try{AC.createMediaElementSource(bgm).connect(MG);MG.gain.value=0;MUSIC_WA=true}catch(e){MUSIC_WA=false}}
+if(!MUSIC_WA)bgm.volume=Math.min(1,MIXS.base*2.4);
+function startMusic(){if(started)return;started=true;AC.resume();if(musOn){bgm.play().catch(()=>{});applyMix(.9)}}
+const wake=()=>{if(AC.state!=='running')AC.resume().catch(()=>{})};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){wake();if(started&&musOn&&!hold&&bgm.paused)bgm.play().catch(()=>{})}});
 addEventListener('pointerdown',startMusic,{once:true});
 // every tap/click gets its own sound (bow, balloons and scratch cards have their own)
 addEventListener('pointerdown',e=>{const t=e.target;if(!t||!t.closest)return;const kind=t.closest('#arena,.bal,canvas')?0:t.closest('.pol,.fr')?'photo':t.closest('#mus')?'tap':t.closest('.btn,button')?'btn':'tap';if(!kind)return;const go_=()=>SFX[kind]();if(AC.state!=='running'){AC.resume().then(go_).catch(()=>{})}else go_()},true);
-function bgmResume(){if(musOn&&started&&!hold)bgm.play().catch(()=>{})}
+function bgmResume(){if(musOn&&started&&!hold&&bgm.paused)bgm.play().catch(()=>{});applyMix(.5)}
 const VS=[].concat(C.voice||[]);let vi=0,voiceOk=false;const voice=new Audio();voice.preload='auto';
+let VOICE_WA=false;if(WA){try{AC.createMediaElementSource(voice).connect(VG);VOICE_WA=true}catch(e){VOICE_WA=false}}
 function vtry(){if(vi<VS.length)voice.src=VS[vi++]}voice.onerror=()=>{voiceOk=false;vtry()};voice.oncanplay=()=>voiceOk=true;vtry();
-$('#mus').onclick=e=>{e.stopPropagation();musOn=!musOn;$('#mus').textContent=musOn?'♪ On':'♪ Off';musOn&&started&&!hold?bgm.play().catch(()=>{}):bgm.pause()};
+$('#mus').onclick=e=>{e.stopPropagation();musOn=!musOn;$('#mus').textContent=musOn?'♪ On':'♪ Off';if(musOn){if(started&&!hold)bgm.play().catch(()=>{});applyMix(.4)}else{applyMix(.12);setTimeout(()=>{if(!musOn)bgm.pause()},600)}};
 // ---------- particles ----------
 const cv=$('#fx'),cx=cv.getContext('2d');let P=[],W,H;
 function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}rs();addEventListener('resize',rs);
@@ -214,11 +248,11 @@ init[14]=()=>{$('#t14').textContent=C.gallery2Title||'';$('#s14').textContent=C.
   d.onclick=()=>{if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};g.append(d)});
  later(()=>burst(W/2,H*.4,60,true),900);[1.3,2.2,3.1,3.8,4.6].forEach((t,i)=>later(()=>{const f=$('#g2 .f'+(i+1));if(!f)return;const r=f.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,16,true);SFX.cake()},t*1000));later(()=>b.classList.add('show'),5000);startRain(true,700)};
 // ---------- 8/9: envelope ----------
-init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;$('#seal').textContent=C.name[0].toUpperCase();const e=$('#env1');e.onclick=()=>{if(e.dataset.d)return;e.dataset.d=1;e.classList.add('open');SFX.open();later(()=>{delete e.dataset.d;e.classList.remove('open');go(9)},900)}};
-init[9]=()=>{later(()=>burst(W/2,H*.45,60,true),1000);const e=$('#env2');e.classList.remove('open');void e.offsetWidth;e.classList.add('open');SFX.open();startRain(true,500);later(()=>go(10),4200)};
+init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;$('#seal').textContent=C.name[0].toUpperCase();const e=$('#env1');e.onclick=()=>{if(e.dataset.d)return;e.dataset.d=1;e.classList.add('open');SFX.seal();SFX.open();later(()=>{delete e.dataset.d;e.classList.remove('open');go(9)},900)}};
+init[9]=()=>{later(()=>burst(W/2,H*.45,60,true),1000);const e=$('#env2');e.classList.remove('open');void e.offsetWidth;e.classList.add('open');SFX.open();later(()=>SFX.paper(),850);later(()=>SFX.whoosh(),3300);startRain(true,500);later(()=>go(10),4200)};
 // ---------- 10: letter ----------
 init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10');$('#ldear').textContent=`Dear ${C.name},`;t.textContent=s.textContent='';g.classList.remove('show');let i=0;const txt=C.letter;$('#letter').classList.toggle('bn',BN.test(txt));
- const iv=setInterval(()=>{t.textContent=txt.slice(0,++i);$('#letter').scrollTop=1e5;if(i>=txt.length){clearInterval(iv);s.innerHTML=`${C.from}<br>— ${C.from}`.replace(C.from+'<br>',C.signoff+'<br>');g.classList.add('show')}},RM?2:38);timers.push(iv)};
+ const iv=setInterval(()=>{t.textContent=txt.slice(0,++i);$('#letter').scrollTop=1e5;const ch=txt[i-1];if(!RM){/\s/.test(ch)?SFX.keyS():SFX.key()}if(i>=txt.length){clearInterval(iv);SFX.sign();s.innerHTML=`${C.from}<br>— ${C.from}`.replace(C.from+'<br>',C.signoff+'<br>');g.classList.add('show')}},RM?2:38);timers.push(iv)};
 // ---------- 11: video (autoplays; unlocked by the Continue tap on the letter page) ----------
 let vprime=Promise.resolve();
 function primeVideo(){const v=$('#vid');v.onplay=v.onpause=v.onended=null;if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}
@@ -228,9 +262,9 @@ init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#
  if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}v.controls=true;v.playsInline=true;
  const fin=()=>{g.classList.add('show');sk.style.display='none';burst(W/2,H/3,80)};
  v.onerror=()=>{pl.style.display='';pl.textContent='Video not found — continue ›';pl.onclick=()=>go(12)};
- v.onplay=()=>{hold=1;bgm.pause()};
- v.onpause=()=>{hold=0;bgmResume()};
- v.onended=()=>{hold=0;bgmResume();fin()};
+ v.onplay=()=>{MIXS.video=1;applyMix(.25)};
+ v.onpause=()=>{MIXS.video=0;applyMix(.7)};
+ v.onended=()=>{MIXS.video=0;applyMix(.7);fin()};
  pl.onclick=()=>{pl.style.display='none';v.muted=false;v.volume=1;v.play().catch(()=>{})};
  sk.onclick=()=>{v.pause();go(12)};
  const unmute=()=>{um.classList.remove('hid');um.classList.add('show');um.onclick=()=>{v.muted=false;v.volume=1;um.classList.remove('show');um.classList.add('hid')}};
@@ -274,8 +308,8 @@ init[0]=()=>{$('#n0').textContent=C.name;$('#f0').textContent=`${C.from} made th
 init[13]=()=>{document.body.classList.toggle('rec',REC);const vo=$('#vo'),g=$('#g13'),wave=$('#wave'),msg=$('#vmsg');g.classList.remove('show');g.onclick=()=>go(3);$('#vtxt').textContent=`${C.from} recorded this for you`;msg.textContent='';vo.textContent='▶ Tap to listen';wave.classList.remove('on');
  if(REC){recorderInit();g.classList.add('show');return}
  vo.onclick=()=>{msg.textContent='';if(!voice.paused){voice.pause();return}if(voice.ended)voice.currentTime=0;const p=voice.play();if(p&&p.catch)p.catch(()=>{msg.textContent=voice.error?'Voice message is not added yet':'Tap once more to play'})};
- voice.onplay=()=>{hold=1;bgm.pause();wave.classList.add('on');vo.textContent='❚❚ Pause'};
- voice.onpause=voice.onended=()=>{hold=0;bgmResume();wave.classList.remove('on');vo.textContent=voice.ended?'↺ Listen again':'▶ Tap to listen'};
+ voice.onplay=()=>{MIXS.voice=1;applyMix(.18);wave.classList.add('on');vo.textContent='❚❚ Pause'};
+ voice.onpause=voice.onended=()=>{MIXS.voice=0;applyMix(.6);wave.classList.remove('on');vo.textContent=voice.ended?'↺ Listen again':'▶ Tap to listen'};
  later(()=>scratchInit($('#sc2'),'frost',()=>g.classList.add('show'),$('#hand2')),50)};
 function recorderInit(){const b=$('#recbtn'),pl=$('#recplay'),dl=$('#recdl'),note=$('#recnote');let mr,ch=[],st;
  b.onclick=async()=>{if(mr&&mr.state==='recording'){mr.stop();return}
