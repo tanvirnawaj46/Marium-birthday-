@@ -74,12 +74,15 @@ const SFX={
  sign(){noise(.3,.28,{bp:2500,bp2:6500,q:.9,a:.05,rv:.2});[1568,2093,2637].forEach((f,i)=>tone(f,.5,'sine',.1,0,.12+i*.08,.5))},
  seal(){noise(.07,.5,{hp:1500});tone(240,.22,'sine',.4,70,0,0);tone(1800,.16,'triangle',.12,900,0,.2);noise(.25,.2,{bp:3000,bp2:1500,q:.6,dl:.05})},
  whoosh(){noise(.7,.32,{bp:400,bp2:3200,q:.5,a:.18,rv:.3});tone(300,.6,'sine',.1,900,0,.3)},
+ flap(){noise(.26,.42,{bp:2000,bp2:800,q:.5,a:.02,rv:.15});noise(.05,.3,{hp:4500,dl:.04});tone(120,.16,'sine',.4,58,.78,0);noise(.04,.3,{bp:1500,q:.8,dl:.8})},
+ slide(){noise(1,.34,{bp:2300,bp2:4300,q:.45,a:.28,hp:900,rv:.1});noise(.5,.2,{bp:3600,q:.6,a:.1,dl:.45})},
+ unfold(){[0,45,100,160,230,320,420].forEach((ms,i)=>noise(.035+Math.random()*.03,.3-i*.02,{bp:2600+Math.random()*3000,q:.7,a:.002,dl:ms/1000}));noise(.4,.28,{bp:700,bp2:2200,q:.4,a:.08,rv:.1})},
  paper(){noise(.4,.34,{bp:2600,bp2:1200,q:.4,a:.05});noise(.28,.24,{hp:5000,dl:.12})},
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4};
-const DIP={ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500]};
+const CAT={ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -133,8 +136,8 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-function go(n){if(n>14)n=14;voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>p.classList.remove('on'));cur=n;setTheme(n);
- later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n))},cur===0&&!started?0:350)}
+function go(n,seam){if(n>14)n=14;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);
+ later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n))},seam||cur===0&&!started?0:350)}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(+b.closest('.pg').id.slice(1)+1)));
 const init={};
 // ---------- 1: bow & arrow (aim at the hearts) ----------
@@ -261,7 +264,24 @@ init[14]=()=>{$('#t14').textContent=C.gallery2Title||'';$('#s14').textContent=C.
   d.onclick=()=>{if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};g.append(d)});
  later(()=>burst(W/2,H*.4,60,true),900);[1.3,2.2,3.1,3.8,4.6].forEach((t,i)=>later(()=>{const f=$('#g2 .f'+(i+1));if(!f)return;const r=f.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,16,true);SFX.cake()},t*1000));later(()=>b.classList.add('show'),5000);startRain(true,700)};
 // ---------- 8/9: envelope ----------
-init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;$('#seal').textContent=C.name[0].toUpperCase();$('#mto').textContent=`For ${C.name} ♥`;const e=$('#env1');e.classList.remove('open');e.onclick=()=>{if(e.dataset.d)return;e.dataset.d=1;e.classList.add('open');SFX.seal();later(()=>SFX.open(),350);later(()=>{delete e.dataset.d;e.classList.remove('open');go(9)},1800)}};
+init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;
+ $$('#seal b').forEach(b=>b.textContent=C.name[0].toUpperCase());$('#mto').textContent=`For ${C.name} ♥`;
+ const pg=$('#p8'),e=$('#env1');pg.classList.remove('opening');e.classList.remove('run');delete e.dataset.d;
+ // measure where the real letter will be, so the paper lands exactly on it
+ const geo=()=>{const L=$('#letter'),lr=L.getBoundingClientRect(),er=e.getBoundingClientRect(),ew=e.offsetWidth,eh=e.offsetHeight,lw=lr.width,lh=lr.height,s0=.9*ew/lw;
+  const cx=er.left+ew/2,cy=er.top+eh*.55,S=e.style;
+  S.setProperty('--s0',s0.toFixed(4));S.setProperty('--ty1',(-(eh*.55+lh*s0/6+8)).toFixed(1)+'px');
+  S.setProperty('--tx2',(lr.left+lw/2-cx).toFixed(1)+'px');S.setProperty('--ty2',(lr.top+lh/2-cy).toFixed(1)+'px');
+  S.setProperty('--drop',(eh*.55).toFixed(0)+'px');pg.style.setProperty('--lcx',(lr.left+lw/2)+'px');pg.style.setProperty('--lcy',(lr.top+lh/2)+'px')};
+ geo();
+ e.onclick=()=>{if(e.dataset.d)return;e.dataset.d=1;startMusic();
+  if(RM){go(10);return}
+  geo();pg.classList.add('opening');void e.offsetWidth;e.classList.add('run');
+  const sr=$('#seal').getBoundingClientRect();SFX.seal();burst(sr.left+sr.width/2,sr.top+sr.height/2,28);
+  later(()=>SFX.flap(),380);later(()=>SFX.slide(),1450);
+  later(()=>{const r=$('#sheet').getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,22,true)},2450);
+  later(()=>SFX.whoosh(),2550);later(()=>SFX.unfold(),3500);later(()=>SFX.unfold(),4100);
+  later(()=>{burst(W/2,H/2,46,true);SFX.chime()},4900);later(()=>go(10,true),5500)}};
 init[9]=()=>{const e=$('#env2');e.classList.remove('play');void e.offsetWidth;e.classList.add('play');later(()=>SFX.paper(),700);later(()=>burst(W/2,H*.4,60,true),1500);later(()=>SFX.whoosh(),2700);startRain(true,500);later(()=>go(10),4100)};
 // ---------- 10: letter ----------
 init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10'),L=$('#letter');$('#ldear').textContent=`Dear ${C.name},`;s.textContent='';s.classList.remove('show');g.classList.remove('show');L.classList.toggle('bn',BN.test(C.letter));
