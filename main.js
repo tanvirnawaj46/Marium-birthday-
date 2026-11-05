@@ -59,12 +59,14 @@ const SFX={
  shoot(){tone(420,.35,'triangle',.2,120,0,.1);tone(210,.5,'sine',.16,90,0,0);noise(.22,.25,{bp:2500,bp2:6000,q:.9,rv:.1})},
  stretch(p){tone(150+p*2.2,.09,'sawtooth',.03,0,0,0);noise(.1,.1,{bp:650+p*7,q:2.2,a:.01})},
  scrF(sp,pr){const c=2800+pr*3200+Math.random()*600;noise(.17,.2+.22*sp,{bp:c,q:1.1,a:.03,hp:1400});noise(.15,.16+.16*sp,{bp:1100+Math.random()*500,q:.8,a:.03});if(Math.random()<.4)tone(3200+Math.random()*2800,.09,'sine',.05,0,0,.3)},
- scrM(sp){ // wet cloth swiping over fogged glass: soft broadband swish + damp friction + occasional glass squeak + tiny droplet ticks
-  noise(.22,.16+.26*sp,{bp:2100+Math.random()*900,q:.35,lp:6500,hp:700,a:.07});
-  noise(.2,.1+.14*sp,{bp:480+Math.random()*180,q:.6,a:.06});
-  noise(.12,.05+.08*sp,{hp:6500,a:.05});
-  if(sp>.3&&Math.random()<.5){const f=1750+Math.random()*1600;tone(f,.1,'sine',.045+.07*sp,f*(1.05+Math.random()*.25),0,.4);tone(f*2.01,.07,'sine',.015+.02*sp,0,0,.3)}
-  if(Math.random()<.18)noise(.012,.2,{bp:4200+Math.random()*2000,q:2,a:.001})},
+ scrM(sp){ // watery: soft liquid swish over wet glass + bubbly water droplets + faint glass squeak
+  noise(.26,.14+.2*sp,{bp:1500+Math.random()*700,bp2:900+Math.random()*500,q:.5,lp:4200,hp:350,a:.09});
+  noise(.22,.08+.1*sp,{bp:380+Math.random()*120,q:.7,lp:900,a:.08});
+  noise(.1,.03+.05*sp,{hp:7000,lp:11000,a:.05});
+  const n=1+(Math.random()<.5)+(sp>.5&&Math.random()<.5);
+  for(let i=0;i<n;i++){const f=500+Math.random()*900,dl=Math.random()*.16;tone(f,.07+Math.random()*.05,'sine',.07+.09*sp,f*(1.8+Math.random()*1.2),dl,.15);if(Math.random()<.5)tone(f*2.4,.04,'sine',.025,f*3.5,dl+.01,.1)}
+  if(Math.random()<.35)noise(.03,.16,{bp:1300+Math.random()*900,q:3,a:.002,dl:Math.random()*.15});
+  if(sp>.4&&Math.random()<.25){const f=2000+Math.random()*1200;tone(f,.09,'sine',.03+.04*sp,f*1.12,0,.4)}},
  foilDone(){tone(80,.9,'sine',.45,30,0,0);noise(.9,.3,{bp:500,bp2:5000,q:.6,a:.25,rv:.35});[1046,1318,1568,2093,2637].forEach((f,i)=>tone(f,.9,'triangle',.11,0,.1+i*.07,.55));tone(3136,1.2,'sine',.06,0,.5,.6)},
  key(){const f=1900+Math.random()*1300,p=165+Math.random()*60;noise(.02,.5,{bp:f,q:1.3,a:.001});tone(p,.08,'sine',.4,p*.5,0,0);noise(.04,.22,{bp:650,q:.8,a:.001});setTimeout(()=>noise(.012,.14,{bp:3400,q:1.5,a:.001}),50+Math.random()*25)},
  keyS(){noise(.03,.45,{bp:900,q:.9,a:.001});tone(112,.14,'sine',.5,56,0,0);noise(.05,.2,{bp:450,q:.7,a:.001});setTimeout(()=>noise(.02,.15,{bp:2600,q:1.2,a:.001}),70)},
