@@ -59,7 +59,12 @@ const SFX={
  shoot(){tone(420,.35,'triangle',.2,120,0,.1);tone(210,.5,'sine',.16,90,0,0);noise(.22,.25,{bp:2500,bp2:6000,q:.9,rv:.1})},
  stretch(p){tone(150+p*2.2,.09,'sawtooth',.03,0,0,0);noise(.1,.1,{bp:650+p*7,q:2.2,a:.01})},
  scrF(sp,pr){const c=2800+pr*3200+Math.random()*600;noise(.17,.2+.22*sp,{bp:c,q:1.1,a:.03,hp:1400});noise(.15,.16+.16*sp,{bp:1100+Math.random()*500,q:.8,a:.03});if(Math.random()<.4)tone(3200+Math.random()*2800,.09,'sine',.05,0,0,.3)},
- scrM(sp){noise(.2,.18+.22*sp,{bp:1300+Math.random()*500,q:.5,lp:3800,a:.05});noise(.15,.12+.12*sp,{bp:4200,q:.6,a:.04});if(Math.random()<.3)noise(.03,.12,{hp:7000})},
+ scrM(sp){ // wet cloth swiping over fogged glass: soft broadband swish + damp friction + occasional glass squeak + tiny droplet ticks
+  noise(.22,.16+.26*sp,{bp:2100+Math.random()*900,q:.35,lp:6500,hp:700,a:.07});
+  noise(.2,.1+.14*sp,{bp:480+Math.random()*180,q:.6,a:.06});
+  noise(.12,.05+.08*sp,{hp:6500,a:.05});
+  if(sp>.3&&Math.random()<.5){const f=1750+Math.random()*1600;tone(f,.1,'sine',.045+.07*sp,f*(1.05+Math.random()*.25),0,.4);tone(f*2.01,.07,'sine',.015+.02*sp,0,0,.3)}
+  if(Math.random()<.18)noise(.012,.2,{bp:4200+Math.random()*2000,q:2,a:.001})},
  foilDone(){tone(80,.9,'sine',.45,30,0,0);noise(.9,.3,{bp:500,bp2:5000,q:.6,a:.25,rv:.35});[1046,1318,1568,2093,2637].forEach((f,i)=>tone(f,.9,'triangle',.11,0,.1+i*.07,.55));tone(3136,1.2,'sine',.06,0,.5,.6)},
  key(){const f=1900+Math.random()*1300,p=165+Math.random()*60;noise(.02,.5,{bp:f,q:1.3,a:.001});tone(p,.08,'sine',.4,p*.5,0,0);noise(.04,.22,{bp:650,q:.8,a:.001});setTimeout(()=>noise(.012,.14,{bp:3400,q:1.5,a:.001}),50+Math.random()*25)},
  keyS(){noise(.03,.45,{bp:900,q:.9,a:.001});tone(112,.14,'sine',.5,56,0,0);noise(.05,.2,{bp:450,q:.7,a:.001});setTimeout(()=>noise(.02,.15,{bp:2600,q:1.2,a:.001}),70)},
@@ -68,7 +73,7 @@ const SFX={
  seal(){noise(.07,.5,{hp:1500});tone(240,.22,'sine',.4,70,0,0);tone(1800,.16,'triangle',.12,900,0,.2);noise(.25,.2,{bp:3000,bp2:1500,q:.6,dl:.05})},
  whoosh(){noise(.7,.32,{bp:400,bp2:3200,q:.5,a:.18,rv:.3});tone(300,.6,'sine',.1,900,0,.3)},
  paper(){noise(.4,.34,{bp:2600,bp2:1200,q:.4,a:.05});noise(.28,.24,{hp:5000,dl:.12})},
- frostDone(){noise(.5,.18,{bp:3000,bp2:1200,q:.7,a:.1,rv:.4});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.09/(1+i*.3),0,i*.09,.7));tone(659,1.2,'sine',.1,0,0,.6)}
+ frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
 const CAT={ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4};
