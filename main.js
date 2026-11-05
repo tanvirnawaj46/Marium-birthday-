@@ -61,8 +61,9 @@ const SFX={
  scrF(sp,pr){const c=2800+pr*3200+Math.random()*600;noise(.17,.2+.22*sp,{bp:c,q:1.1,a:.03,hp:1400});noise(.15,.16+.16*sp,{bp:1100+Math.random()*500,q:.8,a:.03});if(Math.random()<.4)tone(3200+Math.random()*2800,.09,'sine',.05,0,0,.3)},
  scrM(sp){noise(.2,.18+.22*sp,{bp:1300+Math.random()*500,q:.5,lp:3800,a:.05});noise(.15,.12+.12*sp,{bp:4200,q:.6,a:.04});if(Math.random()<.3)noise(.03,.12,{hp:7000})},
  foilDone(){tone(80,.9,'sine',.45,30,0,0);noise(.9,.3,{bp:500,bp2:5000,q:.6,a:.25,rv:.35});[1046,1318,1568,2093,2637].forEach((f,i)=>tone(f,.9,'triangle',.11,0,.1+i*.07,.55));tone(3136,1.2,'sine',.06,0,.5,.6)},
- key(){const f=1700+Math.random()*900;noise(.03,.4,{bp:f,q:.9,a:.002});tone(150+Math.random()*60,.055,'square',.16,70,0,0);tone(f*1.5,.03,'triangle',.07,0,0,0)},
- keyS(){noise(.05,.4,{bp:900,q:.7,a:.002});tone(110,.1,'sine',.3,58,0,0);noise(.02,.15,{hp:4000})},
+ key(){const f=1900+Math.random()*1300,p=165+Math.random()*60;noise(.02,.5,{bp:f,q:1.3,a:.001});tone(p,.08,'sine',.4,p*.5,0,0);noise(.04,.22,{bp:650,q:.8,a:.001});setTimeout(()=>noise(.012,.14,{bp:3400,q:1.5,a:.001}),50+Math.random()*25)},
+ keyS(){noise(.03,.45,{bp:900,q:.9,a:.001});tone(112,.14,'sine',.5,56,0,0);noise(.05,.2,{bp:450,q:.7,a:.001});setTimeout(()=>noise(.02,.15,{bp:2600,q:1.2,a:.001}),70)},
+ ret(){noise(.28,.3,{bp:2200,bp2:800,q:.6,a:.03});tone(90,.12,'sine',.5,50,.26,0);tone(2637,.7,'sine',.07,0,.3,.6);tone(3136,.5,'sine',.04,0,.3,.5)},
  sign(){noise(.3,.28,{bp:2500,bp2:6500,q:.9,a:.05,rv:.2});[1568,2093,2637].forEach((f,i)=>tone(f,.5,'sine',.1,0,.12+i*.08,.5))},
  seal(){noise(.07,.5,{hp:1500});tone(240,.22,'sine',.4,70,0,0);tone(1800,.16,'triangle',.12,900,0,.2);noise(.25,.2,{bp:3000,bp2:1500,q:.6,dl:.05})},
  whoosh(){noise(.7,.32,{bp:400,bp2:3200,q:.5,a:.18,rv:.3});tone(300,.6,'sine',.1,900,0,.3)},
@@ -70,8 +71,8 @@ const SFX={
  frostDone(){noise(.5,.18,{bp:3000,bp2:1200,q:.7,a:.1,rv:.4});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.09/(1+i*.3),0,i*.09,.7));tone(659,1.2,'sine',.1,0,0,.6)}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4};
-const DIP={scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500]};
+const CAT={ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4};
+const DIP={ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -253,11 +254,15 @@ init[14]=()=>{$('#t14').textContent=C.gallery2Title||'';$('#s14').textContent=C.
   d.onclick=()=>{if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};g.append(d)});
  later(()=>burst(W/2,H*.4,60,true),900);[1.3,2.2,3.1,3.8,4.6].forEach((t,i)=>later(()=>{const f=$('#g2 .f'+(i+1));if(!f)return;const r=f.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,16,true);SFX.cake()},t*1000));later(()=>b.classList.add('show'),5000);startRain(true,700)};
 // ---------- 8/9: envelope ----------
-init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;$('#seal').textContent=C.name[0].toUpperCase();const e=$('#env1');e.onclick=()=>{if(e.dataset.d)return;e.dataset.d=1;e.classList.add('open');SFX.seal();SFX.open();later(()=>{delete e.dataset.d;e.classList.remove('open');go(9)},900)}};
-init[9]=()=>{later(()=>burst(W/2,H*.45,60,true),1000);const e=$('#env2');e.classList.remove('open');void e.offsetWidth;e.classList.add('open');SFX.open();later(()=>SFX.paper(),850);later(()=>SFX.whoosh(),3300);startRain(true,500);later(()=>go(10),4200)};
+init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;$('#seal').textContent=C.name[0].toUpperCase();$('#mto').textContent=`For ${C.name} ♥`;const e=$('#env1');e.classList.remove('open');e.onclick=()=>{if(e.dataset.d)return;e.dataset.d=1;e.classList.add('open');SFX.seal();later(()=>SFX.open(),350);later(()=>{delete e.dataset.d;e.classList.remove('open');go(9)},1800)}};
+init[9]=()=>{const e=$('#env2');e.classList.remove('play');void e.offsetWidth;e.classList.add('play');later(()=>SFX.paper(),700);later(()=>burst(W/2,H*.4,60,true),1500);later(()=>SFX.whoosh(),2700);startRain(true,500);later(()=>go(10),4100)};
 // ---------- 10: letter ----------
-init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10');$('#ldear').textContent=`Dear ${C.name},`;t.textContent=s.textContent='';g.classList.remove('show');let i=0;const txt=C.letter;$('#letter').classList.toggle('bn',BN.test(txt));
- const iv=setInterval(()=>{t.textContent=txt.slice(0,++i);$('#letter').scrollTop=1e5;const ch=txt[i-1];if(!RM){/\s/.test(ch)?SFX.keyS():SFX.key()}if(i>=txt.length){clearInterval(iv);SFX.sign();s.innerHTML=`${C.from}<br>— ${C.from}`.replace(C.from+'<br>',C.signoff+'<br>');g.classList.add('show')}},RM?2:38);timers.push(iv)};
+init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10'),L=$('#letter');$('#ldear').textContent=`Dear ${C.name},`;s.textContent='';s.classList.remove('show');g.classList.remove('show');L.classList.toggle('bn',BN.test(C.letter));
+ const ch=Array.from(C.letter),tn=document.createTextNode(''),cr=document.createElement('span');cr.className='cr';t.textContent='';t.append(tn,cr);let i=0,ly=-1;
+ const step=()=>{if(i>=ch.length){cr.remove();SFX.sign();s.innerHTML=`${C.signoff}<br>— ${C.from}`;s.classList.add('show');later(()=>g.classList.add('show'),900);return}
+  const c=ch[i++];tn.nodeValue+=c;L.scrollTop=1e5;const y=cr.offsetTop;if(!RM){if(ly>=0&&y>ly+4&&/\s/.test(ch[i-2]||''))SFX.ret();else /\s/.test(c)?SFX.keyS():SFX.key()}ly=y;
+  let d=RM?2:Math.max(22,Math.min(58,9500/ch.length))*(.55+Math.random()*.9);if(/[,;]/.test(c))d+=140;else if(/[.!?]/.test(c))d+=300;else if(!RM&&Math.random()<.04)d+=120;later(step,d)};
+ later(step,RM?0:1100)};
 // ---------- 11: video (autoplays; unlocked by the Continue tap on the letter page) ----------
 let vprime=Promise.resolve();
 function primeVideo(){const v=$('#vid');v.onplay=v.onpause=v.onended=null;if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}
