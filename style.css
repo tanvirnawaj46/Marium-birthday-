@@ -419,3 +419,12 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 @keyframes sgl{0%{opacity:0;scale:.4}45%{opacity:.9}100%{opacity:.5;scale:1}}
 .run .pm{animation:pmsh .5s 3.45s forwards}
 @keyframes pmsh{to{box-shadow:0 0 0 #0000}}
+
+/* solid edge strips: what Safari samples to tint the status bar and the bottom bar (sits under the page content) */
+.edge{position:fixed;left:0;right:0;z-index:-1;background-color:var(--ec,#1a0f3a)}
+.edge:after{pointer-events:none}
+.eT{top:0;height:max(calc(var(--sat) + 10px),26px)}
+.eB{bottom:0;height:max(calc(var(--sab) + 10px),26px)}
+.edge:after{content:"";position:absolute;left:0;right:0;height:46px}
+.eT:after{top:100%;background:linear-gradient(var(--ec),#0000)}
+.eB:after{bottom:100%;background:linear-gradient(#0000,var(--ec))}

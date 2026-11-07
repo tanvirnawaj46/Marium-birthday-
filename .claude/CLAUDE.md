@@ -13,7 +13,8 @@ Usage limit may cut the session. Work in small stages, push each working stage t
 after the limit resets, continue ONLY the unchecked items below; do not restart or redo finished work.
 
 ## Current job: letter opening + typing (started 2026-11-06)
-- [ ] 1. Envelope scene (p8): wax seal cracks, flap opens in 3D, paper slides OUT of the pocket, rises, unfolds into the letter (no page-9 detour)
+- [x] 1. (DONE, pushed) Envelope scene (p8): wax seal cracks, flap opens in 3D, paper slides OUT of the pocket, rises, unfolds into the letter (no page-9 detour)
 - [ ] 2. Letter page (p10): paper matches scene end-state, ink-in typing with soft caret + human rhythm
 - [ ] 3. Realistic keyboard sound (key-down thock + key-up click, varied, space/enter/line-bell) + envelope sounds
 - [ ] 4. Test 393x852 / 428x926 (screens + audio levels) and push
+- [x] 0. (DONE, pushed) Status/bottom bar colour match: solid .edge strips per page + theme-color + html/body bg colour (THEME table in main.js holds each page's real top/bottom colour; re-measure if a page background changes)

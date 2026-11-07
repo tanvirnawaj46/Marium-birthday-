@@ -3,8 +3,12 @@ const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 // older iPhones (no dvh): keep --vh equal to the visible height
 if(!(window.CSS&&CSS.supports&&CSS.supports('height','1dvh'))){const sv=()=>document.documentElement.style.setProperty('--vh',innerHeight*.01+'px');sv();addEventListener('resize',sv);addEventListener('orientationchange',()=>setTimeout(sv,300))}
 // status-bar / address-bar tint follows each page's background (no stray bar colour)
-const THEME={"0":["#f190bd","#dce0ff"],"1":["#feeff6","#f4e6ff"],"2":["#fa5b8f","#e62756"],"3":["#fff7f3","#ffebf3"],"4":["#722f71","#7b3858"],"5":["#722f71","#7b3858"],"6":["#f2919b","#5d57e6"],"7":["#83356e","#40276e"],"8":["#2b3099","#2e2079"],"9":["#4145a3","#2e2079"],"10":["#733681","#67306c"],"11":["#713377","#411756"],"12":["#0f0a2e","#9f3282"],"13":["#825ece","#ad4a9b"],"14":["#e27e9c","#8e417d"]},TM=document.querySelector('meta[name=theme-color]');
-function setTheme(n){const t=THEME[n]||['#1a0f3a','#1a0f3a'];if(TM)TM.setAttribute('content',t[0]);const g=`linear-gradient(${t[0]},${t[1]})`;document.documentElement.style.background=g;document.body.style.background=g}
+const THEME={"0":["#fbe0f2","#d9dfff"],"1":["#ffe5f6","#f4e6fe"],"2":["#fb5e91","#e12756"],"3":["#fff4f1","#ffeaf3"],"4":["#5d2567","#6d2c58"],"5":["#5d2567","#6e2d57"],"6":["#e56f9e","#4f52d2"],"7":["#642764","#311953"],"8":["#2b3091","#392383"],"9":["#3c3192","#402587"],"10":["#743882","#662f6a"],"11":["#4e2268","#401756"],"12":["#0f0a2e","#762676"],"13":["#845fcf","#ac499a"],"14":["#de7a98","#8b3f7c"]},TM=document.querySelector('meta[name=theme-color]');
+function setTheme(n){const t=THEME[n]||['#1a0f3a','#1a0f3a'];if(TM)TM.setAttribute('content',t[0]);const g=`linear-gradient(${t[0]},${t[1]})`;
+ [document.documentElement,document.body].forEach(el=>{el.style.backgroundImage=g;el.style.backgroundColor=t[0]})}
+// Safari tints its status bar / bottom bar from solid fixed elements sitting on the screen edges (and from theme-color).
+// Every page gets a solid top strip + bottom strip in that page's real edge colour, painted under the page content.
+$$('.pg').forEach(pg=>{const t=THEME[+pg.id.slice(1)];if(!t)return;['T','B'].forEach((k,i)=>{const s=document.createElement('i');s.className='edge e'+k;s.style.setProperty('--ec',t[i]);pg.append(s)})});
 let cur=0,timers=[];const later=(f,t)=>timers.push(setTimeout(f,t));
 // ---------- stars ----------
 for(let i=0;i<70;i++){const s=document.createElement('i');s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;opacity:${.3+Math.random()*.7}`;$('#stars').append(s)}
