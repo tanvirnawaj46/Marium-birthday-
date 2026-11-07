@@ -49,6 +49,17 @@ function applyMix(tc=.25){const t=AC.currentTime,v=musicLevel();
  if(MUSIC_WA)MG.gain.setTargetAtTime(v,t,tc);else if(typeof bgm!=='undefined')bgm.volume=Math.min(1,v*2.4);
  SB.gain.setTargetAtTime(MIXS.voice?.6:1.5,t,.12)}
 function dip(d,ms){if(MIXS.voice||MIXS.video)return;MIXS.dip=d;applyMix(.04);clearTimeout(MIXS.dt);MIXS.dt=setTimeout(()=>{MIXS.dip=1;applyMix(.35)},ms)}
+const KP=[.9,1,1.09,1.2];
+// mechanical-keyboard "thock": click transient + resonant body + plate noise, then a quieter key-up tick; varied per key
+function kbHit(o){if(AC.state!=='running')return;const t=AC.currentTime,V=(o.v||1)*LVL,p=o.p||1,d=o.d||.085,mk=()=>{const g=AC.createGain();let n=g;if(AC.createStereoPanner){const sp=AC.createStereoPanner();sp.pan.value=o.pan||0;g.connect(sp);n=sp}out(n,.07);return g};
+ const nz=(at,len,v,f,q,hp)=>{const s=AC.createBufferSource(),g=mk(),b=AC.createBiquadFilter();s.buffer=NB;b.type='bandpass';b.frequency.value=f;b.Q.value=q;let n=s;if(hp){const h=AC.createBiquadFilter();h.type='highpass';h.frequency.value=hp;s.connect(h);n=h}n.connect(b);b.connect(g);g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(Math.max(.0002,v),at+.0012);g.gain.exponentialRampToValueAtTime(.0001,at+len);s.start(at,Math.random()*1.5);s.stop(at+len+.02)};
+ const ts=(at,f0,f1,len,v,type)=>{const os=AC.createOscillator(),g=mk();os.type=type||'sine';os.frequency.setValueAtTime(f0,at);os.frequency.exponentialRampToValueAtTime(f1,at+len);g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(v,at+.003);g.gain.exponentialRampToValueAtTime(.0001,at+len);os.start(at);os.stop(at+len+.02)};
+ nz(t,.014,.55*V,3300*p,1.1,2200);                 // top-out click
+ ts(t,185*p,92*p,d,.62*V);ts(t,430*p,250*p,.03,.14*V,'triangle');  // thock body
+ nz(t+.002,.04,.26*V,1050*p,2.2);nz(t,.022,.3*V,420,.7);           // case + plate
+ if(o.sp){nz(t+.007,.012,.2*V,2600,1.4,1800);nz(t+.017,.012,.16*V,3100,1.4,1800)}  // spacebar stabiliser rattle
+ if(o.up!==0){const u=t+.058+Math.random()*.035;nz(u,.01,.22*V*(o.sp?1.3:1),4300,1.6,3000);ts(u,520*p,380*p,.022,.05*V)}   // key-up
+};
 const SFX={
  tap(){tone(680,.14,'sine',.2,980,0,.15);tone(1360,.07,'triangle',.06,0,0,.1);tone(150,.14,'sine',.22,55,0,0)},
  btn(){tone(130,.28,'sine',.36,46,0,0);noise(.04,.1,{hp:3500});tone(880,.4,'sine',.14,0,.02,.35);tone(1320,.5,'sine',.1,0,.07,.4);tone(1760,.6,'triangle',.05,0,.12,.4)},
@@ -72,9 +83,11 @@ const SFX={
   if(Math.random()<.35)noise(.03,.16,{bp:1300+Math.random()*900,q:3,a:.002,dl:Math.random()*.15});
   if(sp>.4&&Math.random()<.25){const f=2000+Math.random()*1200;tone(f,.09,'sine',.03+.04*sp,f*1.12,0,.4)}},
  foilDone(){tone(80,.9,'sine',.45,30,0,0);noise(.9,.3,{bp:500,bp2:5000,q:.6,a:.25,rv:.35});[1046,1318,1568,2093,2637].forEach((f,i)=>tone(f,.9,'triangle',.11,0,.1+i*.07,.55));tone(3136,1.2,'sine',.06,0,.5,.6)},
- key(){const f=1900+Math.random()*1300,p=165+Math.random()*60;noise(.02,.5,{bp:f,q:1.3,a:.001});tone(p,.08,'sine',.4,p*.5,0,0);noise(.04,.22,{bp:650,q:.8,a:.001});setTimeout(()=>noise(.012,.14,{bp:3400,q:1.5,a:.001}),50+Math.random()*25)},
- keyS(){noise(.03,.45,{bp:900,q:.9,a:.001});tone(112,.14,'sine',.5,56,0,0);noise(.05,.2,{bp:450,q:.7,a:.001});setTimeout(()=>noise(.02,.15,{bp:2600,q:1.2,a:.001}),70)},
- ret(){noise(.28,.3,{bp:2200,bp2:800,q:.6,a:.03});tone(90,.12,'sine',.5,50,.26,0);tone(2637,.7,'sine',.07,0,.3,.6);tone(3136,.5,'sine',.04,0,.3,.5)},
+ key(c){kbHit({p:KP[(c?c.charCodeAt(0):Math.random()*4|0)%4]*(.96+Math.random()*.08),v:.82+Math.random()*.3,pan:(Math.random()-.5)*.5,up:1})},
+ keyS(){kbHit({p:.6+Math.random()*.04,v:1.05,d:.15,pan:(Math.random()-.5)*.2,up:1,sp:1})},
+ enter(){kbHit({p:.52,v:1.2,d:.18,pan:0,up:1,sp:1})},
+ back(){kbHit({p:.82,v:.8,pan:(Math.random()-.5)*.3,up:0})},
+ scribble(){noise(.8,.2,{bp:3300,bp2:2300,q:.8,a:.12,hp:1600,rv:.1});[.1,.26,.42,.58].forEach(d=>noise(.05,.1,{hp:5000,dl:d}))},
  sign(){noise(.3,.28,{bp:2500,bp2:6500,q:.9,a:.05,rv:.2});[1568,2093,2637].forEach((f,i)=>tone(f,.5,'sine',.1,0,.12+i*.08,.5))},
  seal(){noise(.07,.5,{hp:1500});tone(240,.22,'sine',.4,70,0,0);tone(1800,.16,'triangle',.12,900,0,.2);noise(.25,.2,{bp:3000,bp2:1500,q:.6,dl:.05})},
  whoosh(){noise(.7,.32,{bp:400,bp2:3200,q:.5,a:.18,rv:.3});tone(300,.6,'sine',.1,900,0,.3)},
@@ -85,8 +98,8 @@ const SFX={
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.2,keyS:1.1,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
-const DIP={ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
+const CAT={ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -288,12 +301,39 @@ init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textCo
   later(()=>{burst(W/2,H/2,46,true);SFX.chime()},4900);later(()=>go(10,true),5500)}};
 init[9]=()=>{const e=$('#env2');e.classList.remove('play');void e.offsetWidth;e.classList.add('play');later(()=>SFX.paper(),700);later(()=>burst(W/2,H*.4,60,true),1500);later(()=>SFX.whoosh(),2700);startRain(true,500);later(()=>go(10),4100)};
 // ---------- 10: letter ----------
-init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10'),L=$('#letter');$('#ldear').textContent=`Dear ${C.name},`;s.textContent='';s.classList.remove('show');g.classList.remove('show');L.classList.toggle('bn',BN.test(C.letter));
- const ch=Array.from(C.letter),tn=document.createTextNode(''),cr=document.createElement('span');cr.className='cr';t.textContent='';t.append(tn,cr);let i=0,ly=-1;
- const step=()=>{if(i>=ch.length){cr.remove();SFX.sign();s.innerHTML=`${C.signoff}<br>— ${C.from}`;s.classList.add('show');later(()=>g.classList.add('show'),900);return}
-  const c=ch[i++];tn.nodeValue+=c;L.scrollTop=1e5;const y=cr.offsetTop;if(!RM){if(ly>=0&&y>ly+4&&/\s/.test(ch[i-2]||''))SFX.ret();else /\s/.test(c)?SFX.keyS():SFX.key()}ly=y;
-  let d=RM?2:Math.max(22,Math.min(58,9500/ch.length))*(.55+Math.random()*.9);if(/[,;]/.test(c))d+=140;else if(/[.!?]/.test(c))d+=300;else if(!RM&&Math.random()<.04)d+=120;later(step,d)};
- later(step,RM?0:1100)};
+// neighbouring keys, so a typo looks like a real slip of the finger
+const KN={q:'wa',w:'qes',e:'wrd',r:'etf',t:'ryg',y:'tuh',u:'yij',i:'uok',o:'ipl',p:'ol',a:'qsz',s:'awdx',d:'sefc',f:'drgv',g:'fthb',h:'gyjn',j:'hukm',k:'jil',l:'kop',z:'asx',x:'zsc',c:'xdv',v:'cfb',b:'vgn',n:'bhm',m:'nj'};
+init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10'),L=$('#letter'),dr=$('#ldear');
+ dr.textContent=`Dear ${C.name},`;dr.classList.remove('show');s.textContent='';s.classList.remove('show');g.classList.remove('show');L.scrollTop=0;
+ L.querySelectorAll('.dust').forEach(x=>x.remove());
+ const bn=BN.test(C.letter),ink=!bn&&!RM;L.classList.toggle('bn',bn);
+ const ch=Array.from(C.letter),cr=document.createElement('span');cr.className='cr';t.textContent='';t.append(cr);
+ let i=0,w=null,tn=null,ly=-1,typos=0;
+ // put one character on the paper
+ const add=c=>{if(c==='\n'){t.insertBefore(document.createElement('br'),cr);w=null;return}
+  if(!ink){if(!tn||tn.nextSibling!==cr){tn=document.createTextNode('');t.insertBefore(tn,cr)}tn.nodeValue+=c;return}
+  if(/\s/.test(c)){t.insertBefore(document.createTextNode(c),cr);w=null;return}
+  if(!w){w=document.createElement('span');w.className='w';t.insertBefore(w,cr)}
+  const k=document.createElement('span');k.className='c';k.textContent=c;w.append(k)};
+ const erase=()=>{if(w&&w.lastChild){w.lastChild.remove();if(!w.lastChild){w.remove();w=null}}};
+ const fx=c=>{if(RM)return;c==='\n'?SFX.enter():/\s/.test(c)?SFX.keyS():SFX.key(c)};
+ const dust=()=>{if(RM||Math.random()>.4)return;const d=document.createElement('i');d.className='dust';d.style.left=(cr.offsetLeft+1)+'px';d.style.top=(cr.offsetTop+6)+'px';d.style.setProperty('--dx',(Math.random()*34-17)+'px');L.append(d);setTimeout(()=>d.remove(),950)};
+ const follow=()=>{const y=cr.offsetTop;if(y!==ly){ly=y;L.scrollTo({top:Math.max(0,y-L.clientHeight*.55),behavior:'smooth'})}};
+ const press=c=>{add(c);fx(c);dust();follow()};
+ const base=RM?2:Math.max(24,Math.min(46,8200/ch.length));
+ // human rhythm: quick inside words, a beat after spaces, longer after commas / full stops, a rare thinking pause, sometimes a fast burst
+ const delay=(c,prev)=>{if(RM)return 2;let d=base*(.6+Math.random()*.8);if(/\s/.test(prev||''))d+=16;if(Math.random()<.16)d*=.55;
+  if(/[,;:]/.test(c))d+=130;else if(/[.!?]/.test(c))d+=300;else if(c==='\n')d+=420;else if(Math.random()<.02)d+=320+Math.random()*260;return d};
+ const fin=()=>{cr.remove();SFX.sign();s.innerHTML=`${C.signoff}<br>— ${C.from}`;s.classList.add('show');L.scrollTo({top:L.scrollHeight,behavior:'smooth'});burst(W/2,H*.55,22,true);later(()=>g.classList.add('show'),1000)};
+ const step=()=>{if(i>=ch.length)return fin();const c=ch[i],prev=ch[i-1];
+  // the odd slip: wrong neighbouring key, a beat, backspace, then the right one
+  if(ink&&typos<3&&i>14&&i<ch.length-30&&/[a-z]/i.test(c)&&Math.random()<.022){typos++;const ks=KN[c.toLowerCase()],wr=ks[Math.random()*ks.length|0];
+   press(c===c.toLowerCase()?wr:wr.toUpperCase());cr.classList.add('idle');
+   later(()=>{erase();SFX.back();cr.classList.remove('idle');later(()=>{i++;press(c);later(step,delay(c,prev))},150)},360);return}
+  i++;press(c);const d=delay(c,prev);cr.classList.toggle('idle',d>230);later(step,d)};
+ // "Dear ...," is written first with a pen, then the keys start
+ later(()=>{dr.classList.add('show');if(!RM)SFX.scribble()},RM?0:500);
+ later(step,RM?0:1900)};
 // ---------- 11: video (autoplays; unlocked by the Continue tap on the letter page) ----------
 let vprime=Promise.resolve();
 function primeVideo(){const v=$('#vid');v.onplay=v.onpause=v.onended=null;if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}

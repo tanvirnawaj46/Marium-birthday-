@@ -428,3 +428,18 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 .edge:after{content:"";position:absolute;left:0;right:0;height:46px}
 .eT:after{top:100%;background:linear-gradient(var(--ec),#0000)}
 .eB:after{bottom:100%;background:linear-gradient(#0000,var(--ec))}
+
+/* typing: ink-in letters, glowing pen caret, drifting dust */
+#ltxt{min-height:2px}
+#ltxt .w{white-space:nowrap}
+#ltxt .c{display:inline-block;transform-origin:50% 85%;animation:inkin .4s cubic-bezier(.2,.9,.3,1) both,inkdry 1.6s ease-out both}
+@keyframes inkin{from{opacity:0;transform:translateY(7px) scale(.55) rotate(-5deg);filter:blur(2.5px)}55%{opacity:1}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes inkdry{from{color:#1e0f07;text-shadow:0 0 8px #ffc566aa}to{color:#5a4030;text-shadow:0 0 0 #0000}}
+#ltxt .cr{display:inline-block;width:2.5px;height:1.15em;margin-left:2px;vertical-align:text-bottom;border-radius:2px;background:linear-gradient(#e6a84e,#8a5a2b);box-shadow:0 0 10px #ffb84d,0 0 2px #fff8;animation:none}
+#ltxt .cr.idle{animation:crblink .8s ease-in-out infinite}
+@keyframes crblink{50%{opacity:.12}}
+.dust{position:absolute;width:6px;height:6px;margin:-3px;border-radius:50%;pointer-events:none;background:radial-gradient(#fff,#ffd27a 55%,#0000 72%);animation:dustup .95s ease-out forwards}
+@keyframes dustup{from{opacity:.95;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--dx),-30px) scale(.2)}}
+#ldear{clip-path:inset(0 100% 0 0)}
+#ldear.show{animation:wipe .95s ease-out forwards}
+#letter.bn #ltxt .cr{height:1.1em}
