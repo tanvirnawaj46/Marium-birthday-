@@ -22,5 +22,5 @@ after the limit resets, continue ONLY the unchecked items below; do not restart 
 All items above are finished. Do NOT redo them; wait for the owner's next request.
 
 ## Job 2: scroll chapter (started 2026-11-09)
-- [x] 1. (DONE, pushed) p2 Wish -> p3 Tree -> p13 Voice as vertical swipe/scroll sequence (drag-follow, slide transition, dots, swipe-up hint); p3 Keep going -> p13; p13 Continue -> p4 cake; p13 forward swipe only after scratch done; cache-bust ?v= on css/js
+- [x] 1. (DONE, pushed) p2/p3/p13 are now ONE native scroll page (#p2 with sections #s2 #s3 #s13, init[3]/init[13] fired by IntersectionObserver, chapter() in main.js); single fixed gradient #ffcee8->#c5c1fd = THEME[2] so bars match like owner's Tanisha site. (old: slide/drag-follow, slide transition, dots, swipe-up hint); p3 Keep going -> p13; p13 Continue -> p4 cake; p13 forward swipe only after scratch done; cache-bust ?v= on css/js
 - [ ] 2. Bar colours still navy on owner's phone (stale cache?) - ask for hard-refresh screenshot
