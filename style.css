@@ -489,7 +489,6 @@ html.ds{overflow:visible}
 
 /* ===== pastel theme for every page after the intro: edges are exactly the bar colours ===== */
 :is(#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst{background:linear-gradient(180deg,#fbe0f1 0%,#f9cfe8 30%,#ecd0f4 68%,#f2dff3 100%);color:#9b2f78}
-.pst .edge:after{display:none}
 .pst .fl .orb{opacity:.35}
 :is(#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst :is(.top,.cap,p,h1,h2,h3,.pre,.sub){color:#9b2f78;text-shadow:none}
 .pst .btn{color:#fff}
