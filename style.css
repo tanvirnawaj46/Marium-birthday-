@@ -497,3 +497,38 @@ html.ds{overflow:visible}
 #p6 #bfield{border-color:#d12e8666;background:#ffffff40}
 #p10 .lw,#p11 .vid,#p8 .e-shadow{filter:none}
 .skip{color:#9b2f78}
+
+/* ===== design polish A (colours/backgrounds untouched) ===== */
+/* A1 buttons: glossy glass pill with a slow shimmer sweep */
+.btn{overflow:hidden;background:linear-gradient(100deg,#ff7a8f,#ff9a6b 55%,#ffb85c);box-shadow:0 10px 28px #ff7a8f77,inset 0 1.5px 0 #ffffff88,inset 0 -3px 8px #c2410c33;letter-spacing:.02em;transition:transform .25s cubic-bezier(.3,1.6,.5,1),box-shadow .3s}
+.btn:after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,#ffffffaa,transparent);transform:skewX(-20deg);animation:btnsh 3.6s ease-in-out infinite;pointer-events:none}
+@keyframes btnsh{0%,55%{left:-60%}100%{left:130%}}
+.btn:active{transform:scale(.94)}
+.pg:not(#p2):not(#p8):not(#p10){transition:opacity 1s,transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.pg:not(#p2):not(#p8):not(#p10):not(.on){transform:scale(1.025)}
+/* A2 wish: wavy shimmering letters, glow halo, twinkles */
+#s2 .big span{color:hsl(calc(322 + var(--i)*2.6) 78% 56%);animation:up .8s var(--d) forwards,bw 3.6s calc(var(--d) + 1.5s) ease-in-out infinite;filter:drop-shadow(0 4px 14px #ffffffcc)}
+@keyframes bw{50%{translate:0 -9px;scale:1.04}}
+#s2:before{content:"";position:absolute;left:50%;top:50%;width:92vmin;height:92vmin;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,#ffffffaa,#ffd1ee55 42%,transparent 70%);animation:halo2 5s ease-in-out infinite;z-index:-1;pointer-events:none}
+@keyframes halo2{50%{scale:1.14;opacity:.65}}
+#s2 .pre:before,#s2 .pre:after{content:"\2726";margin:0 .6em;color:#f08cc6;display:inline-block;animation:tw2 2.2s ease-in-out infinite}
+#s2 .pre:after{animation-delay:1.1s}
+@keyframes tw2{50%{opacity:.25;scale:.6;rotate:40deg}}
+#s2 .sub{letter-spacing:.06em}
+/* A3 tree: staggered reveal, gradient heading */
+#s3 .txt3>*{opacity:0;transform:translateY(22px)}
+#s3.in .txt3>*{animation:up .9s cubic-bezier(.2,.8,.2,1) forwards}
+#s3.in .txt3>:nth-child(1){animation-delay:2.2s}#s3.in .txt3>:nth-child(2){animation-delay:2.7s}#s3.in .txt3>:nth-child(3){animation-delay:3.3s}#s3.in .txt3>:nth-child(4){animation-delay:3.9s}
+#t3n{background:linear-gradient(90deg,#c0286e,#ec5aa0,#9b4fd1,#c0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:gshift 6s linear infinite}
+#s3.in #t3n{animation:up .9s cubic-bezier(.2,.8,.2,1) 2.7s forwards,gshift 6s linear 3.6s infinite}
+@keyframes gshift{to{background-position:-250% 0}}
+/* A4 voice card: glow border, pulsing mic rings */
+#s13 .top,#s13 .vcard{transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
+#s13:not(.in) .top,#s13:not(.in) .vcard{opacity:0;transform:translateY(26px)}
+#s13 .vcard{box-shadow:0 14px 50px #e56fb344,inset 0 0 44px #ffffff66;border:1.5px solid #ffffffcc}
+.vmic{position:relative;width:4.6rem;height:4.6rem;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffd3ea);box-shadow:0 8px 24px #e56fb366;font-size:2.2rem;filter:none}
+.vmic:before,.vmic:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #ec5aa0;opacity:0;animation:ring 2.8s ease-out infinite}
+.vmic:after{animation-delay:1.4s}
+@keyframes ring{0%{scale:1;opacity:.7}100%{scale:1.9;opacity:0}}
+#s13 .wave{height:42px}#s13 .wave i{width:6px;background:linear-gradient(#ff7bb5,#9b6bff)}
+@media (prefers-reduced-motion:reduce){.btn:after,#s2:before,.vmic:before,.vmic:after{animation:none}}

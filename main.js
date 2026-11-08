@@ -200,7 +200,7 @@ init[1]=()=>{const A=$('#arena'),arc=$('#bowArc'),str=$('#str'),sh=$('#shaft'),s
    draw([rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q],[tipP[0]-u0[0]*L,tipP[1]-u0[1]*L]);
    if(k<1)return requestAnimationFrame(f);land(best)})(t0)}};
 // ---------- 2: HB ----------
-init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach((w,i,a)=>{[...w].forEach((c,j)=>{const s=document.createElement('span');s.textContent=c;s.style.animationDelay=(i*.7+j*.08)+'s';e.append(s)});if(!i)e.append(document.createElement('br'))});SFX.chime();chapter()};
+init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach((w,i,a)=>{[...w].forEach((c,j)=>{const s=document.createElement('span');s.textContent=c;s.style.setProperty('--d',(i*.7+j*.08).toFixed(2)+'s');s.style.setProperty('--i',i*5+j);e.append(s)});if(!i)e.append(document.createElement('br'))});SFX.chime();chapter()};
 // ---------- 3: tree ----------
 const HG=[['#ff9db3','#f0365f','#9f1239'],['#ffc2d4','#f43f78','#be185d'],['#ffd9e6','#f472b6','#c026a3'],['#ffb8a6','#fb5470','#be123c'],['#fff1a8','#fbbf24','#d97706']];
 const HP='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z';

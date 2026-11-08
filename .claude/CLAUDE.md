@@ -28,10 +28,10 @@ All items above are finished. Do NOT redo them; wait for the owner's next reques
 ## Job 3: design/animation polish (started 2026-11-09) - owner: "colours perfect, keep them; make animations/design prettier. Do half now, rest after the 5h limit reset"
 Rule: keep page backgrounds/edge colours exactly (bar match). Only touch animation, typography, buttons, cards, motion. Push each item.
 Part A (before limit):
-- [ ] A1. Global: glass/shimmer .btn, softer page transition (not #p2/#p8/#p10)
-- [ ] A2. Wish section (#s2): letter wave/shimmer, glow halo, twinkle
-- [ ] A3. Tree section (#s3): staggered text reveal, gradient heading
-- [ ] A4. Voice card (#s13): pulsing mic ring, glow border, nicer wave
+- [x] A1. (DONE, pushed) Global: glass/shimmer .btn, softer page transition (not #p2/#p8/#p10)
+- [x] A2. (DONE, pushed) Wish section (#s2): letter wave/shimmer, glow halo, twinkle
+- [x] A3. (DONE, pushed) Tree section (#s3): staggered text reveal, gradient heading
+- [x] A4. (DONE, pushed) Voice card (#s13): pulsing mic ring, glow border, nicer wave
 Part B (after reset, do ONLY these):
 - [ ] B1. Gift page p0 + bow game p1 polish
 - [ ] B2. Cake p4 + wish p5 (candle/flame glow, confetti, text reveal)
