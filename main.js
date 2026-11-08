@@ -153,7 +153,8 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-function go(n,seam){if(n>14)n=14;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);
+var CH=[2,3,13],chLock=0;
+function go(n,seam){if(n>14)n=14;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);chUI(n);
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n))},seam||cur===0&&!started?0:350)}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(+b.closest('.pg').id.slice(1)+1)));
 const init={};
@@ -197,7 +198,7 @@ init[1]=()=>{const A=$('#arena'),arc=$('#bowArc'),str=$('#str'),sh=$('#shaft'),s
    draw([rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q],[tipP[0]-u0[0]*L,tipP[1]-u0[1]*L]);
    if(k<1)return requestAnimationFrame(f);land(best)})(t0)}};
 // ---------- 2: HB ----------
-init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach((w,i,a)=>{[...w].forEach((c,j)=>{const s=document.createElement('span');s.textContent=c;s.style.animationDelay=(i*.7+j*.08)+'s';e.append(s)});if(!i)e.append(document.createElement('br'))});SFX.chime();later(()=>go(13),4500)};
+init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach((w,i,a)=>{[...w].forEach((c,j)=>{const s=document.createElement('span');s.textContent=c;s.style.animationDelay=(i*.7+j*.08)+'s';e.append(s)});if(!i)e.append(document.createElement('br'))});SFX.chime()};
 // ---------- 3: tree ----------
 const HG=[['#ff9db3','#f0365f','#9f1239'],['#ffc2d4','#f43f78','#be185d'],['#ffd9e6','#f472b6','#c026a3'],['#ffb8a6','#fb5470','#be123c'],['#fff1a8','#fbbf24','#d97706']];
 const HP='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z';
@@ -386,7 +387,7 @@ init[0]=()=>{$('#n0').textContent=C.name;$('#f0').textContent=`${C.from} made th
  b.onclick=()=>{b.onclick=null;startMusic();SFX.chime();const r=b.getBoundingClientRect();burst(r.left+r.width/2,r.top,70);go(1)};
  later(()=>scratchInit($('#sc1'),'foil',()=>{b.style.pointerEvents='auto';const r=b.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,50)},$('#hand1')),50)};
 // ---------- 13: voice message (frost-wipe scratch) ----------
-init[13]=()=>{document.body.classList.toggle('rec',REC);const vo=$('#vo'),g=$('#g13'),wave=$('#wave'),msg=$('#vmsg');g.classList.remove('show');g.onclick=()=>go(3);$('#vtxt').textContent=`${C.from} recorded this for you`;msg.textContent='';vo.textContent='▶ Tap to listen';wave.classList.remove('on');
+init[13]=()=>{document.body.classList.toggle('rec',REC);const vo=$('#vo'),g=$('#g13'),wave=$('#wave'),msg=$('#vmsg');g.classList.remove('show');g.onclick=()=>go(4);$('#vtxt').textContent=`${C.from} recorded this for you`;msg.textContent='';vo.textContent='▶ Tap to listen';wave.classList.remove('on');
  if(REC){recorderInit();g.classList.add('show');return}
  vo.onclick=()=>{msg.textContent='';if(!voice.paused){voice.pause();return}if(voice.ended)voice.currentTime=0;const p=voice.play();if(p&&p.catch)p.catch(()=>{msg.textContent=voice.error?'Voice message is not added yet':'Tap once more to play'})};
  voice.onplay=()=>{MIXS.voice=1;applyMix(.18);wave.classList.add('on');vo.textContent='❚❚ Pause'};
@@ -400,3 +401,19 @@ function recorderInit(){const b=$('#recbtn'),pl=$('#recplay'),dl=$('#recdl'),not
   mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());hold=0;const type=mr.mimeType||'audio/webm',ext=/mp4/.test(type)?'m4a':/ogg/.test(type)?'ogg':'webm',url=URL.createObjectURL(new Blob(ch,{type}));pl.src=url;pl.classList.remove('hid');dl.href=url;dl.download='voice.'+ext;dl.classList.remove('hid');dl.textContent='⬇ Save voice.'+ext;note.textContent=`Save kore "voice.${ext}" file ta assets folder-e rakho. Tarpor birthday site normal link-e kholo.`;b.textContent='● Record again'};
   mr.start();b.textContent='■ Stop recording'}}
 go(REC?13:0);
+
+// ---------- scroll chapter: wish (2) -> tree (3) -> voice (13) ----------
+function chUI(n){const i=CH.indexOf(n),d=$('#chd'),h=$('#chh');if(!d)return;d.classList.toggle('show',i>=0);d.classList.toggle('lt',n===3);h.classList.toggle('lt',n===3);h.classList.remove('show');[...d.children].forEach((x,j)=>x.classList.toggle('on',j===i));if(n===2||n===3)later(()=>h.classList.add('show'),n===2?3400:3600)}
+function chOK(d){const i=CH.indexOf(cur);if(i<0)return 0;if(d>0)return cur===13?($('#g13').classList.contains('show')?2:0):1;return i>0?1:0}
+function chGo(n,d){if(chLock)return;chLock=1;setTimeout(()=>chLock=0,1100);const old=$$('.pg.on'),np=$('#p'+n),k=d>0?'u':'d';old.forEach(p=>{p.style.transition='';p.style.transform='';p.style.opacity='';p.classList.add('lv'+k)});np.classList.add('en'+k);void np.offsetWidth;go(n,true);setTimeout(()=>{old.forEach(p=>p.classList.remove('lvu','lvd'));np.classList.remove('enu','end')},1000)}
+function chStep(d){const ok=chOK(d);if(!ok||chLock)return;if(ok===2){$('#g13').click();return}chGo(CH[CH.indexOf(cur)+d],d)}
+(()=>{let y0=null,pg=null,drag=0;
+ const rs=()=>{if(pg){pg.style.transition='';pg.style.transform='';pg.style.opacity=''}pg=null;drag=0;y0=null};
+ addEventListener('touchstart',e=>{rs();if(CH.indexOf(cur)<0||chLock||e.touches.length!==1)return;if(e.target.closest&&e.target.closest('#sc2,#rec,audio'))return;y0=e.touches[0].clientY;pg=$('#p'+cur)},{passive:true});
+ addEventListener('touchmove',e=>{if(y0==null)return;const dy=e.touches[0].clientY-y0;if(Math.abs(dy)<10||!chOK(dy<0?1:-1))return;drag=dy;pg.style.transition='none';pg.style.transform=`translateY(${dy*.35}px)`;pg.style.opacity=1-Math.min(.5,Math.abs(dy)/500)},{passive:true});
+ addEventListener('touchend',()=>{if(y0==null)return;const dy=drag;const p=pg;if(Math.abs(dy)>60){const d=dy<0?1:-1;if(p){p.style.transition='';p.style.transform='';p.style.opacity=''}pg=null;y0=null;chStep(d)}else rs()},{passive:true});
+ addEventListener('touchcancel',rs,{passive:true});
+ addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>18&&!(e.target.closest&&e.target.closest('#sc2')))chStep(e.deltaY>0?1:-1)},{passive:true});
+ addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='PageDown')chStep(1);else if(e.key==='ArrowUp'||e.key==='PageUp')chStep(-1)});
+ $('#chh').onclick=()=>chStep(1);$('#g3').onclick=()=>chStep(1);
+})();

@@ -20,3 +20,7 @@ after the limit resets, continue ONLY the unchecked items below; do not restart 
 - [x] 0. (DONE, pushed) Status/bottom bar colour match: solid .edge strips per page + theme-color + html/body bg colour (THEME table in main.js holds each page's real top/bottom colour; re-measure if a page background changes)
 
 All items above are finished. Do NOT redo them; wait for the owner's next request.
+
+## Job 2: scroll chapter (started 2026-11-09)
+- [x] 1. (DONE, pushed) p2 Wish -> p3 Tree -> p13 Voice as vertical swipe/scroll sequence (drag-follow, slide transition, dots, swipe-up hint); p3 Keep going -> p13; p13 Continue -> p4 cake; p13 forward swipe only after scratch done; cache-bust ?v= on css/js
+- [ ] 2. Bar colours still navy on owner's phone (stale cache?) - ask for hard-refresh screenshot

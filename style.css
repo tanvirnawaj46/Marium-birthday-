@@ -443,3 +443,21 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 #ldear{clip-path:inset(0 100% 0 0)}
 #ldear.show{animation:wipe .95s ease-out forwards}
 #letter.bn #ltxt .cr{height:1.1em}
+
+/* ===== scroll chapter: wish -> tree -> voice ===== */
+#p2,#p3,#p13{transition:opacity .85s,transform 1s cubic-bezier(.22,.7,.2,1)}
+#p2:not(.on),#p3:not(.on),#p13:not(.on){transform:translateY(9vh)}
+#p2.end:not(.on),#p3.end:not(.on),#p13.end:not(.on){transform:translateY(-9vh)}
+#p2.lvu,#p3.lvu,#p13.lvu{opacity:0;transform:translateY(-9vh)}
+#p2.lvd,#p3.lvd,#p13.lvd{opacity:0;transform:translateY(9vh)}
+#chd{position:fixed;z-index:9;right:max(10px,var(--sar));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;opacity:0;pointer-events:none;transition:opacity .6s}
+#chd.show{opacity:1}
+#chd i{width:6px;height:6px;border-radius:6px;background:#fff;opacity:.45;box-shadow:0 1px 5px #0003;transition:height .5s,opacity .5s}
+#chd i.on{height:22px;opacity:1}
+#chd.lt i{background:#d9487a}
+#chh{position:fixed;z-index:9;left:0;right:0;bottom:max(18px,calc(var(--sab) + 12px));display:flex;flex-direction:column;align-items:center;gap:0;color:#fff;font:500 .78rem/1 Fredoka,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:0;pointer-events:none;transition:opacity .8s;text-shadow:0 1px 8px #0004}
+#chh.show{opacity:.9;pointer-events:auto}
+#chh b{font-size:1.5rem;line-height:.8;margin-top:4px;animation:chb 1.5s ease-in-out infinite}
+#chh.lt{color:#c0456f;text-shadow:none}
+@keyframes chb{0%,100%{transform:translateY(5px);opacity:.4}50%{transform:translateY(-3px);opacity:1}}
+@media (prefers-reduced-motion:reduce){#p2,#p3,#p13{transition:opacity .4s}#chh b{animation:none}}
