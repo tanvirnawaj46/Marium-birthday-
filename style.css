@@ -467,3 +467,11 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 #chh b{font-size:1.5rem;line-height:.8;margin-top:4px;animation:chb 1.5s ease-in-out infinite}
 @keyframes chb{0%,100%{transform:translateY(5px);opacity:.4}50%{transform:translateY(-3px);opacity:1}}
 @media (prefers-reduced-motion:reduce){#chh b{animation:none}}
+
+/* ===== document-scroll mode (Wish/Tree/Voice): real page scroll so Safari's bars blend like a normal website ===== */
+html.ds{overflow:visible;height:auto;min-height:100%;overscroll-behavior:auto;background:#ffcee8!important}
+html.ds body{position:relative;inset:auto;height:auto;min-height:100%;overflow:visible;overscroll-behavior:auto;background:none!important}
+html.ds #p2{position:relative;inset:auto;overflow:visible;height:auto;min-height:calc(100*var(--vh));background:none;touch-action:manipulation}
+html.ds #p2:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#ffcee8 0%,#f7b8df 30%,#efc5ef 50%,#dbd4fe 72%,#c5c1fd 100%)}
+html.ds #p2 .fl{position:fixed}
+html.ds .edge{display:none}

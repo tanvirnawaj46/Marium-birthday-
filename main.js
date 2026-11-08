@@ -153,7 +153,7 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-function go(n,seam){if(n>14)n=14;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
+function go(n,seam){if(n>14)n=14;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n))},seam||cur===0&&!started?0:350)}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(+b.closest('.pg').id.slice(1)+1)));
 const init={};
@@ -404,11 +404,11 @@ go(REC?13:0);
 
 // ---------- one continuous scroll page: wish -> tree -> voice ----------
 let chIO=null;
-function chapter(){const sc=$('#p2'),dots=[...$('#chd').children],hint=$('#chh'),S=[$('#s2'),$('#s3'),$('#s13')],seen={};sc.scrollTop=0;if(chIO)chIO.disconnect();
+function chapter(){const root=document.documentElement,dots=[...$('#chd').children],hint=$('#chh'),S=[$('#s2'),$('#s3'),$('#s13')],seen={};root.classList.add('ds');scrollTo(0,0);if(chIO)chIO.disconnect();
  $('#chd').classList.add('show');hint.classList.remove('show');later(()=>hint.classList.add('show'),3400);
  const fire=i=>{if(seen[i])return;seen[i]=1;if(i===1)init[3]();if(i===2)init[13]()};
- chIO=new IntersectionObserver(es=>es.forEach(e=>{const i=S.indexOf(e.target);if(e.isIntersecting&&e.intersectionRatio>=.4){fire(i);S[i].classList.add('in')}}),{root:sc,threshold:[.4,.7]});S.slice(1).forEach(s=>chIO.observe(s));
- const upd=()=>{const k=Math.round(sc.scrollTop/sc.clientHeight);dots.forEach((d,j)=>d.classList.toggle('on',j===Math.min(k,2)));$('#chd').classList.toggle('lt',k===1);hint.classList.toggle('lt',k===1);hint.classList.toggle('gone',sc.scrollTop>sc.clientHeight*1.6)};
- sc.onscroll=upd;upd();
- $('#chh').onclick=()=>{const k=Math.round(sc.scrollTop/sc.clientHeight);S[Math.min(k+1,2)].scrollIntoView({behavior:'smooth'})};
+ chIO=new IntersectionObserver(es=>es.forEach(e=>{const i=S.indexOf(e.target);if(e.isIntersecting&&e.intersectionRatio>=.4){fire(i);S[i].classList.add('in')}}),{threshold:[.4,.7]});S.slice(1).forEach(s=>chIO.observe(s));
+ const upd=()=>{if(cur!==2)return;const H=innerHeight,k=Math.round(scrollY/H);dots.forEach((d,j)=>d.classList.toggle('on',j===Math.min(k,2)));$('#chd').classList.toggle('lt',k===1);hint.classList.toggle('lt',k===1);hint.classList.toggle('gone',scrollY>H*1.6)};
+ onscroll=upd;upd();
+ $('#chh').onclick=()=>{const k=Math.round(scrollY/innerHeight);S[Math.min(k+1,2)].scrollIntoView({behavior:'smooth'})};
  $('#g3').onclick=()=>S[2].scrollIntoView({behavior:'smooth'})}
