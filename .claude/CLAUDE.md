@@ -33,10 +33,10 @@ Part A (before limit):
 - [x] A3. (DONE, pushed) Tree section (#s3): staggered text reveal, gradient heading
 - [x] A4. (DONE, pushed) Voice card (#s13): pulsing mic ring, glow border, nicer wave
 Part B (after reset, do ONLY these):
-- [ ] B1. Gift page p0 + bow game p1 polish
-- [ ] B2. Cake p4 + wish p5 (candle/flame glow, confetti, text reveal)
-- [ ] B3. Balloons p6 (shine, pop burst, counter chips)
-- [ ] B4. Photos p7 + p14 (polaroid float/tilt, entrance stagger, lightbox)
-- [ ] B5. Envelope p8 + letter p10 (paper/ink glow, small details)
-- [ ] B6. Video p11 + final p12 (title reveal, confetti, replay button)
-- [ ] B7. Test 393x852 / 428x926 all pages, audio untouched, push
+- [x] B1. (DONE, pushed) Gift page p0 + bow game p1 polish
+- [x] B2. (DONE, pushed) Cake p4 + wish p5 (candle/flame glow, confetti, text reveal)
+- [x] B3. (DONE, pushed) Balloons p6 (shine, pop burst, counter chips)
+- [x] B4. (DONE, pushed) Photos p7 + p14 (polaroid float/tilt, entrance stagger, lightbox)
+- [x] B5. (DONE, pushed) Envelope p8 + letter p10 (paper/ink glow, small details)
+- [x] B6. (DONE, pushed) Video p11 + final p12 (title reveal, confetti, replay button)
+- [x] B7. (DONE, pushed) Test 393x852 / 428x926 all pages, audio untouched, push

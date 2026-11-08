@@ -532,3 +532,51 @@ html.ds{overflow:visible}
 @keyframes ring{0%{scale:1;opacity:.7}100%{scale:1.9;opacity:0}}
 #s13 .wave{height:42px}#s13 .wave i{width:6px;background:linear-gradient(#ff7bb5,#9b6bff)}
 @media (prefers-reduced-motion:reduce){.btn:after,#s2:before,.vmic:before,.vmic:after{animation:none}}
+
+/* ===== design polish B (colours/backgrounds untouched; idle motion uses translate/scale/rotate props so it never fights transform animations) ===== */
+/* titles on every pastel page: soft gradient ink + tiny sparkle underline */
+.pst .top,#p1 .top{-webkit-text-fill-color:transparent;background:linear-gradient(90deg,#b0286e,#ec5aa0 45%,#8a4fd1);-webkit-background-clip:text;background-clip:text;letter-spacing:.02em;filter:drop-shadow(0 2px 10px #ffffffcc)}
+.pst .top:after,#p1 .top:after{content:"";display:block;width:56px;height:3px;margin:.45rem auto 0;border-radius:3px;background:linear-gradient(90deg,transparent,#ec5aa0,transparent);animation:ulg 3s ease-in-out infinite}
+@keyframes ulg{50%{width:96px;opacity:.6}}
+/* B1 gift card + bow game */
+#p0 .gcard{animation:up 1s both,gfloat 5s ease-in-out 1s infinite}
+@keyframes gfloat{50%{translate:0 -7px}}
+#p0 .gift{filter:drop-shadow(0 8px 14px #e879a877)}
+#p0 .gcard h2{background:linear-gradient(90deg,#c0286e,#ec5aa0,#9b4fd1,#c0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;animation:gshift 6s linear infinite}
+#p0 .gcard:after{content:"";position:absolute;inset:-14px;border-radius:30px;border:1.5px solid #ff9ec766;animation:ring2 3.2s ease-out infinite;pointer-events:none}
+@keyframes ring2{0%{scale:.96;opacity:.8}100%{scale:1.07;opacity:0}}
+#p1 .cap,#p1 .hint,#p1 small{letter-spacing:.2em}
+/* B2 cake + wish */
+#p4 .cakestack,#p5 .cakestack{filter:drop-shadow(0 18px 24px #e879a844)}
+#p4 .ck,#p5 .ck{animation:gfloat 4.5s ease-in-out infinite}
+#p5 .gold,#p4 .gold{background:linear-gradient(90deg,#c0286e,#ff7a59,#ec5aa0,#9b4fd1,#c0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 3px 12px #ffffffcc);animation:gshift 5s linear infinite}
+#p5 #wish,#p5 #tap{display:inline-block;padding:.35rem 1rem;border-radius:99px;background:#ffffff77;box-shadow:0 4px 16px #e879a822;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+#p5 #tap{animation:tpulse 2.4s ease-in-out infinite}
+@keyframes tpulse{50%{scale:1.05}}
+/* B3 balloons: glass instruction chips */
+#p6 #bsub,#p6 #bcnt{display:inline-block;padding:.4rem 1rem;border-radius:99px;background:#ffffff77;box-shadow:0 4px 16px #e879a822}
+#p6 .bcnt{color:#c0286e;font-weight:600}
+#p6 #bfield{background:#ffffff4d;box-shadow:inset 0 0 40px #ffffff88,0 10px 36px #e879a822;border-style:solid;border-width:1.5px}
+/* B4 photos */
+#p7 .cap,#p14 .cap{display:inline-block;padding:.3rem .9rem;border-radius:99px;background:#ffffff77}
+#p7 .pol,#p14 .fr{animation-timing-function:ease-in-out}
+#dots i{transition:width .4s,background .4s}
+#p7 #g7,#p14 #g14{margin-top:.4rem}
+/* B5 envelope + letter */
+#p8 .ev:not(.run){animation:gfloat 4.2s ease-in-out infinite}
+#p8 .cap{display:inline-block;padding:.4rem 1rem;border-radius:99px;background:#ffffff77}
+#p8 .cap.tiny,#p8 [class*=hint]{animation:tpulse 2.4s ease-in-out infinite}
+#p10 #letter{box-shadow:0 22px 50px #b04a8a44,0 0 0 1px #ffffff99,inset 0 0 60px #fff6d980}
+/* B6 video + final */
+#vf{border-color:#fff;box-shadow:0 20px 50px #c0286e33,0 0 0 6px #ffffff66}
+#vplay{animation:tpulse 2.2s ease-in-out infinite}
+.bunting{animation:sway2 4s ease-in-out infinite;transform-origin:50% 0}
+@keyframes sway2{50%{rotate:1.4deg}}
+#p12 .glow{background:linear-gradient(90deg,#b0286e,#ec5aa0,#8a4fd1,#ff7a59,#b0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 4px 16px #ffffffee);animation:gshift 6s linear infinite}
+#p12 .big2{background:linear-gradient(90deg,#c0286e,#ff7a59,#ec5aa0,#9b4fd1,#c0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 4px 14px #ffffffcc);animation:gshift 5s linear infinite}
+#p12 .flowers{animation:sway3 3.6s ease-in-out infinite}
+#p12 .cat{animation:hop 2.4s ease-in-out infinite}
+@keyframes sway3{50%{translate:0 -6px;rotate:1.5deg}}
+@keyframes hop{0%,60%,100%{translate:0 0}75%{translate:0 -14px}}
+@media (prefers-reduced-motion:reduce){#p0 .gcard,#p0 .gcard:after,.bunting,#p12 .flowers,#p12 .cat,#p4 .ck,#p5 .ck{animation:none}}
+.top .em{display:inline-block;-webkit-text-fill-color:initial;background:none}

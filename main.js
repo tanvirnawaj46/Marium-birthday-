@@ -157,7 +157,7 @@ const FLT={
   pg.prepend(L)})})();
 // ---------- navigation ----------
 function go(n,seam){if(n>14)n=14;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
- later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n))},seam||cur===0&&!started?0:350)}
+ later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:350)}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(+b.closest('.pg').id.slice(1)+1)));
 const init={};
 // ---------- 1: bow & arrow (aim at the hearts) ----------
@@ -276,6 +276,7 @@ init[7]=()=>{const car=$('#car'),dots=$('#dots'),LT=$('#lights');car.innerHTML=d
 $('#lb').onclick=()=>$('#lb').classList.remove('on');
 // ---------- bangla auto-tag ----------
 const BN=/[\u0980-\u09FF]/;
+function wrapEmoji(r){(r||document).querySelectorAll('.top').forEach(e=>{if(e.children.length||e.dataset.em)return;e.dataset.em=1;e.innerHTML=e.textContent.replace(/(\p{Extended_Pictographic}\uFE0F?)/gu,'<span class="em">$1</span>')})}
 function tagBn(r){(r||document).querySelectorAll('h1,h2,h3,p,small,div,span,button').forEach(e=>{if(!e.parentElement.closest('.bn')&&[...e.childNodes].some(n=>n.nodeType==3&&BN.test(n.textContent)))e.classList.add('bn')})}
 // ---------- 14: gallery 2 ----------
 $('#g7').onclick=()=>go(14);$('#g14').onclick=()=>go(8);
