@@ -110,6 +110,8 @@ function startMusic(){if(started)return;started=true;AC.resume();if(musOn){bgm.p
 const wake=()=>{if(AC.state!=='running')AC.resume().catch(()=>{})};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){wake();if(started&&musOn&&!hold&&bgm.paused)bgm.play().catch(()=>{})}});
 addEventListener('pointerdown',startMusic,{once:true});
+// iOS only accepts audio from touchend/click, not pointerdown: keep retrying on every gesture until the music is really playing
+(()=>{const ev=['pointerdown','touchstart','touchend','click'],f=()=>{AC.resume().catch(()=>{});if(musOn&&!hold&&bgm.paused){started=true;const p=bgm.play();if(p&&p.then)p.then(()=>applyMix(.9)).catch(()=>{})}if(AC.state==='running'&&!bgm.paused)ev.forEach(t=>removeEventListener(t,f,true))};ev.forEach(t=>addEventListener(t,f,true))})();
 // every tap/click gets its own sound (bow, balloons and scratch cards have their own)
 addEventListener('pointerdown',e=>{const t=e.target;if(!t||!t.closest)return;const kind=t.closest('#arena,.bal,canvas')?0:t.closest('.pol,.fr')?'photo':t.closest('#mus')?'tap':t.closest('.btn,button')?'btn':'tap';if(!kind)return;const go_=()=>SFX[kind]();if(AC.state!=='running'){AC.resume().then(go_).catch(()=>{})}else go_()},true);
 function bgmResume(){if(musOn&&started&&!hold&&bgm.paused)bgm.play().catch(()=>{});applyMix(.5)}
