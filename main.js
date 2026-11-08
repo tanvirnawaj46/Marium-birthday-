@@ -3,9 +3,10 @@ const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 // older iPhones (no dvh): keep --vh equal to the visible height
 if(!(window.CSS&&CSS.supports&&CSS.supports('height','1dvh'))){const sv=()=>document.documentElement.style.setProperty('--vh',innerHeight*.01+'px');sv();addEventListener('resize',sv);addEventListener('orientationchange',()=>setTimeout(sv,300))}
 // status-bar / address-bar tint follows each page's background (no stray bar colour)
-const THEME={"0":["#fbe0f2","#d9dfff"],"1":["#ffe5f6","#f4e6fe"],"2":["#ffcee8","#c5c1fd"],"3":["#fff4f1","#ffeaf3"],"4":["#5d2567","#6d2c58"],"5":["#5d2567","#6e2d57"],"6":["#e56f9e","#4f52d2"],"7":["#642764","#311953"],"8":["#2b3091","#392383"],"9":["#3c3192","#402587"],"10":["#743882","#662f6a"],"11":["#4e2268","#401756"],"12":["#0f0a2e","#762676"],"13":["#845fcf","#ac499a"],"14":["#de7a98","#8b3f7c"]},TM=document.querySelector('meta[name=theme-color]');
-function setTheme(n){const t=THEME[n]||['#fbe0f2','#d9dfff'];if(TM)TM.setAttribute('content',t[0]);const g=`linear-gradient(${t[0]},${t[1]})`;
- [document.documentElement,document.body].forEach(el=>{el.style.backgroundImage=g;el.style.backgroundColor=t[0]})}
+let THEME={"0":["#fbe0f2","#d9dfff"],"1":["#ffe5f6","#f4e6fe"],"2":["#ffcee8","#c5c1fd"],"3":["#fff4f1","#ffeaf3"],"4":["#5d2567","#6d2c58"],"5":["#5d2567","#6e2d57"],"6":["#e56f9e","#4f52d2"],"7":["#642764","#311953"],"8":["#2b3091","#392383"],"9":["#3c3192","#402587"],"10":["#743882","#662f6a"],"11":["#4e2268","#401756"],"12":["#0f0a2e","#762676"],"13":["#845fcf","#ac499a"],"14":["#de7a98","#8b3f7c"]},TM=document.querySelector('meta[name=theme-color]');
+function setTheme(n){const t=THEME[n]||['#fbe0f2','#d9dfff'];if(TM){const nm=TM.cloneNode();nm.setAttribute('content',t[0]);TM.replaceWith(nm);TM=nm}const g=`linear-gradient(${t[0]},${t[1]})`;
+ [document.documentElement,document.body].forEach(el=>{el.style.backgroundImage=g;el.style.backgroundColor=t[0]});nudge()}
+function nudge(){const r=document.documentElement;r.classList.add('nd');requestAnimationFrame(()=>{scrollTo(0,1);setTimeout(()=>{scrollTo(0,0);setTimeout(()=>r.classList.remove('nd'),60)},60)})}
 // Safari tints its status bar / bottom bar from solid fixed elements sitting on the screen edges (and from theme-color).
 // Every page gets a solid top strip + bottom strip in that page's real edge colour, painted under the page content.
 $$('.pg').forEach(pg=>{const t=THEME[+pg.id.slice(1)];if(!t)return;['T','B'].forEach((k,i)=>{const s=document.createElement('i');s.className='edge e'+k;s.style.setProperty('--ec',t[i]);pg.append(s)})});

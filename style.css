@@ -475,3 +475,9 @@ html.ds #p2{position:relative;inset:auto;overflow:visible;height:auto;min-height
 html.ds #p2:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#ffcee8 0%,#f7b8df 30%,#efc5ef 50%,#dbd4fe 72%,#c5c1fd 100%)}
 html.ds #p2 .fl{position:fixed}
 html.ds .edge{display:none}
+
+/* all pages: normal (non-fixed) document so Safari re-samples bar colours; .nd = tiny temporary scroll to force a re-sample */
+html{height:auto;min-height:100%;overflow:visible}
+body{position:relative;inset:auto;height:auto;min-height:100%;overflow:visible}
+html.nd body{min-height:calc(100% + 2px)}
+html.ds{overflow:visible}
