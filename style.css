@@ -445,7 +445,7 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 #letter.bn #ltxt .cr{height:1.1em}
 
 /* ===== one continuous scroll page: wish -> tree -> voice ===== */
-#p2{display:block;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:0;color:#a2306f;background:linear-gradient(180deg,#ffcee8 0%,#f7b8df 30%,#efc5ef 50%,#dbd4fe 72%,#c5c1fd 100%)}
+#p2{display:block;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding:0;color:#a2306f;background:linear-gradient(180deg,#fbe0f1 0%,#f8c6e4 28%,#ebc9f4 58%,#e0d0f8 82%,#f2dff3 100%)}
 #p2::-webkit-scrollbar{display:none}
 #sc0{position:relative;z-index:3}
 .cs{position:relative;min-height:calc(100*var(--vh));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:max(2rem,var(--sat)) 1rem max(2rem,var(--sab));text-align:center}
@@ -469,10 +469,10 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 @media (prefers-reduced-motion:reduce){#chh b{animation:none}}
 
 /* ===== document-scroll mode (Wish/Tree/Voice): real page scroll so Safari's bars blend like a normal website ===== */
-html.ds{overflow:visible;height:auto;min-height:100%;overscroll-behavior:auto;background:#ffcee8!important}
+html.ds{overflow:visible;height:auto;min-height:100%;overscroll-behavior:auto;background:#fbe0f1!important}
 html.ds body{position:relative;inset:auto;height:auto;min-height:100%;overflow:visible;overscroll-behavior:auto;background:none!important}
 html.ds #p2{position:relative;inset:auto;overflow:visible;height:auto;min-height:calc(100*var(--vh));background:none;touch-action:manipulation}
-html.ds #p2:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#ffcee8 0%,#f7b8df 30%,#efc5ef 50%,#dbd4fe 72%,#c5c1fd 100%)}
+html.ds #p2:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#fbe0f1 0%,#f8c6e4 28%,#ebc9f4 58%,#e0d0f8 82%,#f2dff3 100%)}
 html.ds #p2 .fl{position:fixed}
 /* Safari keeps the bar colour it sampled at load (pink), so every page fades into that same pink at its top/bottom edge */
 .eT{--ec:#fbe0f1!important}.eB{--ec:#f2dff3!important}
