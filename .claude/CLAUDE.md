@@ -23,4 +23,20 @@ All items above are finished. Do NOT redo them; wait for the owner's next reques
 
 ## Job 2: scroll chapter (started 2026-11-09)
 - [x] 1. (DONE, pushed) p2/p3/p13 are now ONE native scroll page (#p2 with sections #s2 #s3 #s13, init[3]/init[13] fired by IntersectionObserver, chapter() in main.js); single fixed gradient #ffcee8->#c5c1fd = THEME[2] so bars match like owner's Tanisha site. (old: slide/drag-follow, slide transition, dots, swipe-up hint); p3 Keep going -> p13; p13 Continue -> p4 cake; p13 forward swipe only after scratch done; cache-bust ?v= on css/js
-- [ ] 2. Bar colours still navy on owner's phone (stale cache?) - ask for hard-refresh screenshot
+- [x] 2. (DONE) Bars: Safari keeps load-time colour, so EVERY page uses the same pastel gradient #fbe0f1 -> #f9cfe8 -> #ecd0f4 -> #f2dff3 (edges = bar colours), THEME all constant, .eT/.eB forced. DO NOT change page edge colours or backgrounds - owner says bar matching is perfect now.
+
+## Job 3: design/animation polish (started 2026-11-09) - owner: "colours perfect, keep them; make animations/design prettier. Do half now, rest after the 5h limit reset"
+Rule: keep page backgrounds/edge colours exactly (bar match). Only touch animation, typography, buttons, cards, motion. Push each item.
+Part A (before limit):
+- [ ] A1. Global: glass/shimmer .btn, softer page transition (not #p2/#p8/#p10)
+- [ ] A2. Wish section (#s2): letter wave/shimmer, glow halo, twinkle
+- [ ] A3. Tree section (#s3): staggered text reveal, gradient heading
+- [ ] A4. Voice card (#s13): pulsing mic ring, glow border, nicer wave
+Part B (after reset, do ONLY these):
+- [ ] B1. Gift page p0 + bow game p1 polish
+- [ ] B2. Cake p4 + wish p5 (candle/flame glow, confetti, text reveal)
+- [ ] B3. Balloons p6 (shine, pop burst, counter chips)
+- [ ] B4. Photos p7 + p14 (polaroid float/tilt, entrance stagger, lightbox)
+- [ ] B5. Envelope p8 + letter p10 (paper/ink glow, small details)
+- [ ] B6. Video p11 + final p12 (title reveal, confetti, replay button)
+- [ ] B7. Test 393x852 / 428x926 all pages, audio untouched, push
