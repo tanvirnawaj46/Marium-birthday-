@@ -486,3 +486,15 @@ html{height:auto;min-height:100%;overflow:visible}
 body{position:relative;inset:auto;height:auto;min-height:100%;overflow:visible}
 html.nd body{min-height:calc(100% + 2px)}
 html.ds{overflow:visible}
+
+/* ===== pastel theme for every page after the intro: edges are exactly the bar colours ===== */
+:is(#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst{background:linear-gradient(180deg,#fbe0f1 0%,#f9cfe8 30%,#ecd0f4 68%,#f2dff3 100%);color:#9b2f78}
+.pst .edge:after{display:none}
+.pst .fl .orb{opacity:.35}
+:is(#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst :is(.top,.cap,p,h1,h2,h3,.pre,.sub){color:#9b2f78;text-shadow:none}
+.pst .btn{color:#fff}
+#p4 .glow,#p5 h1,#p5 .glow,#p12 .glow,#p12 h1,#p12 h2,#p5 .big{color:#d12e86;text-shadow:0 3px 18px #fff9,0 0 28px #ff8fc7aa}
+#p12 .glow{animation:none}
+#p6 #bfield{border-color:#d12e8666;background:#ffffff40}
+#p10 .lw,#p11 .vid,#p8 .e-shadow{filter:none}
+.skip{color:#9b2f78}
