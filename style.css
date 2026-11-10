@@ -629,7 +629,7 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .vt.done{cursor:default}.vt.done .vs{opacity:.92;transform:rotate(-10deg) scale(1);transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .15s}
 .vt.done .vb,.vt.done .ve{opacity:.5;transition:opacity .4s}.vt.done .vr{opacity:0}
 .vbar{position:absolute;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));display:flex;flex-direction:column;align-items:center;gap:.6rem;z-index:3}
-#p15 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
+#p15 .vbar .cap,#p18 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
 #vlist{-webkit-mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000);mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000)}
 
 /* ===== N2 keepsake wallpaper ===== */
@@ -643,3 +643,27 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .wpc p{margin:0;font:500 .9rem/1.4 Fredoka,system-ui,sans-serif;color:#9b2f78;text-align:center}
 #wpd{padding:.55rem 1.2rem;border-radius:99px;background:#ffffffaa;color:#9b2f78;font:600 .8rem Fredoka,system-ui,sans-serif;text-decoration:none;letter-spacing:.08em}
 #wpx{position:absolute;top:max(12px,env(safe-area-inset-top));left:14px;width:42px;height:42px;border:0;border-radius:50%;background:#ffffffcc;color:#9b2f78;font-size:1.1rem}
+
+/* ===== p18 constellation heart ===== */
+#cst{position:absolute;left:0;right:0;top:calc(16*var(--vh));bottom:calc(14*var(--vh));touch-action:none}
+#cst canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#cvf{opacity:0;transition:opacity 1.4s ease}#cvf.on{opacity:1}
+.cstar{position:absolute;width:26px;height:26px;translate:-50% -50%;scale:.92;border-radius:50%;background:radial-gradient(circle,#fff 0 15%,#ffe58f 30%,#f6b63a 56%,#f6b63a00 72%);opacity:.85;pointer-events:none;transition:scale .5s cubic-bezier(.3,1.6,.5,1)}
+.cstar:before,.cstar:after{content:"";position:absolute;left:50%;top:50%;translate:-50% -50%;pointer-events:none}
+.cstar:before{width:44px;height:2px;background:linear-gradient(90deg,#fff0,#fff,#fff0)}
+.cstar:after{width:2px;height:44px;background:linear-gradient(#fff0,#fff,#fff0)}
+.cstar b{position:absolute;left:50%;top:50%;width:78px;height:78px;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,#ffffffaa 0,#ffd98a77 32%,#ffd98a00 70%);opacity:0;transition:opacity .6s}
+.cstar.on{scale:1.12}.cstar.on b{opacity:1}
+#p18.done .cstar{scale:1.25}
+.cstar.tw{animation:cstw 2.8s ease-in-out var(--d) infinite}
+@keyframes cstw{50%{opacity:.5}}
+.cring{position:absolute;left:0;top:0;width:54px;height:54px;margin:-27px 0 0 -27px;border:2.5px solid #d6428f;border-radius:50%;opacity:0;pointer-events:none}
+.cring.on{animation:cpulse 1.3s ease-out infinite}
+@keyframes cpulse{from{scale:.55;opacity:.95}to{scale:1.4;opacity:0}}
+#chand{left:0;top:0;margin:-8px 0 0 -14px;animation:none;display:none}
+#cdn{position:absolute;left:0;right:0;bottom:calc(19*var(--vh));text-align:center;opacity:0;transform:translateY(12px);pointer-events:none}
+#cdn.in{animation:up 1.4s cubic-bezier(.2,.8,.2,1) forwards}
+#cnm{margin:0;font:italic 600 3rem/1.05 "Cormorant Garamond",Georgia,serif;background:linear-gradient(90deg,#b0286e,#ec5aa0,#8a4fd1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+#cln{margin:.45rem 0 0;font:italic 500 1.2rem/1.4 "Cormorant Garamond",Georgia,serif;color:#8a2a78}
+.met{position:absolute;left:0;top:0;width:150px;height:3px;margin:-1px 0 0 -75px;border-radius:3px;background:linear-gradient(90deg,#fff0,#fff 72%,#ffe08a);opacity:0;pointer-events:none;z-index:7}
+.vbar .cap:empty{display:none}
