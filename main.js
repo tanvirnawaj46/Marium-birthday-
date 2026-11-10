@@ -184,7 +184,7 @@ init[1]=()=>{const A=$('#arena'),arc=$('#bowArc'),str=$('#str'),sh=$('#shaft'),s
  const land=b=>{
   if(!b){arw.style.display='none';toast(['so close 💫','try again ✨','almost! 💕'][Math.random()*3|0]);later(nock,450);return}
   const r=b.h.el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.45;b.h.el.classList.add('gone');
-  if(b.h.m){later(()=>arw.style.display='none',250);burst(x,y,130,true);SFX.burst();later(()=>go(2),1700);return}
+  if(b.h.m){later(()=>arw.style.display='none',250);burst(x,y,130,true);SFX.burst();later(()=>go(3),1700);return}
   b.h.dead=true;arw.style.display='none';burst(x,y,45,true);SFX.pop2();toast(['oops, not this one 💕','the big one! 💘','aim higher ✨'][Math.random()*3|0]);later(nock,600);
   later(()=>{b.h.el.classList.remove('gone');b.h.el.classList.add('spawn');b.h.dead=false},3000)};
  nock();later(()=>toast('hit the big golden heart 💘'),900);
@@ -217,7 +217,7 @@ function treeSVG(n){
  return`<svg viewBox="0 0 400 440" xmlns="http://www.w3.org/2000/svg"><defs>${defs}<radialGradient id="glw"><stop offset="0" stop-color="#ff5c8a" stop-opacity=".55"/><stop offset=".6" stop-color="#ff8fb0" stop-opacity=".18"/><stop offset="1" stop-color="#ff8fb0" stop-opacity="0"/></radialGradient><linearGradient id="tkg" gradientUnits="userSpaceOnUse" x1="120" y1="0" x2="280" y2="0"><stop offset="0" stop-color="#8a5668"/><stop offset=".5" stop-color="#5a3347"/><stop offset="1" stop-color="#8a5668"/></linearGradient></defs>
 <ellipse class="halo" cx="200" cy="175" rx="215" ry="205" fill="url(#glw)"/><ellipse cx="200" cy="428" rx="95" ry="9" fill="#f472b6" opacity=".35"/>
 <g stroke="url(#tkg)" fill="none" stroke-linecap="round">${br}</g><g class="canopy">${heartsSVG}</g>${sp}</svg>`}
-init[3]=()=>{$('#tree').innerHTML=treeSVG(RM?110:210);$('#t3n').innerHTML=`Happy<br>Birthday, ${C.name}`;$('#t3a').textContent=`and just like that, you're turning ${C.age} ✨`;startRain(true,300);later(SFX.chime,1200)};
+init[3]=()=>{const p3=$('#p3');p3.classList.remove('in');void p3.offsetWidth;p3.classList.add('in');$('#g3').onclick=()=>go(2);$('#tree').innerHTML=treeSVG(RM?110:210);$('#t3n').innerHTML=`Happy<br>Birthday, ${C.name}`;$('#t3a').textContent=`and just like that, you're turning ${C.age} ✨`;startRain(true,300);later(SFX.chime,1200)};
 // ---------- cake ----------
 const dripsRow=(y,xs,hs,d)=>xs.map((x,i)=>`<rect class="dr" style="animation-delay:${d+i*.12}s" x="${x}" y="${y}" width="9" height="${hs[i]}" rx="4.5" fill="#fff"/>`).join('');
 const cakeSVG=(c)=>`<svg class="cake${c?' static':''}" viewBox="0 0 260 210"><defs>
@@ -408,14 +408,14 @@ go(REC?13:0);
 
 // ---------- one continuous scroll page: wish -> tree -> voice ----------
 let chIO=null;
-function chapter(){const root=document.documentElement,dots=[...$('#chd').children],hint=$('#chh'),S=[$('#s2'),$('#s3'),$('#s13')],seen={};root.classList.add('ds');scrollTo(0,0);if(chIO)chIO.disconnect();
+function chapter(){const root=document.documentElement,dots=[...$('#chd').children],hint=$('#chh'),S=[$('#s2'),$('#s13')],seen={};root.classList.add('ds');scrollTo(0,0);if(chIO)chIO.disconnect();
  $('#chd').classList.add('show');hint.classList.remove('show');later(()=>hint.classList.add('show'),3400);
- const fire=i=>{if(seen[i])return;seen[i]=1;if(i===1)init[3]();if(i===2)init[13]()};
+ const fire=i=>{if(seen[i])return;seen[i]=1;if(i===1)init[13]()};
  chIO=new IntersectionObserver(es=>es.forEach(e=>{const i=S.indexOf(e.target);if(e.isIntersecting&&e.intersectionRatio>=.4){fire(i);S[i].classList.add('in')}}),{threshold:[.4,.7]});S.slice(1).forEach(s=>chIO.observe(s));
- const upd=()=>{if(cur!==2)return;const H=innerHeight,k=Math.round(scrollY/H);dots.forEach((d,j)=>d.classList.toggle('on',j===Math.min(k,2)));$('#chd').classList.toggle('lt',k===1);hint.classList.toggle('lt',k===1);hint.classList.toggle('gone',scrollY>60)};
+ const upd=()=>{if(cur!==2)return;const H=innerHeight,k=Math.round(scrollY/H);dots.forEach((d,j)=>d.classList.toggle('on',j===Math.min(k,1)));hint.classList.toggle('gone',scrollY>60)};
  onscroll=upd;upd();
- $('#chh').onclick=()=>{const k=Math.round(scrollY/innerHeight);S[Math.min(k+1,2)].scrollIntoView({behavior:'smooth'})};
- $('#g3').onclick=()=>S[2].scrollIntoView({behavior:'smooth'})}
+ $('#chh').onclick=()=>{const k=Math.round(scrollY/innerHeight);S[Math.min(k+1,1)].scrollIntoView({behavior:'smooth'})};
+}
 
 // block double-tap zoom and pinch zoom (iOS Safari ignores user-scalable on its own)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>addEventListener(t,e=>e.preventDefault(),{passive:false}));

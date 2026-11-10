@@ -40,3 +40,7 @@ Part B (after reset, do ONLY these):
 - [x] B5. (DONE, pushed) Envelope p8 + letter p10 (paper/ink glow, small details)
 - [x] B6. (DONE, pushed) Video p11 + final p12 (title reveal, confetti, replay button)
 - [x] B7. (DONE, pushed) Test 393x852 / 428x926 all pages, audio untouched, push
+
+## Job 4 (2026-11-10)
+- [x] (DONE, pushed) Double-tap/pinch zoom disabled
+- [x] (DONE, pushed) Tree page is standalone #p3 again, BEFORE the scroll page. Flow: p1 bow -> p3 tree (Keep going -> go(2)) -> p2 scroll page (Wish #s2 -> Voice #s13, 2 dots) -> p13 Continue -> p4 cake

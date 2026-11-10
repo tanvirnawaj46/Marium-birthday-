@@ -451,7 +451,7 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 .cs{position:relative;min-height:calc(100*var(--vh));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:max(2rem,var(--sat)) 1rem max(2rem,var(--sab));text-align:center}
 #s2 .big{color:#d12e86;text-shadow:0 4px 22px #ffffffcc,0 2px 0 #fff8}
 #s2 .pre,#s2 .sub{color:#a2306f}
-#s3{color:#a14a63}
+#p3{color:#a14a63}
 #s13 .top{position:static;color:#8a2a78;opacity:1}
 #s13 .cap{color:#8a2a78}
 #s13 .vcard{background:#ffffff66;border-color:#ffffffaa;box-shadow:0 10px 40px #b05fd033}
@@ -488,9 +488,9 @@ html.nd body{min-height:calc(100% + 2px)}
 html.ds{overflow:visible}
 
 /* ===== pastel theme for every page after the intro: edges are exactly the bar colours ===== */
-:is(#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst{background:linear-gradient(180deg,#fbe0f1 0%,#f9cfe8 30%,#ecd0f4 68%,#f2dff3 100%);color:#9b2f78}
+:is(#p3,#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst{background:linear-gradient(180deg,#fbe0f1 0%,#f9cfe8 30%,#ecd0f4 68%,#f2dff3 100%);color:#9b2f78}
 .pst .fl .orb{opacity:.35}
-:is(#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst :is(.top,.cap,p,h1,h2,h3,.pre,.sub){color:#9b2f78;text-shadow:none}
+:is(#p3,#p4,#p5,#p6,#p7,#p8,#p10,#p11,#p12,#p14).pst :is(.top,.cap,p,h1,h2,h3,.pre,.sub){color:#9b2f78;text-shadow:none}
 .pst .btn{color:#fff}
 #p4 .glow,#p5 h1,#p5 .glow,#p12 .glow,#p12 h1,#p12 h2,#p5 .big{color:#d12e86;text-shadow:0 3px 18px #fff9,0 0 28px #ff8fc7aa}
 #p12 .glow{animation:none}
@@ -516,11 +516,11 @@ html.ds{overflow:visible}
 @keyframes tw2{50%{opacity:.25;scale:.6;rotate:40deg}}
 #s2 .sub{letter-spacing:.06em}
 /* A3 tree: staggered reveal, gradient heading */
-#s3 .txt3>*{opacity:0;transform:translateY(22px)}
-#s3.in .txt3>*{animation:up .9s cubic-bezier(.2,.8,.2,1) forwards}
-#s3.in .txt3>:nth-child(1){animation-delay:2.2s}#s3.in .txt3>:nth-child(2){animation-delay:2.7s}#s3.in .txt3>:nth-child(3){animation-delay:3.3s}#s3.in .txt3>:nth-child(4){animation-delay:3.9s}
+#p3 .txt3>*{opacity:0;transform:translateY(22px)}
+#p3.in .txt3>*{animation:up .9s cubic-bezier(.2,.8,.2,1) forwards}
+#p3.in .txt3>:nth-child(1){animation-delay:2.2s}#p3.in .txt3>:nth-child(2){animation-delay:2.7s}#p3.in .txt3>:nth-child(3){animation-delay:3.3s}#p3.in .txt3>:nth-child(4){animation-delay:3.9s}
 #t3n{background:linear-gradient(90deg,#c0286e,#ec5aa0,#9b4fd1,#c0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:gshift 6s linear infinite}
-#s3.in #t3n{animation:up .9s cubic-bezier(.2,.8,.2,1) 2.7s forwards,gshift 6s linear 3.6s infinite}
+#p3.in #t3n{animation:up .9s cubic-bezier(.2,.8,.2,1) 2.7s forwards,gshift 6s linear 3.6s infinite}
 @keyframes gshift{to{background-position:-250% 0}}
 /* A4 voice card: glow border, pulsing mic rings */
 #s13 .top,#s13 .vcard{transition:opacity 1s,transform 1s cubic-bezier(.2,.8,.2,1)}
