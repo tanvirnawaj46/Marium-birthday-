@@ -416,3 +416,8 @@ function chapter(){const root=document.documentElement,dots=[...$('#chd').childr
  onscroll=upd;upd();
  $('#chh').onclick=()=>{const k=Math.round(scrollY/innerHeight);S[Math.min(k+1,2)].scrollIntoView({behavior:'smooth'})};
  $('#g3').onclick=()=>S[2].scrollIntoView({behavior:'smooth'})}
+
+// block double-tap zoom and pinch zoom (iOS Safari ignores user-scalable on its own)
+['gesturestart','gesturechange','gestureend'].forEach(t=>addEventListener(t,e=>e.preventDefault(),{passive:false}));
+(()=>{let lt=0;addEventListener('touchend',e=>{const n=Date.now(),t=e.target;if(n-lt<350&&!(t.closest&&t.closest('button,a,input,[onclick]')))e.preventDefault();lt=n},{passive:false})})();
+addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
