@@ -65,14 +65,14 @@ using the specs here as they are (do NOT redesign, do NOT re-ask). Tick each box
   commit (trailer from system reminder) -> `git push origin HEAD:main` -> tick here. Reply to owner in short Banglish.
 - Page numbers: new pages use ids 15..19 (see N0). Add `FLT[n]` floaters only if cheap (reuse FLT[10] style) ; THEME[n]=["#fbe0f1","#f2dff3"].
 
-## N0. Flow table (prerequisite, small)  [ ]
+## N0. Flow table (prerequisite, small)  [x] DONE, pushed
 - main.js: `const FLOW=[0,1,3,2,4,5,6,16,7,14,17,8,10,15,11,18,12];` `const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)}`.
 - go(): cap `if(n>19)n=19`. `.go` buttons -> `go(nextOf(id))`. Replace hard-coded next calls: p4 `go(5)`, p5 `go(6)`, g7 `go(14)`, g14 `go(8)`, p8 `go(10,true)`/RM `go(10)`,
   p11 `go(12)` (3 places: onerror/skip/.go) -> use `go(nextOf(N))`. p1->3, p3->2, p13->4 stay (scroll chapter is special). THEME entries 15..19 constant.
 - index.html: empty new `<section class="pg pst" id="p15"> ...` etc. are added by each item. `init[n]` for each. Test: flow.js passes through all pages.
 - Until an item is built, its id is simply not in FLOW (so the flow never shows a missing page): add each id to FLOW only when that item is done.
 
-## N1. p15 "Little gifts" voucher book  [ ]   (FLOW: after p10 letter, before p11 video)
+## N1. p15 "Little gifts" voucher book  [x] DONE, pushed   (FLOW: after p10 letter, before p11 video)
 - config.js: `vouchers:[{e:"🤗",t:"One long hug",n:"any time you want, no questions asked"},{e:"🍳",t:"Breakfast in bed",n:"made by me, burnt toast included"},{e:"🍽️",t:"Your favourite dinner",n:"my treat, your choice"},{e:"🌙",t:"A whole day, just us",n:"phones away, you pick the plan"},{e:"🎬",t:"Movie night",n:"you choose the film, I bring the snacks"},{e:"💌",t:"One surprise",n:"I will not tell you when"}]`, `voucherTitle:"A few little gifts 🎁"`, `voucherHint:"tap a gift to redeem it, then show it to Akib ✦"` (use C.from).
 - Markup: `.top` title; `#vlist` scroll area (absolute, top 14vh, bottom 14vh, overflow-y:auto, hide scrollbar, padding 4px, gap .8rem, `touch-action:pan-y`);
   each `.vt` ticket: width min(88vw,380px), cream `#fffaf6` bg, radius 18px, left emoji bubble 54px (pink radial), centre title (Fredoka 600 1.05rem #9b2f78) + note (italic .85rem), right dashed

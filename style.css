@@ -614,3 +614,20 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #sky .st{position:absolute;color:#f5b83d;filter:drop-shadow(0 0 5px #ffd98a);animation:starin 1.6s ease both,tw 2.6s ease-in-out var(--d) infinite 1.6s;translate:-50% -50%}
 @keyframes starin{from{opacity:0;scale:.2}to{opacity:1;scale:1}}
 @media (prefers-reduced-motion:reduce){#p12 .ring,#p12 .sp,#p12 .halo{animation:none}}
+
+/* ===== p15 voucher book ===== */
+#vlist{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(21*var(--vh));overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:8px 0 22px;scrollbar-width:none}
+#vlist::-webkit-scrollbar{display:none}
+.vw{flex:none;filter:drop-shadow(0 7px 10px #e879a833);opacity:0;transform:translateY(24px)}
+#p15.in .vw{animation:up .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--k)*.09s + .35s)}
+.vt{position:relative;width:min(88vw,380px);min-height:92px;display:flex;align-items:center;gap:.8rem;padding:.8rem .9rem .8rem .9rem;border-radius:18px;background:#fffaf6;color:#7a2a6a;text-align:left;cursor:pointer;-webkit-mask:radial-gradient(circle 9px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat;mask:radial-gradient(circle 9px at 0 50%,#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 9px at 100% 50%,#0000 97%,#000) right/51% 100% no-repeat}
+.ve{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:1.7rem;background:radial-gradient(circle at 35% 30%,#fff,#ffd9ec)}
+.vb{flex:1;min-width:0}.vb b{display:block;font:600 1.05rem/1.2 Fredoka,system-ui,sans-serif;color:#9b2f78}
+.vb span{display:block;margin-top:.15rem;font:italic 500 .98rem/1.3 "Cormorant Garamond",Georgia,serif;opacity:.88}
+.vr{flex:none;align-self:stretch;display:grid;place-items:center;padding-left:.8rem;border-left:2px dashed #f0b8d8;font:600 .6rem Fredoka,system-ui,sans-serif;letter-spacing:.18em;color:#d12e86}
+.vs{position:absolute;right:16px;top:50%;margin-top:-17px;padding:.22rem .65rem;border:2.5px solid #e11d62;border-radius:10px;background:#fffaf6cc;color:#e11d62;font:700 .74rem Fredoka,system-ui,sans-serif;letter-spacing:.1em;opacity:0;transform:rotate(-10deg) scale(2.2);pointer-events:none}
+.vt.done{cursor:default}.vt.done .vs{opacity:.92;transform:rotate(-10deg) scale(1);transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .15s}
+.vt.done .vb,.vt.done .ve{opacity:.5;transition:opacity .4s}.vt.done .vr{opacity:0}
+.vbar{position:absolute;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));display:flex;flex-direction:column;align-items:center;gap:.6rem;z-index:3}
+#p15 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
+#vlist{-webkit-mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000);mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000)}
