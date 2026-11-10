@@ -360,7 +360,21 @@ init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#
   .catch(()=>{v.muted=false;pl.style.display=''});
  startRain(false,600)};
 // ---------- 12: final ----------
-init[12]=()=>{$('#n12').textContent=C.name+'!';startRain(false,120);fireworks();rain(30,true);SFX.chime();$('#replay').onclick=()=>{bgm.currentTime=0;go(1)}};
+init[12]=()=>{const p=$('#p12'),sky=$('#sky'),wi=$('#wi'),wf=$('#wf'),wh=$('#wh');p.classList.remove('run');void p.offsetWidth;p.classList.add('run');sky.innerHTML='';
+ const nm=$('#n12');nm.textContent=C.name;nm.style.fontSize=Math.min(3.8,22/Math.max(C.name.length,4))+'rem';$('#fl').textContent=C.finalLine||'Another year of you, my favourite part of every single day.';
+ const ph=`made with love ✦ for ${C.name} ✦ by ${C.from} ✦ `;$('#rt').textContent=ph+ph;
+ SFX.chime();const stars=()=>sky.querySelectorAll('.st').length;
+ const star=(fx,fy,quiet)=>{const s=document.createElement('i');s.className='st';s.textContent='✦';s.style.left=(fx*100)+'%';s.style.top=(fy*100)+'%';s.style.setProperty('--d',(Math.random()*2).toFixed(2)+'s');s.style.fontSize=(10+Math.random()*10)+'px';sky.appendChild(s);if(!quiet)SFX.chime();upd()};
+ const upd=()=>{const n=stars();if(n)wh.textContent=n===1?'✦ 1 wish is shining in the sky':`✦ ${n} wishes are shining in the sky`};
+ const lantern=(txt,wait)=>{const W=p.clientWidth,H=p.clientHeight,r=wf.getBoundingClientRect(),el=document.createElement('div');el.className='ln';const x=Math.max(90,Math.min(W-90,W*(.18+.64*Math.random())));el.style.left=(x-32)+'px';el.style.top=(Math.min(r.top,H-120)-96)+'px';el.innerHTML='<div class="lb"></div>'+(txt?'<span class="lw"></span>':'');if(txt)el.querySelector('.lw').textContent=txt;sky.appendChild(el);
+  const fx=Math.max(.08,Math.min(.92,x/W+(Math.random()-.5)*.25)),fy=.05+.2*Math.random(),dx=fx*W-x,dy=(Math.min(r.top,H-120)-96)-(fy*H);
+  const a=el.animate([{transform:'translate(0,0) scale(1)',opacity:0},{opacity:1,offset:.07},{opacity:1,offset:.78},{transform:`translate(${dx}px,${-dy}px) scale(.42)`,opacity:0}],{duration:RM?3000:15000,delay:wait||0,easing:'cubic-bezier(.3,.12,.3,1)',fill:'both'});
+  if(txt)setTimeout(()=>{star(fx,fy);try{const k=JSON.parse(localStorage.getItem('stars12')||'[]');k.push([+fx.toFixed(3),+fy.toFixed(3)]);localStorage.setItem('stars12',JSON.stringify(k.slice(-24)))}catch(e){}},(wait||0)+(RM?2400:11800));a.onfinish=()=>el.remove()};
+ try{(JSON.parse(localStorage.getItem('stars12')||'[]')).slice(-24).forEach(s=>star(s[0],s[1],true))}catch(e){}
+ later(()=>lantern('',0),1500);later(()=>lantern('',0),5200);later(()=>lantern('',0),9000);
+ wi.oninput=()=>{SFX.keyS&&SFX.keyS()};
+ wf.onsubmit=e=>{e.preventDefault();const t=wi.value.trim();if(!t){wi.focus();return}wi.value='';wi.blur();SFX.whoosh();lantern(t,0);wh.textContent='your wish is rising…';};
+ $('#replay').onclick=()=>{bgm.currentTime=0;go(1)}};
 // ---------- scratch cards ----------
 const REC=/[?&]record/.test(location.search),hnd=$('#hnd');
 function scratchInit(cv,type,onDone,hint){
