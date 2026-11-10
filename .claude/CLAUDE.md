@@ -82,7 +82,7 @@ using the specs here as they are (do NOT redesign, do NOT re-ask). Tick each box
 - SFX.stamp: thud `tone(120,.14,'sine',.55,50,0,0)` + paper snap `noise(.05,.3,{bp:2800,q:.8})` + tiny chime `tone(1568,.35,'sine',.08,0,.08,.4)`; CAT stamp:1.3, DIP stamp:[.55,500].
 - Add p15 to FLOW. Test at both sizes with all 6 tickets scrolling, redeem 2, reload page -> stamps persist.
 
-## N2. Keepsake wallpaper (final page p12)  [ ]
+## N2. Keepsake wallpaper (final page p12)  [x] DONE, pushed (pre-renders at 4.8s, share sheet or press-and-hold overlay fallback)
 - Under the replay link on p12 add a small elegant text button `#keep` "✦ keep this as a wallpaper" (same style as `.f-re`, delay 7.4s).
 - On tap draw a canvas 1179x2556: vertical gradient #fbe0f1 -> #f9cfe8 -> #ecd0f4 -> #f2dff3, big soft white radial glow top-third, ~40 small gold/pink stars (seeded random), thin ring of text
   ("made with love for NAME by FROM", canvas text along a circle, 26px letter-spaced) around a glass circle (white 35% fill, white stroke), NAME in italic 600 "Cormorant Garamond" (fallback Georgia italic) 170px gradient (#b0286e->#8a4fd1) centered in circle,

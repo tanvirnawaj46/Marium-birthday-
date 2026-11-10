@@ -631,3 +631,15 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .vbar{position:absolute;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));display:flex;flex-direction:column;align-items:center;gap:.6rem;z-index:3}
 #p15 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
 #vlist{-webkit-mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000);mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000)}
+
+/* ===== N2 keepsake wallpaper ===== */
+#p12 .f-keep{margin-top:.3rem;padding:.85rem 1.25rem;border:1px solid #9b2f7840;border-radius:99px;background:#ffffff44;font:600 .74rem Fredoka;letter-spacing:.13em}
+#p12.run .f-keep{animation:fadekeep 1.2s ease 7.4s forwards}
+@keyframes fadekeep{to{opacity:.82}}
+#wp{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:rgba(251,224,241,.95);opacity:0}
+#wp.on{display:flex;animation:fadein .3s ease forwards}
+.wpc{display:flex;flex-direction:column;align-items:center;gap:.8rem;max-width:90vw}
+#wpi{display:block;max-height:calc(68*var(--vh));max-width:72vw;width:auto;height:auto;border-radius:22px;box-shadow:0 14px 40px #b0286e40;-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
+.wpc p{margin:0;font:500 .9rem/1.4 Fredoka,system-ui,sans-serif;color:#9b2f78;text-align:center}
+#wpd{padding:.55rem 1.2rem;border-radius:99px;background:#ffffffaa;color:#9b2f78;font:600 .8rem Fredoka,system-ui,sans-serif;text-decoration:none;letter-spacing:.08em}
+#wpx{position:absolute;top:max(12px,env(safe-area-inset-top));left:14px;width:42px;height:42px;border:0;border-radius:50%;background:#ffffffcc;color:#9b2f78;font-size:1.1rem}
