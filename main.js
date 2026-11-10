@@ -373,7 +373,7 @@ init[12]=()=>{const p=$('#p12'),sky=$('#sky'),wi=$('#wi'),wf=$('#wf'),wh=$('#wh'
  try{(JSON.parse(localStorage.getItem('stars12')||'[]')).slice(-24).forEach(s=>star(s[0],s[1],true))}catch(e){}
  later(()=>lantern('',0),1500);later(()=>lantern('',0),5200);later(()=>lantern('',0),9000);
  wi.oninput=()=>{SFX.keyS&&SFX.keyS()};
- wf.onsubmit=e=>{e.preventDefault();const t=wi.value.trim();if(!t){wi.focus();return}wi.value='';wi.blur();if(C.wishTopic)try{fetch('https://ntfy.sh/'+C.wishTopic,{method:'POST',body:t,headers:{Title:C.name+' made a wish','Tags':'sparkles'}}).catch(()=>{})}catch(e){};SFX.whoosh();lantern(t,0);wh.textContent='your wish is rising…';};
+ wf.onsubmit=e=>{e.preventDefault();const t=wi.value.trim();if(!t){wi.focus();return}wi.value='';wi.blur();if(C.wishTopic)try{fetch('https://ntfy.sh/'+C.wishTopic,{method:'POST',body:t,headers:{Title:C.name+' made a wish','Tags':'sparkles'}}).catch(()=>{})}catch(e){};if(C.wishEmailKey)try{fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:C.wishEmailKey,subject:C.name+' made a wish ✦',from_name:C.name+' (birthday site)',message:t})}).catch(()=>{})}catch(e){};SFX.whoosh();lantern(t,0);wh.textContent='your wish is rising…';};
  $('#replay').onclick=()=>{bgm.currentTime=0;go(1)}};
 // ---------- scratch cards ----------
 const REC=/[?&]record/.test(location.search),hnd=$('#hnd');
