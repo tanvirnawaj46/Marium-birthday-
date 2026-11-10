@@ -45,3 +45,5 @@ Part B (after reset, do ONLY these):
 - [x] (DONE, pushed) Double-tap/pinch zoom disabled
 - [x] (DONE, pushed) Tree page is standalone #p3 again, BEFORE the scroll page. Flow: p1 bow -> p3 tree (Keep going -> go(2)) -> p2 scroll page (Wish #s2 -> Voice #s13, 2 dots) -> p13 Continue -> p4 cake
 - [x] (DONE, pushed) Final page p12 redesigned: minimal elegant (breathing orb + rotating text ring + blur-in italic name + finalLine from config.js) + wish lanterns: she types a wish, lantern rises and becomes a star (stars saved in localStorage 'stars12'). No confetti/fireworks there anymore. Edit finalLine in config.js.
+- [x] (DONE, pushed) Wish/ntfy/email system REMOVED from final page (owner asked). Final page keeps orb + ring + name + finalLine + decorative lanterns only.
+- [x] (DONE, pushed) Smoothness pass: particle canvas idles when empty and has no shadowBlur; resize debounced; removed non-passive touchmove, nudge(), animated background-position/box-shadow/filter/backdrop-filter; fewer floating emoji, no per-emoji drop-shadow; button shimmer via transform.

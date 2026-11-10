@@ -4,9 +4,8 @@ const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 if(!(window.CSS&&CSS.supports&&CSS.supports('height','1dvh'))){const sv=()=>document.documentElement.style.setProperty('--vh',innerHeight*.01+'px');sv();addEventListener('resize',sv);addEventListener('orientationchange',()=>setTimeout(sv,300))}
 // status-bar / address-bar tint follows each page's background (no stray bar colour)
 let THEME={"0":["#fbe0f1","#f2dff3"],"1":["#fbe0f1","#f2dff3"],"2":["#fbe0f1","#f2dff3"],"3":["#fbe0f1","#f2dff3"],"4":["#fbe0f1","#f2dff3"],"5":["#fbe0f1","#f2dff3"],"6":["#fbe0f1","#f2dff3"],"7":["#fbe0f1","#f2dff3"],"8":["#fbe0f1","#f2dff3"],"9":["#fbe0f1","#f2dff3"],"10":["#fbe0f1","#f2dff3"],"11":["#fbe0f1","#f2dff3"],"12":["#fbe0f1","#f2dff3"],"13":["#fbe0f1","#f2dff3"],"14":["#fbe0f1","#f2dff3"]},TM=document.querySelector('meta[name=theme-color]');
-function setTheme(n){const t=THEME[n]||['#fbe0f2','#d9dfff'];if(TM){const nm=TM.cloneNode();nm.setAttribute('content',t[0]);TM.replaceWith(nm);TM=nm}const g=`linear-gradient(${t[0]},${t[1]})`;
- [document.documentElement,document.body].forEach(el=>{el.style.backgroundImage=g;el.style.backgroundColor=t[0]});nudge()}
-function nudge(){const r=document.documentElement;r.classList.add('nd');requestAnimationFrame(()=>{scrollTo(0,1);setTimeout(()=>{scrollTo(0,0);setTimeout(()=>r.classList.remove('nd'),60)},60)})}
+function setTheme(n){const t=THEME[n]||['#fbe0f2','#d9dfff'];if(TM)TM.setAttribute('content',t[0]);const g=`linear-gradient(${t[0]},${t[1]})`;
+ [document.documentElement,document.body].forEach(el=>{el.style.backgroundImage=g;el.style.backgroundColor=t[0]});}
 // Safari tints its status bar / bottom bar from solid fixed elements sitting on the screen edges (and from theme-color).
 // Every page gets a solid top strip + bottom strip in that page's real edge colour, painted under the page content.
 $$('.pg').forEach(pg=>{const t=THEME[+pg.id.slice(1)];if(!t)return;['T','B'].forEach((k,i)=>{const s=document.createElement('i');s.className='edge e'+k;s.style.setProperty('--ec',t[i]);pg.append(s)})});
@@ -121,13 +120,13 @@ function vtry(){if(vi<VS.length)voice.src=VS[vi++]}voice.onerror=()=>{voiceOk=fa
 $('#mus').onclick=e=>{e.stopPropagation();musOn=!musOn;$('#mus').textContent=musOn?'♪ On':'♪ Off';if(musOn){if(started&&!hold)bgm.play().catch(()=>{});applyMix(.4)}else{applyMix(.12);setTimeout(()=>{if(!musOn)bgm.pause()},600)}};
 // ---------- particles ----------
 const cv=$('#fx'),cx=cv.getContext('2d');let P=[],W,H;
-function rs(){W=innerWidth;H=innerHeight;const d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0)}rs();addEventListener('resize',rs);addEventListener('orientationchange',()=>setTimeout(rs,300));if(window.visualViewport)visualViewport.addEventListener('resize',rs);
+function rs(){W=innerWidth;H=innerHeight;const d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0)}rs();let rt;const rsd=()=>{clearTimeout(rt);rt=setTimeout(()=>{if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>140)rs()},200)};addEventListener('resize',rsd);addEventListener('orientationchange',()=>setTimeout(rs,300));
 const COL=['#f472b6','#fbbf24','#fff','#818cf8','#22d3ee','#fb923c'];
 function burst(x,y,n=60,hearts=false){if(RM)n=15;for(let i=0;i<n;i++){const a=Math.random()*6.28,s=2+Math.random()*7;P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.12,l:1,d:.014+Math.random()*.01,r:3+Math.random()*5,c:COL[i%6],h:hearts&&i%2==0})}}
 function rain(n,hearts){for(let i=0;i<n;i++)P.push({x:Math.random()*W,y:-10,vx:Math.random()*2-1,vy:1+Math.random()*2.5,g:0,l:1,d:.003,r:4+Math.random()*4,c:COL[i%6],h:hearts,rect:!hearts})}
 let rainOn=null;
 function heartPath(x,y,r){cx.beginPath();cx.moveTo(x,y+r*.4);cx.bezierCurveTo(x-r,y-r*.4,x-r*.5,y-r*1.1,x,y-r*.4);cx.bezierCurveTo(x+r*.5,y-r*1.1,x+r,y-r*.4,x,y+r*.4);cx.fill()}
-(function loop(){cx.clearRect(0,0,W,H);P=P.filter(p=>p.l>0&&p.y<H+20);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;cx.shadowColor=p.c;cx.shadowBlur=8;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}requestAnimationFrame(loop)})();
+let dirty=0;(function loop(){if(P.length||dirty){cx.clearRect(0,0,W,H);dirty=P.length>0;P=P.filter(p=>p.l>0&&p.y<H+20);if(P.length>420)P=P.slice(-420);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}}requestAnimationFrame(loop)})();
 function startRain(hearts,rate=400){stopRain();rainOn=setInterval(()=>rain(1,hearts&&Math.random()<.7),RM?900:rate*.4)}
 function stopRain(){clearInterval(rainOn);rainOn=null}
 function fireworks(){const i=setInterval(()=>{if(!rainOn&&cur!==12&&cur!==5)return clearInterval(i);burst(W*(.15+Math.random()*.7),H*(.1+Math.random()*.4),40);SFX.chime()},1500);timers.push(i)}
@@ -143,14 +142,14 @@ const FLT={
  8:{e:['✨','⭐','🌙','💫','🫧'],m:['bob','fall'],o:['#8aa0ff','#c4a1ff','#6ee7f9']},
  10:{e:['🌸','💌','💗','🎀','✨','🌷'],m:['fall'],o:['#ff9ec6','#f0abfc','#fcd5a5']},
  11:{e:['🎉','✨','🎈','⭐','🫧'],m:['rise'],o:['#f472b6','#818cf8','#fbbf24']},
- 12:{e:['🎈','🌷','🌸','🦋','✨','💖','🎀','⭐','🫧'],m:['rise','bob'],n:18,o:['#6366f1','#ec4899','#22d3ee']},
+ 12:{e:['🎈','🌷','🌸','🦋','✨','💖','🎀','⭐','🫧'],m:['rise','bob'],n:10,o:['#6366f1','#ec4899','#22d3ee']},
  13:{e:['🎵','🎶','💗','✨','🫧','🎀'],m:['rise'],o:['#ff9ed1','#a78bfa','#7dd3fc']},
  14:{e:['🦋','🌸','💗','✨','🎀','🌷'],m:['bob','fall'],o:['#ffb4a8','#f9a8d4','#c4b5fd']}
 };FLT[5]=FLT[4];FLT[9]=FLT[8];
 (function(){const R=(a,b)=>a+Math.random()*(b-a);
  $$('.pg').forEach(pg=>{const t=FLT[+pg.id.slice(1)];if(!t)return;const L=document.createElement('div');L.className='fl';
   t.o.forEach((c,i)=>{const o=document.createElement('b');o.className='orb';o.style.cssText=`--c:${c};--t:${R(14,22).toFixed(1)}s;left:${[8,92,45][i]}%;top:${[8,45,100][i]}%;animation-delay:-${R(0,10).toFixed(1)}s`;L.append(o)});
-  const n=RM?6:(t.n||14);
+  const n=RM?6:(t.n||9);
   for(let i=0;i<n;i++){const s=document.createElement('span'),m=t.m[i%t.m.length];s.className=m;s.textContent=t.e[i%t.e.length];
    const T=m==='bob'?R(5,9):R(11,20);
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
@@ -360,20 +359,11 @@ init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#
   .catch(()=>{v.muted=false;pl.style.display=''});
  startRain(false,600)};
 // ---------- 12: final ----------
-init[12]=()=>{const p=$('#p12'),sky=$('#sky'),wi=$('#wi'),wf=$('#wf'),wh=$('#wh');p.classList.remove('run');void p.offsetWidth;p.classList.add('run');sky.innerHTML='';
+init[12]=()=>{const p=$('#p12'),sky=$('#sky');p.classList.remove('run');void p.offsetWidth;p.classList.add('run');sky.innerHTML='';
  const nm=$('#n12');nm.textContent=C.name;nm.style.fontSize=Math.min(3.8,22/Math.max(C.name.length,4))+'rem';$('#fl').textContent=C.finalLine||'Another year of you, my favourite part of every single day.';
- const ph=`made with love ✦ for ${C.name} ✦ by ${C.from} ✦ `;$('#rt').textContent=ph+ph;
- SFX.chime();const stars=()=>sky.querySelectorAll('.st').length;
- const star=(fx,fy,quiet)=>{const s=document.createElement('i');s.className='st';s.textContent='✦';s.style.left=(fx*100)+'%';s.style.top=(fy*100)+'%';s.style.setProperty('--d',(Math.random()*2).toFixed(2)+'s');s.style.fontSize=(10+Math.random()*10)+'px';sky.appendChild(s);if(!quiet)SFX.chime();upd()};
- const upd=()=>{const n=stars();if(n)wh.textContent=n===1?'✦ 1 wish is shining in the sky':`✦ ${n} wishes are shining in the sky`};
- const lantern=(txt,wait)=>{const W=p.clientWidth,H=p.clientHeight,r=wf.getBoundingClientRect(),el=document.createElement('div');el.className='ln';const x=Math.max(90,Math.min(W-90,W*(.18+.64*Math.random())));el.style.left=(x-32)+'px';el.style.top=(Math.min(r.top,H-120)-96)+'px';el.innerHTML='<div class="lb"></div>'+(txt?'<span class="lw"></span>':'');if(txt)el.querySelector('.lw').textContent=txt;sky.appendChild(el);
-  const fx=Math.max(.08,Math.min(.92,x/W+(Math.random()-.5)*.25)),fy=.05+.2*Math.random(),dx=fx*W-x,dy=(Math.min(r.top,H-120)-96)-(fy*H);
-  const a=el.animate([{transform:'translate(0,0) scale(1)',opacity:0},{opacity:1,offset:.07},{opacity:1,offset:.78},{transform:`translate(${dx}px,${-dy}px) scale(.42)`,opacity:0}],{duration:RM?3000:15000,delay:wait||0,easing:'cubic-bezier(.3,.12,.3,1)',fill:'both'});
-  if(txt)setTimeout(()=>{star(fx,fy);try{const k=JSON.parse(localStorage.getItem('stars12')||'[]');k.push([+fx.toFixed(3),+fy.toFixed(3)]);localStorage.setItem('stars12',JSON.stringify(k.slice(-24)))}catch(e){}},(wait||0)+(RM?2400:11800));a.onfinish=()=>el.remove()};
- try{(JSON.parse(localStorage.getItem('stars12')||'[]')).slice(-24).forEach(s=>star(s[0],s[1],true))}catch(e){}
- later(()=>lantern('',0),1500);later(()=>lantern('',0),5200);later(()=>lantern('',0),9000);
- wi.oninput=()=>{SFX.keyS&&SFX.keyS()};
- wf.onsubmit=e=>{e.preventDefault();const t=wi.value.trim();if(!t){wi.focus();return}wi.value='';wi.blur();if(C.wishTopic)try{fetch('https://ntfy.sh/'+C.wishTopic,{method:'POST',body:t,headers:{Title:C.name+' made a wish','Tags':'sparkles'}}).catch(()=>{})}catch(e){};if(C.wishEmailKey)try{fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:C.wishEmailKey,subject:C.name+' made a wish ✦',from_name:C.name+' (birthday site)',message:t})}).catch(()=>{})}catch(e){};SFX.whoosh();lantern(t,0);wh.textContent='your wish is rising…';};
+ const ph=`made with love ✦ for ${C.name} ✦ by ${C.from} ✦ `;$('#rt').textContent=ph+ph;SFX.chime();
+ if(!RM){const lan=()=>{if(cur!==12)return;const W=p.clientWidth,H=p.clientHeight,el=document.createElement('div');el.className='ln';const x=Math.max(60,Math.min(W-60,W*(.12+.76*Math.random())));el.style.left=(x-32)+'px';el.style.top=(H-100)+'px';el.innerHTML='<div class="lb"></div>';sky.appendChild(el);
+  el.animate([{transform:'translate(0,0) scale(1)',opacity:0},{opacity:.95,offset:.1},{opacity:.95,offset:.75},{transform:`translate(${(Math.random()-.5)*90}px,${-H*.95}px) scale(.45)`,opacity:0}],{duration:16000,easing:'cubic-bezier(.3,.12,.3,1)',fill:'both'}).onfinish=()=>el.remove();later(lan,7000)};later(lan,2500);later(lan,6500)}
  $('#replay').onclick=()=>{bgm.currentTime=0;go(1)}};
 // ---------- scratch cards ----------
 const REC=/[?&]record/.test(location.search),hnd=$('#hnd');
@@ -434,4 +424,3 @@ function chapter(){const root=document.documentElement,dots=[...$('#chd').childr
 // block double-tap zoom and pinch zoom (iOS Safari ignores user-scalable on its own)
 ['gesturestart','gesturechange','gestureend'].forEach(t=>addEventListener(t,e=>e.preventDefault(),{passive:false}));
 (()=>{let lt=0;addEventListener('touchend',e=>{const n=Date.now(),t=e.target;if(n-lt<350&&!(t.closest&&t.closest('button,a,input,[onclick]')))e.preventDefault();lt=n},{passive:false})})();
-addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
