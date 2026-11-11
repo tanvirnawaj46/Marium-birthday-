@@ -57,6 +57,9 @@ window.CONFIG = {
   // ---- STARS (p18 "Connect our stars") : heart complete hole name-er niche ei line ashbe ----
   starLine: "my favourite constellation",
 
+  // ---- GARDEN (p17 "Planted just for you") : age = koyta phul lagano jabe (default 19). {n} = age number ----
+  gardenEnd: "{n} flowers for {n} years, and one more to grow with you ♡",
+
   // ---- LETTER ----
   letter: "I keep thinking about how lucky I got with you. You have seen me at my worst and stayed anyway, and I do not say thank you nearly enough for that. This year, I hope life is gentle with you, that your days are full of laughter, and that you always know how loved you are.",
   finalLine: "Another year of you, my favourite part of every single day.",   // last page, name er niche

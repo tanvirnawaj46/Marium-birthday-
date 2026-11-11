@@ -629,7 +629,7 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .vt.done{cursor:default}.vt.done .vs{opacity:.92;transform:rotate(-10deg) scale(1);transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .15s}
 .vt.done .vb,.vt.done .ve{opacity:.5;transition:opacity .4s}.vt.done .vr{opacity:0}
 .vbar{position:absolute;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));display:flex;flex-direction:column;align-items:center;gap:.6rem;z-index:3}
-#p15 .vbar .cap,#p18 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
+#p15 .vbar .cap,#p17 .vbar .cap,#p18 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
 #vlist{-webkit-mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000);mask-image:linear-gradient(#0000,#000 12px,#000 calc(100% - 26px),#0000)}
 
 /* ===== N2 keepsake wallpaper ===== */
@@ -666,4 +666,28 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #cnm{margin:0;font:italic 600 3rem/1.05 "Cormorant Garamond",Georgia,serif;background:linear-gradient(90deg,#b0286e,#ec5aa0,#8a4fd1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 #cln{margin:.45rem 0 0;font:italic 500 1.2rem/1.4 "Cormorant Garamond",Georgia,serif;color:#8a2a78}
 .met{position:absolute;left:0;top:0;width:150px;height:3px;margin:-1px 0 0 -75px;border-radius:3px;background:linear-gradient(90deg,#fff0,#fff 72%,#ffe08a);opacity:0;pointer-events:none;z-index:7}
-.vbar .cap:empty{display:none}
+.vbar .cap:empty,#p15 .vbar .cap:empty,#p17 .vbar .cap:empty,#p18 .vbar .cap:empty{display:none}
+
+/* ===== p17 garden ===== */
+#fcn{position:absolute;left:50%;translate:-50% 0;top:calc(var(--top) + 3rem);margin:0;padding:.3rem 1rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;font:600 .95rem Fredoka,system-ui,sans-serif;letter-spacing:.1em;z-index:3}
+#gst{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(14*var(--vh));touch-action:none}
+#gw{position:absolute;inset:0;pointer-events:none}
+#gw.br{animation:gbr 2.6s ease-in-out forwards}
+@keyframes gbr{50%{scale:.92}to{scale:.95}}
+.gglow{position:absolute;left:-8%;width:116%;height:210px;margin-top:-95px;background:radial-gradient(ellipse at center,#e1b6f0 0,#e8c9f2b0 38%,#e8c9f200 70%);pointer-events:none}
+.fl{position:absolute;left:0;top:0;width:calc(60px*var(--s));height:calc(120px*var(--s));transform-origin:50% 100%;animation:gsway var(--sw) ease-in-out var(--sd) infinite alternate;pointer-events:none}
+.fl svg{position:absolute;display:block;overflow:visible}
+.fl .sm{left:0;top:0;width:100%;height:100%;transform-origin:50% 100%;animation:gstem .8s cubic-bezier(.22,.8,.3,1) both}
+.fl .bm{left:13.33%;top:13.33%;width:73.34%;height:36.67%;transform-origin:50% 50%;animation:gbloom .6s cubic-bezier(.3,1.7,.5,1) .55s both}
+.fl.big .sm{animation-duration:1.7s}.fl.big .bm{animation-duration:1.1s;animation-delay:1.3s}
+@keyframes gsway{from{rotate:-2.5deg}to{rotate:2.5deg}}
+@keyframes gstem{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes gbloom{from{transform:scale(0)}to{transform:scale(1)}}
+#gring{position:absolute;left:0;top:0;width:280px;height:280px;margin:-140px 0 0 -140px;border-radius:50%;background:radial-gradient(circle,#ffffffd0 0,#ffc4e5aa 32%,#ffc4e500 68%);opacity:0;pointer-events:none}
+#gring.on{animation:gring 2.8s ease-out infinite}
+@keyframes gring{from{scale:.35;opacity:.95}to{scale:1.6;opacity:0}}
+#ghand{left:50%;top:58%;animation:gtap 1.5s ease-in-out infinite}
+@keyframes gtap{0%,100%{transform:translateY(0)}40%{transform:translateY(-16px)}62%{transform:translateY(6px) scale(.9)}}
+#gdn{position:absolute;left:0;right:0;bottom:calc(17*var(--vh));padding:0 8vw;text-align:center;opacity:0;transform:translateY(12px);pointer-events:none}
+#gdn.in{animation:up 1.4s cubic-bezier(.2,.8,.2,1) forwards}
+#gend{margin:0;font:italic 600 1.5rem/1.35 "Cormorant Garamond",Georgia,serif;color:#8a2a78}
