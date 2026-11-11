@@ -166,8 +166,17 @@ const FLT={
   pg.prepend(L)})})();
 // ---------- navigation ----------
 const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
-function go(n,seam){if(n>19)n=19;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
- later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:350)}
+function go0(n,seam,fast){if(n>19)n=19;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
+ later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
+// ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
+let tapPt=[0,0,0],irisOn=0;addEventListener('pointerdown',e=>{tapPt=[e.clientX,e.clientY,performance.now()]},true);
+function go(n,seam){const ir=$('#iris');if(n>19)n=19;if(irisOn&&!seam)return; // ignore double taps while the wipe runs
+ if(!ir||seam||RM||!started||n===5||n===8||n===10)return go0(n,seam);
+ irisOn=1;setTimeout(()=>{irisOn=0},2500);const t=performance.now()-tapPt[2]<2000,x=t?tapPt[0]:innerWidth/2,y=t?tapPt[1]:innerHeight*.6,sz=Math.max(innerWidth,innerHeight)*.4,
+  sc=(2*Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y))/sz*1.08).toFixed(2);
+ ir.style.translate=x+'px '+y+'px';
+ ir.animate([{transform:'scale(0)',opacity:1},{transform:'scale('+sc+')',opacity:1}],{duration:520,easing:'cubic-bezier(.45,0,.75,.55)',fill:'forwards'}).onfinish=()=>{go0(n,seam,1);
+  ir.animate([{transform:'scale('+sc+')',opacity:1},{transform:'scale('+sc+')',opacity:0}],{duration:420,easing:'ease-out',fill:'forwards'}).onfinish=()=>{ir.getAnimations().forEach(a=>a.cancel());irisOn=0}}}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
 const init={};
 // ---------- 1: bow & arrow (aim at the hearts) ----------
