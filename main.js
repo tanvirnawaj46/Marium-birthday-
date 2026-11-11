@@ -60,6 +60,7 @@ function kbHit(o){if(AC.state!=='running')return;const t=AC.currentTime,V=(o.v||
  if(o.sp){nz(t+.007,.012,.2*V,2600,1.4,1800);nz(t+.017,.012,.16*V,3100,1.4,1800)}  // spacebar stabiliser rattle
  if(o.up!==0){const u=t+.058+Math.random()*.035;nz(u,.01,.22*V*(o.sp?1.3:1),4300,1.6,3000);ts(u,520*p,380*p,.022,.05*V)}   // key-up
 };
+const MEL=[[392,.75],[392,.25],[440,1],[392,1],[523,1],[494,2],[392,.75],[392,.25],[440,1],[392,1],[587,1],[523,2],[392,.75],[392,.25],[784,1],[659,1],[523,1],[494,1],[440,1],[698,.75],[698,.25],[659,1],[523,1],[587,1],[523,2]];
 const PENT=[523,587,659,784,880,1047,1175,1319,1568,1760,1976,2349,2637,3136];
 const SFX={
  tap(){tone(680,.14,'sine',.2,980,0,.15);tone(1360,.07,'triangle',.06,0,0,.1);tone(150,.14,'sine',.22,55,0,0)},
@@ -96,6 +97,7 @@ const SFX={
  stamp(){tone(120,.14,'sine',.55,50,0,0);noise(.05,.3,{bp:2800,q:.8});tone(1568,.35,'sine',.08,0,.08,.4);tone(2093,.3,'sine',.04,0,.14,.4)},
  star(i){const f=PENT[Math.max(0,Math.min(13,i|0))];tone(f,.9,'sine',.12,0,0,.5);tone(f*2,.5,'sine',.04,0,0,.4)},
  meter(){tone(300,1.6,'sine',.12,1400,0,.3)},
+ mb(f=0){if(f<60)f=MEL[f%MEL.length][0];tone(f,1.2,'sine',.14,0,0,.5);tone(f*3,.4,'sine',.035,0,0,.3);tone(f*2,.6,'sine',.05,0,0,.4)},
  plant(k){const f=PENT[Math.max(0,Math.min(13,k|0))];tone(f,.6,'sine',.1,0,0,.4);noise(.05,.12,{bp:1800,q:.6})},
  meteor(){tone(3520,.9,'sine',.07,700,0,.5);noise(.8,.16,{bp:5200,bp2:1400,q:.7,a:.06,rv:.25});[2093,2637,3136,3951].forEach((f,i)=>tone(f,.55,'sine',.045,0,.2+i*.09,.5))},
  slide(){noise(1,.34,{bp:2300,bp2:4300,q:.45,a:.28,hp:900,rv:.1});noise(.5,.2,{bp:3600,q:.6,a:.1,dl:.45})},
@@ -104,8 +106,8 @@ const SFX={
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={star:1.3,meter:1.2,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
-const DIP={star:[.6,400],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
+const CAT={star:1.3,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={star:[.6,400],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -161,7 +163,7 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-const FLOW=[0,1,3,2,4,5,6,16,7,14,17,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
+const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
 function go(n,seam){if(n>19)n=19;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:350)}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
@@ -374,6 +376,29 @@ init[15]=()=>{const V=C.vouchers||[],L=$('#vlist'),p=$('#p15'),hint=$('#vh15'),g
  L.onclick=e=>{const t=e.target.closest('.vt');if(!t||t.classList.contains('done'))return;t.classList.add('done');got.push(+t.dataset.i);try{localStorage.setItem('vouch',JSON.stringify(got))}catch(e){}
   const r=t.getBoundingClientRect();SFX.stamp();burst(r.left+r.width*.78,r.top+r.height/2,26,true);hint.textContent='show this to '+C.from+' 💌';show()};
  g.onclick=()=>go(nextOf(15))};
+// ---------- p19: tiny music box (Happy Birthday, one note per tap or auto) ----------
+init[19]=()=>{const p=$('#p19'),bx=$('#mbx'),ball=$('#mbb'),nt=$('#mbn'),lyr=$('#mbl'),bar=$('#mbf'),pl=$('#mbplay'),end=$('#mbend'),hint=$('#mbh'),g=$('#g19'),hand=$('#mbhand');
+ const nm=(C.name||'').trim()||'you',cut=Math.ceil(nm.length/2),n1=nm.length>1?nm.slice(0,cut)+'-':nm+' ',n2=nm.length>1?nm.slice(cut):'♡';
+ const syl=['Hap-','py ','birth-','day ','to ','you','Hap-','py ','birth-','day ','to ','you','Hap-','py ','birth-','day ','dear ',n1,n2,'Hap-','py ','birth-','day ','to ','you'],starts=[0,6,12,19],T=MEL.length;
+ let i=0,auto=false,fin=false,sg=0;
+ nt.innerHTML='';ball.classList.remove('spin');lyr.textContent='';end.textContent='Happy birthday, '+C.name+' ♡';end.classList.remove('in');bar.style.transform='scaleX(0)';
+ pl.textContent='▶ play it for me';pl.classList.remove('hid');g.classList.remove('show');g.classList.add('hid');hand.style.display='block';hint.textContent='tap anywhere to play the tune, one note at a time ✦';
+ const lineOf=k=>starts.filter(s=>s<=k).pop();
+ const float=k=>{if(nt.children.length>=8)nt.firstChild.remove();const e=document.createElement('i');e.className='mbn';e.textContent='♪ '+syl[k].trim().replace(/-$/,'');
+  e.style.cssText='left:'+(18+Math.random()*50)+'%;top:8%;color:'+['#d6428f','#8a4fd1','#e8821c','#2f9e8f'][k%4];nt.appendChild(e);
+  const a=e.animate([{transform:'translate(0,0) scale(.7)',opacity:0},{transform:'translate(0,-26px) scale(1)',opacity:1,offset:.2},{transform:'translate('+((Math.random()-.5)*60)+'px,-90px) scale(1.05)',opacity:0}],{duration:1900,easing:'ease-out'});a.onfinish=()=>e.remove()};
+ const finish=()=>{fin=true;auto=false;
+  later(()=>{end.classList.add('in');burst(innerWidth/2,innerHeight*.4,90,true);SFX.chime()},800);
+  later(()=>{pl.textContent='↺ play again';pl.classList.remove('hid');pl.classList.add('show');g.classList.remove('hid');g.classList.add('show')},1900)};
+ const note=k=>{SFX.mb(MEL[k][0]);const r=bx.getBoundingClientRect();burst(r.left+r.width*(.35+Math.random()*.3),r.top+r.height*.28,6);float(k);
+  ball.classList.add('spin');const my=++sg;later(()=>{if(my===sg)ball.classList.remove('spin')},1700);
+  bx.animate([{transform:'scale(1)'},{transform:'scale(.975)'},{transform:'scale(1)'}],{duration:220,easing:'ease-out'});
+  lyr.textContent=syl.slice(lineOf(k),k+1).join('');bar.style.transform='scaleX('+((k+1)/T)+')';if(k===T-1)finish()};
+ p.onpointerdown=e=>{if(auto||fin||e.target.closest('button'))return;hand.style.display='none';hint.textContent='';note(i++)};
+ pl.onclick=()=>{if(auto)return;auto=true;fin=false;i=0;end.classList.remove('in');lyr.textContent='';bar.style.transform='scaleX(0)';hand.style.display='none';hint.textContent='';pl.classList.add('hid');pl.classList.remove('show');
+  let t=350;MEL.forEach((n,k)=>{later(()=>{if(auto)note(k)},t);t+=n[1]*500})};
+ later(()=>{g.classList.remove('hid');g.classList.add('show')},60000);
+ g.onclick=()=>go(nextOf(19))};
 // ---------- p16: a very serious question (love meter) ----------
 init[16]=()=>{const w=$('#lmw'),t=$('#lmt'),f=$('#lmf'),th=$('#lmth'),hr=$('#lmh'),nv=$('#lmv'),q=$('#lmq'),hint=$('#lmh16'),b2=$('#lm2'),g=$('#g16');
  const Q1=C.loveQ1||'How much do you love me?',Q2=C.loveQ2||'How much do I love you?',QE=C.loveEnd||'Always one more ♡';

@@ -712,3 +712,24 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 @keyframes lmshk{from{translate:-2px 0}to{translate:2px 0}}
 #p16 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
 #p16 .vbar .cap:empty{display:none}
+
+/* ===== p19 music box ===== */
+#mbs{position:absolute;left:0;right:0;top:calc(18*var(--vh));display:flex;justify-content:center;pointer-events:none}
+#mbx{position:relative;width:min(84vw,340px);aspect-ratio:300/250}
+#mbx>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+#mbb{position:absolute;left:40%;top:7.6%;width:20%;height:40%;animation:mbspin 4s linear infinite paused}
+#mbb.spin{animation-play-state:running}
+#mbb svg{display:block;width:100%;height:100%}
+@keyframes mbspin{from{transform:perspective(500px) rotateY(0)}to{transform:perspective(500px) rotateY(360deg)}}
+#mbn{position:absolute;inset:0;pointer-events:none}
+.mbn{position:absolute;font:700 1.15rem Fredoka,system-ui,sans-serif;white-space:nowrap;opacity:0;text-shadow:0 1px 6px #fff}
+#mbl{position:absolute;left:0;right:0;top:calc(57*var(--vh));margin:0;padding:0 6vw;min-height:2rem;text-align:center;font:italic 600 1.5rem/1.3 "Cormorant Garamond",Georgia,serif;color:#8a2a78}
+#mbend{position:absolute;left:0;right:0;top:calc(62.5*var(--vh));margin:0;padding:0 6vw;text-align:center;text-wrap:balance;font:italic 600 1.8rem/1.2 "Cormorant Garamond",Georgia,serif;background:linear-gradient(90deg,#b0286e,#ec5aa0,#8a4fd1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;opacity:0;transform:translateY(10px)}
+#mbend.in{animation:up 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+#mbp{position:absolute;left:0;right:0;margin:0 auto;top:calc(71*var(--vh));width:min(60vw,260px);height:6px;border-radius:3px;background:#ffffff8c;overflow:hidden}
+#mbf{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#ff8ab4,#ff5c93 55%,#ffa35c)}
+#mbc{position:absolute;left:0;right:0;top:calc(75*var(--vh));display:flex;justify-content:center}
+#mbplay{padding:.6rem 1.5rem;font-size:.95rem}
+#mbhand{left:50%;top:38%;animation:gtap 1.5s ease-in-out infinite}
+#p19 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
+#p19 .vbar .cap:empty{display:none}
