@@ -733,3 +733,15 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #mbhand{left:50%;top:38%;animation:gtap 1.5s ease-in-out infinite}
 #p19 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
 #p19 .vbar .cap:empty{display:none}
+
+/* ===== p5 candle: mic blow / tap ===== */
+#blow{margin-top:.5rem;padding:.6rem 1.5rem;font-size:1rem}
+#blow.on{animation:blowp 1.1s ease-in-out infinite}
+@keyframes blowp{50%{transform:scale(1.06)}}
+.chit{cursor:pointer;pointer-events:all}
+.cake.out .fl{animation:snuff .3s ease-in forwards}
+@keyframes snuff{from{transform:scale(1)}to{transform:scale(.1,.02)}}
+.smk{position:absolute;left:0;top:0;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:radial-gradient(circle,#a58fc2b0 0,#a58fc200 70%);pointer-events:none;z-index:30}
+#p5 .cakestack{height:auto;min-height:min(calc(66*var(--vh)),400px)}
+#p5 .cakestack>*{flex-shrink:0}
+#p5 #wish{text-wrap:balance}

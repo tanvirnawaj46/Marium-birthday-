@@ -65,6 +65,10 @@ window.CONFIG = {
   loveQ2: "How much do I love you?",
   loveEnd: "Always one more ♡",
 
+  // ---- CANDLE (p5) : true = phone-er mic-e fuu diye candle nibhano jabe (mic permission chaibe). Kaj na korle / deny korle candle-e tap korlei nibhe.
+  //      iPhone-e ekbar test koro; kono somossa hole false koro (tokhon shudhu candle tap) ----
+  blowMic: true,
+
   // ---- LETTER ----
   letter: "I keep thinking about how lucky I got with you. You have seen me at my worst and stayed anyway, and I do not say thank you nearly enough for that. This year, I hope life is gentle with you, that your days are full of laughter, and that you always know how loved you are.",
   finalLine: "Another year of you, my favourite part of every single day.",   // last page, name er niche

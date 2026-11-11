@@ -98,6 +98,7 @@ const SFX={
  star(i){const f=PENT[Math.max(0,Math.min(13,i|0))];tone(f,.9,'sine',.12,0,0,.5);tone(f*2,.5,'sine',.04,0,0,.4)},
  meter(){tone(300,1.6,'sine',.12,1400,0,.3)},
  mb(f=0){if(f<60)f=MEL[f%MEL.length][0];tone(f,1.2,'sine',.14,0,0,.5);tone(f*3,.4,'sine',.035,0,0,.3);tone(f*2,.6,'sine',.05,0,0,.4)},
+ puff(){noise(.5,.3,{bp:500,bp2:1400,q:.4,a:.1})},
  plant(k){const f=PENT[Math.max(0,Math.min(13,k|0))];tone(f,.6,'sine',.1,0,0,.4);noise(.05,.12,{bp:1800,q:.6})},
  meteor(){tone(3520,.9,'sine',.07,700,0,.5);noise(.8,.16,{bp:5200,bp2:1400,q:.7,a:.06,rv:.25});[2093,2637,3136,3951].forEach((f,i)=>tone(f,.55,'sine',.045,0,.2+i*.09,.5))},
  slide(){noise(1,.34,{bp:2300,bp2:4300,q:.45,a:.28,hp:900,rv:.1});noise(.5,.2,{bp:3600,q:.6,a:.1,dl:.45})},
@@ -106,8 +107,8 @@ const SFX={
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={star:1.3,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
-const DIP={star:[.6,400],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
+const CAT={star:1.3,puff:1.2,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={star:[.6,400],puff:[.6,600],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -137,7 +138,8 @@ function heartPath(x,y,r){cx.beginPath();cx.moveTo(x,y+r*.4);cx.bezierCurveTo(x-
 let dirty=0;(function loop(){if(P.length||dirty){cx.clearRect(0,0,W,H);dirty=P.length>0;P=P.filter(p=>p.l>0&&p.y<H+20);if(P.length>420)P=P.slice(-420);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}}requestAnimationFrame(loop)})();
 function startRain(hearts,rate=400){stopRain();rainOn=setInterval(()=>rain(1,hearts&&Math.random()<.7),RM?900:rate*.4)}
 function stopRain(){clearInterval(rainOn);rainOn=null}
-function fireworks(){const i=setInterval(()=>{if(!rainOn&&cur!==12&&cur!==5)return clearInterval(i);burst(W*(.15+Math.random()*.7),H*(.1+Math.random()*.4),40);SFX.chime()},1500);timers.push(i)}
+let QUIET=0; // 1 while the microphone listens (no chimes then, they would be heard as a blow)
+function fireworks(){const i=setInterval(()=>{if(!rainOn&&cur!==12&&cur!==5)return clearInterval(i);if(QUIET)return;burst(W*(.15+Math.random()*.7),H*(.1+Math.random()*.4),40);SFX.chime()},1500);timers.push(i)}
 // ---------- floating dreamy layer (per page) ----------
 const FLT={
  0:{e:['🦋','🎀','⭐','🫧','🌸','💗','✨'],m:['bob'],o:['#ff9ec9','#b9a3ff','#9fd2ff']},
@@ -239,14 +241,53 @@ const cakeSVG=(c)=>`<svg class="cake${c?' static':''}" viewBox="0 0 260 210"><de
 ${dripsRow(148,[40,82,125,168,205],[16,10,22,12,18],2.9)}${dripsRow(106,[62,100,140,185],[14,20,12,18],3.1)}${dripsRow(70,[80,112,150,172],[16,10,20,12],3.3)}
 <g class="pop" style="animation-delay:3.7s"><circle cx="96" cy="58" r="7" fill="#e11d48"/><circle cx="164" cy="58" r="7" fill="#e11d48"/><path d="M96 51q3-8 8-9M164 51q-3-8-8-9" stroke="#4d7c0f" stroke-width="2" fill="none"/></g>
 ${c?`<rect x="124" y="22" width="12" height="42" rx="3" fill="#fff"/><path d="M124 32l12-5M124 42l12-5M124 52l12-5" stroke="#f472b6" stroke-width="3"/>
-<g class="fl"><path class="flame" d="M130 0c11 11 7 21 0 21s-11-10 0-21z" fill="#ffb347"/><path class="flame" d="M130 8c5 5 3 11 0 11s-5-6 0-11z" fill="#fff6c8"/></g>
+<circle class="chit" cx="130" cy="20" r="38" fill="#0000"/><g class="fl"><path class="flame" d="M130 0c11 11 7 21 0 21s-11-10 0-21z" fill="#ffb347"/><path class="flame" d="M130 8c5 5 3 11 0 11s-5-6 0-11z" fill="#fff6c8"/></g>
 ${[[40,40,0],[220,30,.4],[24,110,.8],[238,96,.2],[60,8,1],[200,6,.6]].map(([x,y,d])=>`<path class="spk" style="animation-delay:${d}s" d="M${x} ${y-8}l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="#fde68a"/>`).join('')}`:''}</svg>`;
 let tapOk=false;
 init[4]=()=>{$('#cake1').innerHTML=cakeSVG(0);[300,1100,1900,2700,3900].forEach(t=>later(SFX.cake,t));later(()=>go(nextOf(4)),5300)};
-init[5]=()=>{$('#cake2').innerHTML=cakeSVG(1);$('#hb5').textContent=`Happy Birthday, ${C.name}!`;const f=['#hb5','#wish','#tap'].map(s=>$(s));f.forEach(x=>x.classList.remove('vis'));tapOk=false;
+// ---- microphone "blow" detector: low-band level of the mic (never connected to the speakers) ----
+let micStop=null;
+function listenBlow(onBlow,onFail){
+ let stream=null,src=null,lp=null,an=null,done=false,raf=0;
+ const stop=()=>{if(done)return;done=true;cancelAnimationFrame(raf);try{src&&src.disconnect();lp&&lp.disconnect()}catch(e){}try{stream&&stream.getTracks().forEach(t=>t.stop())}catch(e){}stream=src=lp=an=null;
+  try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}try{AC.resume()}catch(e){}dip(1,40);bgmResume();applyMix(.9);micStop=null};
+ micStop=stop;
+ const md=navigator.mediaDevices;if(!md||!md.getUserMedia){stop();later(onFail,0);return}
+ later(()=>{if(!done&&!stream){stop();onFail()}},20000); // permission prompt never answered
+ md.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}).then(s=>{
+  if(done||cur!==5){s.getTracks().forEach(t=>t.stop());return}
+  stream=s;try{AC.resume()}catch(e){}
+  src=AC.createMediaStreamSource(s);lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1500;an=AC.createAnalyser();an.fftSize=512;an.smoothingTimeConstant=0;
+  src.connect(lp);lp.connect(an);
+  const fb=new Float32Array(an.fftSize),bb=new Uint8Array(an.fftSize),t0=performance.now();let base=0,nb=0,ema=0,above=0,thr=.05,armed=false;
+  const step=now=>{if(done)return;if(cur!==5){stop();return}
+   let q=0;if(an.getFloatTimeDomainData){an.getFloatTimeDomainData(fb);for(let i=0;i<fb.length;i++)q+=fb[i]*fb[i]}else{an.getByteTimeDomainData(bb);for(let i=0;i<bb.length;i++){const v=(bb[i]-128)/128;q+=v*v}}
+   const rms=Math.sqrt(q/fb.length);ema=ema*.6+rms*.4;const el=now-t0;
+   if(el<500){base+=rms;nb++}else{if(!armed){armed=true;thr=Math.max((base/Math.max(1,nb))*3,.05)}
+    if(ema>thr){if(!above)above=now;if(now-above>=300){stop();onBlow();return}}else above=0;
+    if(el>10500){stop();onFail();return}}
+   raf=requestAnimationFrame(step)};
+  raf=requestAnimationFrame(step)
+ }).catch(()=>{if(!done){stop();onFail()}})}
+init[5]=()=>{if(micStop)micStop();QUIET=0;$('#cake2').innerHTML=cakeSVG(1);$('#hb5').textContent=`Happy Birthday, ${C.name}!`;
+ const hb=$('#hb5'),wi=$('#wish'),bl=$('#blow'),tp=$('#tap'),mic=C.blowMic!==false&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+ [hb,wi,bl,tp].forEach(x=>x.classList.remove('vis'));bl.classList.remove('on');bl.style.display=mic?'':'none';bl.textContent='🎤 blow here';
+ wi.textContent=mic?'Make a wish… then blow out the candle 🕯️':'Make a wish… then tap the candle to blow it out 🕯️';
+ tapOk=false;let lit=true,listening=false;
+ const enableTap=()=>{if(tapOk)return;tapOk=true;tp.classList.add('vis')};
  later(()=>{SFX.chime();burst(W/2,H*.45,90)},700);later(()=>{startRain(false,300);fireworks()},1500);
- later(()=>f[0].classList.add('vis'),1200);later(()=>f[1].classList.add('vis'),2200);later(()=>{f[2].classList.add('vis');tapOk=true},3000);
- $('#p5').onclick=()=>{if(tapOk){tapOk=false;go(nextOf(5))}}};
+ later(()=>hb.classList.add('vis'),1200);later(()=>wi.classList.add('vis'),2200);later(()=>{if(mic&&lit)bl.classList.add('vis')},3000);
+ later(()=>{if(lit)enableTap()},12000); // fallback: tap anywhere to continue
+ const smoke=()=>{const sv=$('#cake2 .cake'),pr=$('#p5').getBoundingClientRect(),r=sv.getBoundingClientRect(),sc=Math.min(r.width/260,r.height/210),x=r.left+(r.width-260*sc)/2+130*sc-pr.left,y=r.top+(r.height-210*sc)/2+8*sc-pr.top;
+  for(let k=0;k<5;k++){const e=document.createElement('i');e.className='smk';$('#p5').appendChild(e);const dx=(Math.random()-.5)*60;
+   const a=e.animate([{transform:`translate(${x}px,${y}px) scale(.6)`,opacity:0},{transform:`translate(${x+dx*.4}px,${y-40}px) scale(1.3)`,opacity:.85,offset:.25},{transform:`translate(${x+dx}px,${y-110-Math.random()*50}px) scale(2.8)`,opacity:0}],{duration:1800+Math.random()*700,delay:k*140,easing:'ease-out',fill:'backwards'});a.onfinish=()=>e.remove()}};
+ const blowOut=()=>{if(!lit)return;lit=false;if(micStop)micStop();QUIET=0;bl.style.display='none';bl.classList.remove('vis');
+  const sv=$('#cake2 .cake');if(sv)sv.classList.add('out');SFX.puff();smoke();
+  later(()=>{burst(W/2,H*.4,80,true);SFX.good();wi.textContent='…and your wish is on its way ✨'},600);later(()=>SFX.chime(),1150);
+  later(enableTap,1700);later(()=>{if(cur===5&&tapOk){tapOk=false;go(nextOf(5))}},3200)};
+ const fail=()=>{listening=false;QUIET=0;if(!lit)return;bl.classList.remove('on');bl.style.display='none';wi.textContent='tap the candle to blow it out ✨'};
+ bl.onclick=e=>{e.stopPropagation();if(!lit||listening)return;listening=true;QUIET=1;bl.classList.add('on');bl.textContent='🎤 now blow on your phone 💨';dip(.25,12000);listenBlow(blowOut,fail)};
+ $('#p5').onclick=e=>{if(lit&&e.target.closest('.chit')){blowOut();return}if(tapOk){tapOk=false;go(nextOf(5))}}};
 // ---------- 6: balloon game (many drifting balloons, only some hold a reason) ----------
 const balSVG=(c,i)=>`<svg viewBox="0 0 100 160"><defs><radialGradient id="bg${i}" cx="34%" cy="26%" r="78%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".5" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path class="body" d="M50 2C21 2 4 27 4 54c0 31 26 58 46 62C70 112 96 85 96 54 96 27 79 2 50 2z" fill="url(#bg${i})"/><path d="M41 121l9-9 9 9z" fill="${c[2]}"/><path class="str" d="M50 121c-9 9 9 17 0 27s-7 9-2 12" stroke="#fffb" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="30" rx="8" ry="15" fill="#fff" opacity=".6" transform="rotate(25 29 30)"/><ellipse cx="72" cy="88" rx="7" ry="3" fill="#fff" opacity=".22" transform="rotate(-30 72 88)"/></svg>`;
 let balRAF=0;
