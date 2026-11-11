@@ -126,7 +126,7 @@ using the specs here as they are (do NOT redesign, do NOT re-ask). Tick each box
 - Add p19 to FLOW only if N6 not using it inline. Test audio-peak mb; screenshot mid-song.
 
 ## N8. Small delights  [ ] (each is a sub-box; do all)
-- [ ] N8a. Photo "develop" reveal on p7 + p14: each photo starts covered by a cream "latent" overlay (opacity 1 + tiny scale 1.02 on the img) that fades to 0 over 2.4s when the page opens (stagger 300ms) — opacity/transform only; tap a photo during the fade = instant reveal + `SFX.photo`.
+- [x] N8a. (DONE, pushed; p7 starts each photo when it scrolls into view via IntersectionObserver, p14 staggered) Photo "develop" reveal on p7 + p14: each photo starts covered by a cream "latent" overlay (opacity 1 + tiny scale 1.02 on the img) that fades to 0 over 2.4s when the page opens (stagger 300ms) — opacity/transform only; tap a photo during the fade = instant reveal + `SFX.photo`.
 - [ ] N8b. Secret on the final page: triple-tap the orb within 1.2s -> a small glass note fades in under the line: `config.secret` (default "P.S. You are my favourite thing, always. ♡") + `burst` hearts + chime; tap again hides.
 - [ ] N8c. Live counters (only if config `since:"YYYY-MM-DD"` or `dob:"YYYY-MM-DD"` is non-empty; defaults empty => nothing shown): p12 shows a quiet italic line "together for 2 years 3 months 14 days" / "19 years = 6,939 days" updated once per second via textContent (NOT per frame). Document in config.js comments.
 - [ ] N8d. Iris page transition: on `go()` (non-seam, not entering 5/8/10) a pink circle (`#iris`, fixed, 40vmax radial pastel #f8c6e4->#fbe0f1, `transform:scale(0)->scale(4)` 520ms ease-in then fade out 420ms) wipes from the last tap point; page swap happens under it. transform+opacity only. Skip when `RM`.

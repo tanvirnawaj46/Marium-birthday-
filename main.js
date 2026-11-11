@@ -312,11 +312,19 @@ init[6]=()=>{cancelAnimationFrame(balRAF);const f=$('#bfield'),cd=$('#cards'),R=
    s.el.style.translate=`${s.x.toFixed(1)}px ${s.y.toFixed(1)}px`;s.el.style.rotate=`${(Math.sin(t/600+s.ph)*6).toFixed(1)}deg`});
   if(cur===6)balRAF=requestAnimationFrame(tick)})(last)};
 // ---------- 7: gallery ----------
+// ---- N8a: photos "develop" like instant film (cream overlay fades out; tap = instant reveal) ----
+function develop(d,im,delay){const o=document.createElement('i');o.className='dev';d.append(o);d.classList.add('dvl');
+ const fit=()=>{if(!im.offsetWidth)return;o.style.cssText=`left:${im.offsetLeft-4}px;top:${im.offsetTop-4}px;width:${im.offsetWidth+8}px;height:${im.offsetHeight+8}px;right:auto;bottom:auto;aspect-ratio:auto`};later(fit,80);later(fit,700);
+ let a=null,ia=null;const end=()=>{o.remove();d.classList.remove('dvl')};
+ const start=()=>{if(a||!o.isConnected)return;a=o.animate([{opacity:1},{opacity:1,offset:.12},{opacity:0}],{duration:2400,delay,easing:'ease-in-out',fill:'both'});a.onfinish=end;ia=im.animate([{scale:1.02},{scale:1}],{duration:2800,delay,easing:'ease-out',fill:'both'})};
+ const reveal=()=>{if(!o.isConnected)return;if(a)a.cancel();if(ia)ia.cancel();fit();o.animate([{opacity:.9},{opacity:0}],{duration:260,fill:'forwards'}).onfinish=end;SFX.photo()};
+ d._dev={start,reveal};return d._dev}
 init[7]=()=>{const car=$('#car'),dots=$('#dots'),LT=$('#lights');car.innerHTML=dots.innerHTML=LT.innerHTML='';
  for(let i=0;i<16;i++){const b=document.createElement('i'),k=i/15;b.style.cssText=`--c:${['#fde68a','#fda4af','#a5f3fc','#d8b4fe'][i%4]};animation-delay:${(i%5)*.3}s;left:${k*100}%;top:${Math.sin(k*Math.PI)*21}px`;LT.append(b)}
  C.photos.forEach((p,i)=>{const d=document.createElement('div');d.className='pol';d.style.cssText=`--r:${(i%2?1:-1)*(1.5+Math.random()*2.5)}deg;--dl:${(.3+i*.2).toFixed(2)}s;--fd:${(4+Math.random()*2.5).toFixed(1)}s`;
   const im=new Image();im.decoding='async';im.className='im';im.src=p.src;im.alt=p.caption||'';im.onerror=()=>{im.removeAttribute('src');im.style.visibility='hidden'};
-  d.append(im);d.insertAdjacentHTML('beforeend',`<p>${p.caption||''} 💛</p>`);d.onclick=()=>{if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};car.append(d);dots.insertAdjacentHTML('beforeend','<i></i>')});
+  d.append(im);d.insertAdjacentHTML('beforeend',`<p>${p.caption||''} 💛</p>`);d.onclick=()=>{if(d.classList.contains('dvl')){d._dev.reveal();return}if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};car.append(d);develop(d,im,i?200:700);dots.insertAdjacentHTML('beforeend','<i></i>')});
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);if(e.target._dev)e.target._dev.start()}}),{root:car,threshold:.55});[...car.children].forEach(x=>io.observe(x));
  const dd=$$('#dots i'),n=dd.length,fx=()=>{const c=car.scrollLeft+car.clientWidth/2,ps=[...car.children];let best=null,bd=9;const v=ps.map(p=>{const w=p.offsetWidth,d=Math.min(1,Math.abs(p.offsetLeft+w/2-c)/w);if(d<bd){bd=d;best=p}return d});ps.forEach((p,i)=>{const d=v[i];p.style.setProperty('--s',(1.09-.26*d).toFixed(3));p.style.setProperty('--k',(.2+.8*d).toFixed(3));p.style.setProperty('--o',(1-.55*d).toFixed(3));p.classList.toggle('act',p===best)})},
  idx=()=>Math.round(car.scrollLeft/((car.scrollWidth-car.clientWidth)||1)*(n-1));let last=-1;const mark=()=>{const k=idx();if(k!==last){if(last>=0){const r=car.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height*.45,12,true);SFX.cake()}last=k}dd.forEach((x,i)=>x.classList.toggle('a',i===k));fx()};
  let raf=0;car.onscroll=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;mark()})};mark();
@@ -331,7 +339,7 @@ function tagBn(r){(r||document).querySelectorAll('h1,h2,h3,p,small,div,span,butt
 $('#g7').onclick=()=>go(nextOf(7));$('#g14').onclick=()=>go(nextOf(14));
 init[14]=()=>{$('#t14').textContent=C.gallery2Title||'';$('#s14').textContent=C.gallery2Sub||'';const g=$('#g2'),b=$('#g14');g.innerHTML='';b.classList.remove('show');
  (C.photos2||[]).slice(0,5).forEach((p,i)=>{const d=document.createElement('div');d.className='fr f'+(i+1);const im=new Image();im.decoding='async';im.src=p.src;im.alt=p.caption||'';im.onerror=()=>{im.removeAttribute('src');im.style.visibility='hidden'};d.append(im);d.insertAdjacentHTML('beforeend',`<span>${p.caption||''}</span>`);
-  d.onclick=()=>{if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};g.append(d)});
+  d.onclick=()=>{if(d.classList.contains('dvl')){d._dev.reveal();return}if(!im.getAttribute('src'))return;$('#lb img').src=p.src;$('#lb p').textContent=p.caption||'';$('#lb').classList.add('on')};g.append(d);develop(d,im,[1100,2000,2900,3600,4400][i]).start()});
  later(()=>burst(W/2,H*.4,60,true),900);[1.3,2.2,3.1,3.8,4.6].forEach((t,i)=>later(()=>{const f=$('#g2 .f'+(i+1));if(!f)return;const r=f.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,16,true);SFX.cake()},t*1000));later(()=>b.classList.add('show'),5000);startRain(true,700)};
 // ---------- 8/9: envelope ----------
 init[8]=()=>{$('#h8').textContent=`One last thing, ${C.name}...`;$('#s8').textContent=`${C.from} wrote you a letter.`;

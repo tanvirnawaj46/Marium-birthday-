@@ -745,3 +745,8 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #p5 .cakestack{height:auto;min-height:min(calc(66*var(--vh)),400px)}
 #p5 .cakestack>*{flex-shrink:0}
 #p5 #wish{text-wrap:balance}
+
+/* ===== N8a: photo develop overlay ===== */
+.dev{position:absolute;z-index:2;pointer-events:none;border-radius:2px;background:radial-gradient(120% 90% at 30% 20%,#f8f0de,#eadfc5 60%,#ddcfb0)}
+.pol .dev{left:12px;top:12px;right:12px;aspect-ratio:1}
+.fr .dev{left:7px;top:7px;right:7px;bottom:40px;border-radius:3px}
