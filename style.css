@@ -691,3 +691,24 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #gdn{position:absolute;left:0;right:0;bottom:calc(17*var(--vh));padding:0 8vw;text-align:center;opacity:0;transform:translateY(12px);pointer-events:none}
 #gdn.in{animation:up 1.4s cubic-bezier(.2,.8,.2,1) forwards}
 #gend{margin:0;font:italic 600 1.5rem/1.35 "Cormorant Garamond",Georgia,serif;color:#8a2a78}
+
+/* ===== p16 love meter ===== */
+#lmq{position:absolute;left:0;right:0;top:calc(17*var(--vh));margin:0;text-wrap:balance;padding:0 7vw;text-align:center;font:italic 600 1.7rem/1.25 "Cormorant Garamond",Georgia,serif;color:#8a2a78}
+#lmh{position:absolute;left:50%;top:calc(41*var(--vh));width:116px;height:108px;margin:-54px 0 0 -58px;scale:1;transition:scale .15s ease-out;pointer-events:none}
+#lmh:before{content:"";position:absolute;inset:-45%;background:radial-gradient(circle,#ffb3d380 0,#ffb3d300 66%)}
+#lmh svg{position:relative;display:block;width:100%;height:100%;animation:lmbeat 1.15s ease-in-out infinite}
+@keyframes lmbeat{0%,100%{transform:scale(1)}45%{transform:scale(1.07)}}
+#lmh.shake{animation:lmhs .09s linear infinite alternate}
+@keyframes lmhs{from{rotate:-4deg}to{rotate:4deg}}
+#lmv{position:absolute;left:0;right:0;top:calc(57*var(--vh));margin:0;text-align:center;font:600 3.4rem/1.1 Fredoka,system-ui,sans-serif;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,#b0286e,#ec5aa0,#ff8a4a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+#lmw{position:absolute;left:0;right:0;top:calc(67*var(--vh));height:76px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:pointer}
+#lmt{position:relative;width:min(80vw,420px);height:18px}
+#lmbar{position:absolute;inset:0;border-radius:9px;background:#ffffff8c;overflow:hidden}
+#lmf{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#ff8ab4,#ff5c93 55%,#ffa35c)}
+#lmth{position:absolute;left:0;top:50%;width:34px;height:34px;margin-top:-17px;font-style:normal;font-size:29px;line-height:34px;text-align:center;translate:-17px 0;pointer-events:none}
+#lmth.wig{animation:lmwig .17s ease-in-out infinite alternate}
+@keyframes lmwig{from{rotate:-24deg}to{rotate:24deg}}
+#lmt.shk{animation:lmshk .1s linear infinite alternate}
+@keyframes lmshk{from{translate:-2px 0}to{translate:2px 0}}
+#p16 .vbar .cap{display:inline-block;padding:.32rem .95rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;opacity:1;font-size:.8rem}
+#p16 .vbar .cap:empty{display:none}

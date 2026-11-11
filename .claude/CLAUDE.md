@@ -105,7 +105,7 @@ using the specs here as they are (do NOT redesign, do NOT re-ask). Tick each box
 - Count = C.age flowers max (default 19). When full: the camera "breathes": a giant 20th flower grows in the middle (scale 2.2) with glow ring (transform/opacity), text fades in: `${C.age} flowers for ${C.age} years, and one more to grow with you ♡` (config `gardenEnd`), `SFX.chime` + `SFX.burst`, petals rain (`rain(40,true)`), `.btn` Keep going. Hint before first tap: "tap anywhere to plant" with `.hand`. Auto-plant 1 flower per 900ms if nothing tapped for 8s (so nobody gets stuck).
 - Add p17 to FLOW. Test: dispatch 19 pointerdowns, screenshot at 7 and 19.
 
-## N5. p16 "A very serious question" love meter  [ ]   (FLOW: after p6 balloons, before p7 photos)
+## N5. p16 "A very serious question" love meter  [x] DONE, pushed (drag also plays SFX.star bells; config loveQ1/loveQ2/loveEnd)   (FLOW: after p6 balloons, before p7 photos)
 - Title `.top` "A very serious question 🧐". Big heart (existing heart SVG style, 120px, `#ff5c93` gradient) with number `#lmv` below ("0%"), question `#lmq`: "How much do you love me?" (config `loveQ1`).
 - Slider track `#lmt` (height 18px, radius 9px, white 55% bg, width 80vw) with fill `#lmf` (scaleX transform from left, gradient pink->orange) and thumb `#lmth` (34px heart emoji) ; pointer drag (touch-action:none) sets value 0..100. Heart scale = 1+v/200 (transform).
 - When thumb reaches 100: the track "can't hold it" — thumb wiggles (rotate anim), meter numbers keep counting 100 -> 1,000 -> 1,000,000 -> "∞" automatically over 2.5s (number text via rAF, ease-in), heart grows to 1.6 and shakes, `SFX.meter(v)` rising tone sweep (use one `tone(300,1.6,'sine',.12,1400,0,.3)`); text `#lmq` becomes "Wait, that doesn't fit on a scale 😅".

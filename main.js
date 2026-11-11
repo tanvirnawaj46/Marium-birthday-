@@ -95,6 +95,7 @@ const SFX={
  flap(){noise(.26,.42,{bp:2000,bp2:800,q:.5,a:.02,rv:.15});noise(.05,.3,{hp:4500,dl:.04});tone(120,.16,'sine',.4,58,.78,0);noise(.04,.3,{bp:1500,q:.8,dl:.8})},
  stamp(){tone(120,.14,'sine',.55,50,0,0);noise(.05,.3,{bp:2800,q:.8});tone(1568,.35,'sine',.08,0,.08,.4);tone(2093,.3,'sine',.04,0,.14,.4)},
  star(i){const f=PENT[Math.max(0,Math.min(13,i|0))];tone(f,.9,'sine',.12,0,0,.5);tone(f*2,.5,'sine',.04,0,0,.4)},
+ meter(){tone(300,1.6,'sine',.12,1400,0,.3)},
  plant(k){const f=PENT[Math.max(0,Math.min(13,k|0))];tone(f,.6,'sine',.1,0,0,.4);noise(.05,.12,{bp:1800,q:.6})},
  meteor(){tone(3520,.9,'sine',.07,700,0,.5);noise(.8,.16,{bp:5200,bp2:1400,q:.7,a:.06,rv:.25});[2093,2637,3136,3951].forEach((f,i)=>tone(f,.55,'sine',.045,0,.2+i*.09,.5))},
  slide(){noise(1,.34,{bp:2300,bp2:4300,q:.45,a:.28,hp:900,rv:.1});noise(.5,.2,{bp:3600,q:.6,a:.1,dl:.45})},
@@ -103,8 +104,8 @@ const SFX={
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={star:1.3,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
-const DIP={star:[.6,400],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
+const CAT={star:1.3,meter:1.2,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={star:[.6,400],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -160,7 +161,7 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-const FLOW=[0,1,3,2,4,5,6,7,14,17,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
+const FLOW=[0,1,3,2,4,5,6,16,7,14,17,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
 function go(n,seam){if(n>19)n=19;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:350)}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
@@ -373,6 +374,37 @@ init[15]=()=>{const V=C.vouchers||[],L=$('#vlist'),p=$('#p15'),hint=$('#vh15'),g
  L.onclick=e=>{const t=e.target.closest('.vt');if(!t||t.classList.contains('done'))return;t.classList.add('done');got.push(+t.dataset.i);try{localStorage.setItem('vouch',JSON.stringify(got))}catch(e){}
   const r=t.getBoundingClientRect();SFX.stamp();burst(r.left+r.width*.78,r.top+r.height/2,26,true);hint.textContent='show this to '+C.from+' 💌';show()};
  g.onclick=()=>go(nextOf(15))};
+// ---------- p16: a very serious question (love meter) ----------
+init[16]=()=>{const w=$('#lmw'),t=$('#lmt'),f=$('#lmf'),th=$('#lmth'),hr=$('#lmh'),nv=$('#lmv'),q=$('#lmq'),hint=$('#lmh16'),b2=$('#lm2'),g=$('#g16');
+ const Q1=C.loveQ1||'How much do you love me?',Q2=C.loveQ2||'How much do I love you?',QE=C.loveEnd||'Always one more ♡';
+ let v=0,phase=0,down=false,gen=0,lastB=0;const W=t.clientWidth;
+ const setNum=s=>{nv.textContent=s;nv.style.fontSize=Math.min(3.4,33/Math.max(5,s.length))+'rem'};
+ const paint=()=>{f.style.transform='scaleX('+(v/100)+')';th.style.translate=(v/100*W-17)+'px 0';hr.style.scale=1+v/200};
+ const say=s=>{q.textContent=s;q.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:450,easing:'ease-out'})};
+ const show=b=>{b.classList.remove('hid');b.classList.add('show')},hide=b=>{b.classList.remove('show');b.classList.add('hid')};
+ th.classList.remove('wig');t.classList.remove('shk');hr.classList.remove('shake');hide(b2);hide(g);
+ q.textContent=Q1;setNum('0%');paint();hint.textContent='drag the heart to answer ✦';
+ const heartBurst=n=>{const r=hr.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,n,true)};
+ const overflow=()=>{if(phase)return;phase=1;down=false;v=100;paint();setNum('100%');hint.textContent='';
+  th.classList.add('wig');t.classList.add('shk');hr.classList.add('shake');hr.style.scale=1.6;say("Wait, that doesn't fit on a scale 😅");SFX.meter();
+  const my=++gen,t0=performance.now();
+  const step=now=>{if(cur!==16||my!==gen)return;const u=Math.min(1,(now-t0)/2500);
+   if(u>=1){setNum('∞');heartBurst(60);SFX.good();later(()=>show(b2),800);return}
+   const lg=2+4.8*Math.pow(u,2.2);setNum((lg>=6?1000000:Math.round(Math.pow(10,lg))).toLocaleString('en-US')+'%');requestAnimationFrame(step)};
+  requestAnimationFrame(step)};
+ const move=e=>{const r=t.getBoundingClientRect();v=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));setNum(Math.round(v)+'%');paint();hint.textContent='';
+  const b=Math.min(13,Math.floor(v/7.2));if(b!==lastB){lastB=b;if(b>0)SFX.star(b)}if(v>=99.5)overflow()};
+ w.onpointerdown=e=>{if(phase)return;e.preventDefault();down=true;try{w.setPointerCapture(e.pointerId)}catch(_){}move(e)};
+ w.onpointermove=e=>{if(down&&!phase)move(e)};
+ w.onpointerup=w.onpointercancel=()=>{down=false};
+ // part 2: my turn
+ b2.onclick=()=>{if(phase!==1)return;phase=2;gen++;hide(b2);th.classList.remove('wig');t.classList.remove('shk');hr.classList.remove('shake');
+  v=0;paint();setNum('0%');say(Q2);const my=++gen;
+  later(()=>{const t0=performance.now(),step=now=>{if(cur!==16||my!==gen)return;const u=Math.min(1,(now-t0)/900);v=100*(1-Math.pow(1-u,3));setNum(Math.round(v)+'%');paint();
+    if(u<1){requestAnimationFrame(step);return}
+    setNum('∞ + 1');hr.style.scale=1.7;hr.classList.add('shake');burst(innerWidth/2,innerHeight*.4,120,true);SFX.burst();say(QE);later(()=>show(g),1800)};
+   requestAnimationFrame(step)},650)};
+ g.onclick=()=>go(nextOf(16))};
 // ---------- p17: garden (one flower for every year) ----------
 const GB=[
  ()=>'<path d="M10 11C8 26 14 38 24 41C18 30 15 20 10 11Z" fill="#e8409a"/><path d="M38 11C40 26 34 38 24 41C30 30 33 20 38 11Z" fill="#cf2a86"/><path d="M24 5C13 12 12 29 24 41C36 29 35 12 24 5Z" fill="#ff7db8"/><path d="M24 10C20 17 20 26 24 33" fill="none" stroke="#ffd0e6" stroke-width="2" stroke-linecap="round" opacity=".85"/>',
