@@ -750,3 +750,9 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .dev{position:absolute;z-index:2;pointer-events:none;border-radius:2px;background:radial-gradient(120% 90% at 30% 20%,#f8f0de,#eadfc5 60%,#ddcfb0)}
 .pol .dev{left:12px;top:12px;right:12px;aspect-ratio:1}
 .fr .dev{left:7px;top:7px;right:7px;bottom:40px;border-radius:3px}
+
+/* ===== p12 extras: secret note + live counters ===== */
+#p12 .f-secret{text-wrap:balance;position:absolute;left:50%;top:calc(81.5*var(--vh));translate:-50% 0;z-index:4;width:max-content;max-width:78vw;padding:.65rem 1.1rem;border-radius:16px;text-align:center;font:italic 500 1.05rem/1.4 "Cormorant Garamond",Georgia,serif;color:#8a2a78;background:linear-gradient(135deg,#ffffffbd,#ffffff78);border:1px solid #ffffffd0;opacity:0;transform:translateY(10px) scale(.96);pointer-events:none;transition:opacity .6s,transform .6s cubic-bezier(.2,.9,.3,1.2)}
+#p12 .f-secret.show{opacity:1;transform:none;pointer-events:auto}
+#p12 .f-cnt{position:absolute;left:0;right:0;bottom:calc(max(var(--sab,0px),14px) + 2vh);margin:0;padding:0 7vw;text-align:center;font:italic 500 1rem/1.5 "Cormorant Garamond",Georgia,serif;color:#8a2a78;font-variant-numeric:tabular-nums;opacity:0;pointer-events:none}
+#p12.run .f-cnt{animation:fadeslow 1.2s ease 7.4s forwards}

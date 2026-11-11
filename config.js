@@ -69,6 +69,14 @@ window.CONFIG = {
   //      iPhone-e ekbar test koro; kono somossa hole false koro (tokhon shudhu candle tap) ----
   blowMic: true,
 
+  // ---- FINAL PAGE extras (p12) ----
+  // secret: orb-er (naam-er golpar) upor 1.2 second-er moddhe 3 bar tap korle ei chhoto note ashe; note-e tap korle ba abar 3 bar tap korle lukiye jay
+  secret: "P.S. You are my favourite thing, always. ♡",
+  // since: "YYYY-MM-DD" dile final page-e live "together for 2 years 3 months 14 days" ashbe (prottek second-e update). Khali "" = kichu dekhabe na
+  since: "",
+  // dob: "YYYY-MM-DD" (jonmodin) dile "19 years = 6,939 days" ashbe. Khali "" = kichu dekhabe na
+  dob: "",
+
   // ---- LETTER ----
   letter: "I keep thinking about how lucky I got with you. You have seen me at my worst and stayed anyway, and I do not say thank you nearly enough for that. This year, I hope life is gentle with you, that your days are full of laughter, and that you always know how loved you are.",
   finalLine: "Another year of you, my favourite part of every single day.",   // last page, name er niche

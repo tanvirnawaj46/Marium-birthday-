@@ -615,12 +615,26 @@ function wallInit(){const keep=$('#keep'),T0='✦ keep this as a wallpaper';keep
   if(!can){wallShow(f);reset();return}
   navigator.share({files:[f]}).then(done,e=>{if(e&&e.name==='AbortError')reset();else{wallShow(f);reset()}})};
  keep.onclick=()=>{if(keep.classList.contains('busy'))return;keep.classList.add('busy');if(wallF)return send(wallF);keep.textContent='✦ making it…';prep().then(send,()=>{keep.textContent='couldn’t make it, tap to retry';keep.classList.remove('busy')})}}
+// ---------- p12 extras: secret note (N8b) + live counters (N8c) ----------
+function p12Extras(){
+ const sec=$('#sec12'),orb=$('#p12>.orb'),cn=$('#cnt12');sec.textContent=C.secret||'P.S. You are my favourite thing, always. ♡';sec.classList.remove('show');
+ let taps=[];const toggle=()=>{if(sec.classList.contains('show')){sec.classList.remove('show');return}sec.classList.add('show');burst(innerWidth/2,innerHeight*.48,60,true);SFX.chime()};
+ orb.onpointerdown=()=>{const n=performance.now();taps=taps.filter(t=>n-t<1200);taps.push(n);if(taps.length>=3){taps=[];toggle()}};sec.onclick=()=>sec.classList.remove('show');
+ const pd=s=>{const q=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||'').trim());if(!q)return null;const d=new Date(+q[1],+q[2]-1,+q[3]);return isNaN(d)?null:d},since=pd(C.since),dob=pd(C.dob);
+ cn.textContent='';cn.style.display=since||dob?'':'none';if(!(since||dob))return;
+ const ymd=(a,b)=>{let y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();if(d<0){m--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate()}if(m<0){y--;m+=12}return[y,m,d]};
+ const un=(n,w)=>n+' '+w+(n===1?'':'s'),z=n=>String(n).padStart(2,'0');
+ const render=()=>{const now=new Date(),clock=z(now.getHours())+':'+z(now.getMinutes())+':'+z(now.getSeconds()),L=[];
+  if(since&&since<=now){const[y,m,d]=ymd(since,now),P=[];if(y)P.push(un(y,'year'));if(m)P.push(un(m,'month'));if(d||!P.length)P.push(un(d,'day'));L.push('together for '+P.join(' ')+' · '+clock)}
+  if(dob&&dob<=now){const[y]=ymd(dob,now),days=Math.floor((now-dob)/864e5);L.push(un(y,'year')+' = '+days.toLocaleString('en-US')+' days')}
+  cn.textContent=L.join('\n')};
+ cn.style.whiteSpace='pre-line';const tick=()=>{if(cur!==12)return;render();later(tick,1000)};tick()}
 init[12]=()=>{const p=$('#p12'),sky=$('#sky');p.classList.remove('run');void p.offsetWidth;p.classList.add('run');sky.innerHTML='';
  const nm=$('#n12');nm.textContent=C.name;nm.style.fontSize=Math.min(3.8,22/Math.max(C.name.length,4))+'rem';$('#fl').textContent=C.finalLine||'Another year of you, my favourite part of every single day.';
  const ph=`made with love ✦ for ${C.name} ✦ by ${C.from} ✦ `;$('#rt').textContent=ph+ph;SFX.chime();
  if(!RM){const lan=()=>{if(cur!==12)return;const W=p.clientWidth,H=p.clientHeight,el=document.createElement('div');el.className='ln';const x=Math.max(60,Math.min(W-60,W*(.12+.76*Math.random())));el.style.left=(x-32)+'px';el.style.top=(H-100)+'px';el.innerHTML='<div class="lb"></div>';sky.appendChild(el);
   el.animate([{transform:'translate(0,0) scale(1)',opacity:0},{opacity:.95,offset:.1},{opacity:.95,offset:.75},{transform:`translate(${(Math.random()-.5)*90}px,${-H*.95}px) scale(.45)`,opacity:0}],{duration:16000,easing:'cubic-bezier(.3,.12,.3,1)',fill:'both'}).onfinish=()=>el.remove();later(lan,7000)};later(lan,2500);later(lan,6500)}
- $('#replay').onclick=()=>{bgm.currentTime=0;go(1)};wallInit()};
+ $('#replay').onclick=()=>{bgm.currentTime=0;go(1)};wallInit();p12Extras()};
 // ---------- scratch cards ----------
 const REC=/[?&]record/.test(location.search),hnd=$('#hnd');
 function scratchInit(cv,type,onDone,hint){
