@@ -34,7 +34,7 @@ html,body{height:100%;overflow:hidden;font-family:Fredoka,system-ui,sans-serif;b
 #unwrap{width:100%;height:100%;padding:0;animation:glowb 2s 1.5s infinite}
 .scr canvas,#sc2{position:absolute;inset:0;width:100%;height:100%;touch-action:none;z-index:5;cursor:pointer}
 .scr canvas{border-radius:99px}
-@keyframes glowb{50%{box-shadow:0 8px 44px #fbb040cc}}
+@keyframes glowb{50%{scale:1.035}}
 
 /* p1: bow & arrow */
 #arena{position:relative;width:100%;max-width:520px;height:calc(72*var(--vh));touch-action:none;cursor:grab}
@@ -98,7 +98,7 @@ html,body{height:100%;overflow:hidden;font-family:Fredoka,system-ui,sans-serif;b
 /* gallery */
 .lights{position:absolute;top:calc(19*var(--vh));left:3%;right:3%;height:26px;border-bottom:2px solid #ffe9b055;border-radius:0 0 50% 50%/0 0 100% 100%;z-index:2}
 .lights i{position:absolute;width:9px;height:12px;margin-left:-4px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:var(--c);box-shadow:0 0 12px 3px var(--c);animation:bulb 1.8s infinite}
-@keyframes bulb{50%{opacity:.35;box-shadow:0 0 4px 1px var(--c)}}
+@keyframes bulb{50%{opacity:.35}}
 #car{display:flex;gap:1.4rem;overflow-x:auto;scroll-snap-type:x mandatory;width:100%;padding:3.2rem calc(50% - min(34vw,140px));scrollbar-width:none;scroll-behavior:smooth}
 #car::-webkit-scrollbar{display:none}
 .pol{position:relative;flex:0 0 min(68vw,280px);scroll-snap-align:center;background:#f8f6f0;padding:12px 12px 44px;border-radius:6px;box-shadow:0 14px 40px #000a;rotate:var(--r);scale:var(--s,1);animation:polIn .9s backwards;cursor:zoom-in;transition:scale .25s,opacity .25s;transform-origin:50% 0}
@@ -170,7 +170,7 @@ html,body{height:100%;overflow:hidden;font-family:Fredoka,system-ui,sans-serif;b
 .vmic{font-size:3rem;filter:drop-shadow(0 0 16px #f472b6)}
 .wave{display:flex;gap:4px;height:34px;align-items:center}.wave i{width:5px;height:8px;border-radius:3px;background:#f9a8d4;transition:height .3s}
 .wave.on i{animation:wv .8s infinite ease-in-out}.wave.on i:nth-child(2n){animation-delay:.2s}.wave.on i:nth-child(3n){animation-delay:.4s}
-@keyframes wv{50%{height:32px}}
+@keyframes wv{50%{transform:scaleY(4)}}
 #rec{display:none;flex-direction:column;align-items:center;gap:.8rem}body.rec #rec{display:flex}body.rec .vcard{display:none}
 a.btn{display:inline-block;text-decoration:none}a.btn.hid{display:none}
 
@@ -247,8 +247,10 @@ h1.bn.bn,h2.bn.bn{font-family:'Galada','Hind Siliguri',cursive;font-weight:400;z
  box-shadow:0 16px 40px #0009,0 0 36px #ffb6d833}
 @keyframes polIn{from{opacity:0;translate:0 140px;rotate:calc(var(--r)*-9);filter:blur(8px)}}
 @keyframes pfl{50%{translate:0 -8px}}
-.pol:after{content:"";position:absolute;left:12px;right:12px;top:12px;aspect-ratio:1;border-radius:2px;pointer-events:none;background:linear-gradient(115deg,transparent 40%,#ffffff99 50%,transparent 60%) 100% 0/300% 100% no-repeat;animation:shine 5s ease-in-out calc(var(--dl,.3s) + 1.5s) infinite}
-@keyframes shine{0%,55%{background-position:100% 0}100%{background-position:0% 0}}
+/* (.pol:after shine is switched off further down; kept transform-only in case it is enabled again; no overflow:hidden here, the tape sits outside the card) */
+.pol{--pw:min(68vw,280px)}
+.pol:after{content:"";position:absolute;left:12px;top:12px;width:calc(3*(var(--pw) - 24px));height:calc(var(--pw) - 24px);pointer-events:none;background:linear-gradient(115deg,transparent 40%,#ffffff99 50%,transparent 60%);translate:-66.667% 0;animation:shine 5s ease-in-out calc(var(--dl,.3s) + 1.5s) infinite}
+@keyframes shine{0%,55%{translate:-66.667% 0}100%{translate:0 0}}
 .pol .im{transition:filter .4s}
 .pol p{transition:color .3s}
 
@@ -258,7 +260,7 @@ h1.bn.bn,h2.bn.bn{font-family:'Galada','Hind Siliguri',cursive;font-weight:400;z
 .f2 img{transform-origin:70% 30%}.f3 img{transform-origin:50% 60%}.f4 img{transform-origin:30% 70%}.f5 img{transform-origin:70% 70%}
 @keyframes kb{to{scale:1.13}}
 .fr:before{content:"💗";position:absolute;top:3px;right:6px;font-size:1.15rem;line-height:1;z-index:3;animation:beat 1.4s infinite;filter:drop-shadow(0 2px 4px #0006)}
-.fr:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 40%,#ffffff88 50%,transparent 60%) 100% 0/300% 100% no-repeat;animation:shine 6s ease-in-out 3s infinite}
+.fr:after{content:"";position:absolute;left:0;top:0;bottom:0;width:300%;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 40%,#ffffff88 50%,transparent 60%);translate:-66.667% 0;animation:shine 6s ease-in-out 3s infinite}
 .f2:after{animation-delay:4s}.f3:after{animation-delay:5s}.f4:after{animation-delay:6s}.f5:after{animation-delay:7s}
 .fr span{z-index:3}
 .f1{animation:inL 1.2s cubic-bezier(.2,1.2,.4,1) .2s both,flt 5s 1.4s infinite ease-in-out,sway 6s 1.4s infinite ease-in-out}
