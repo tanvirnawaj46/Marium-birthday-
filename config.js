@@ -60,6 +60,24 @@ window.CONFIG = {
   // ---- GARDEN (p17 "Planted just for you") : age = koyta phul lagano jabe (default 19). {n} = age number ----
   gardenEnd: "{n} flowers for {n} years, and one more to grow with you ♡",
 
+  // ---- REASONS JAR (p20 "A jar full of reasons") : jar-e protita heart-e ekta karon. 12 ta rakho (4..16 chalbe). Choto, sweet, tomar nijer kotha-o likhte paro ----
+  reasonsTitle: "A jar full of reasons 💌",
+  reasons: [
+    "your laugh",
+    "the way you care about everyone",
+    "your kindness, even when nobody notices",
+    "how safe home feels with you",
+    "your smile on an ordinary day",
+    "the way you make small things special",
+    "your quiet strength",
+    "how you really listen",
+    "your sleepy morning face",
+    "the way you believe in me",
+    "you, exactly as you are",
+    "every tomorrow with you"
+  ],
+  reasonsEnd: "…and a thousand more I haven't said yet ♡",
+
   // ---- LOVE METER (p16 "A very serious question") ----
   loveQ1: "How much do you love me?",
   loveQ2: "How much do I love you?",

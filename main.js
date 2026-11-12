@@ -165,12 +165,12 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
-function go0(n,seam,fast){if(n>19)n=19;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
+const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,20,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
+function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
 let tapPt=[0,0,0],irisOn=0;addEventListener('pointerdown',e=>{tapPt=[e.clientX,e.clientY,performance.now()]},true);
-function go(n,seam){const ir=$('#iris');if(n>19)n=19;if(irisOn&&!seam)return; // ignore double taps while the wipe runs
+function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; // ignore double taps while the wipe runs
  if(!ir||seam||RM||!started||n===5||n===8||n===10)return go0(n,seam);
  irisOn=1;setTimeout(()=>{irisOn=0},2500);const t=performance.now()-tapPt[2]<2000,x=t?tapPt[0]:innerWidth/2,y=t?tapPt[1]:innerHeight*.6,sz=Math.max(innerWidth,innerHeight)*.4,
   sc=(2*Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y))/sz*1.08).toFixed(2);
@@ -532,6 +532,56 @@ init[17]=()=>{const st=$('#gst'),fl=$('#gfl'),big=$('#gbig'),chip=$('#fcn'),hint
  st.onpointerup=st.onpointercancel=()=>{down=false;if(!done)arm()};
  arm();later(showBtn,70000);
  g.onclick=()=>go(nextOf(17))};
+// ---------- p20: reasons jar ----------
+init[20]=()=>{const st=$('#rjs'),wr=$('#rjw'),box=$('#rjh'),chip=$('#rjn'),hint=$('#rjhint'),g=$('#g20'),dn=$('#rjdn'),hand=$('#rjhand'),p=$('#p20'),ov=$('#rjo'),card=$('#rjc'),lid=$('#rjlid'),tx=$('#rjt');
+ let R=(Array.isArray(C.reasons)?C.reasons.filter(Boolean):[]).slice(0,16);if(R.length<2)R=['your smile','your kindness','you'];
+ const N=R.length;$('#t20').textContent=C.reasonsTitle||'A jar full of reasons 💌';$('#rjend').textContent=C.reasonsEnd||"…and a thousand more I haven't said yet ♡";
+ box.innerHTML='';p.querySelectorAll('.rfly').forEach(e=>e.remove());ov.classList.remove('on');card.getAnimations().forEach(a=>a.cancel());lid.getAnimations().forEach(a=>a.cancel());
+ dn.classList.remove('in');g.classList.remove('show');g.classList.add('hid');p.classList.remove('done');
+ chip.textContent='0 / '+N;hint.textContent='tap a little heart to read it ✦';
+ const jw=wr.clientWidth,k=jw/300,cols=N>12?4:3,sz=Math.round(60*k*(N>12?.88:1)),rows=Math.ceil(N/cols);
+ let sd=7;const rn=()=>(sd=sd*16807%2147483647)/2147483647;
+ const CL=['#ff8fb8','#f7a6d3','#c4a2f2','#ffa9a0','#ffc68a','#e58ae0','#ff7fa8','#b9b3f7'];
+ const HS=c=>`<svg viewBox="0 0 64 60"><path d="M32 57C10 40 3 28 3 18 3 9 10 3 18 3c6 0 11 3 14 8 3-5 8-8 14-8 8 0 15 6 15 15 0 10-7 22-29 39z" fill="${c}"/><path d="M32 11C29 6 24 3 18 3 10 3 3 9 3 18c0 10 7 22 29 39z" fill="#fff" opacity=".26"/><path d="M8 14L32 38L56 14" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.4" stroke-linejoin="round"/><path d="M32 11V57" stroke="#000" stroke-opacity=".07" stroke-width="1.2"/></svg>`;
+ // shuffle which reason sits in which heart (seeded), so the order is a surprise
+ const ord=R.map((_,i)=>i);for(let i=N-1;i>0;i--){const j=Math.floor(rn()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]]}
+ let top=null,k0=0,busy=false,done=false,canClose=false,gen=0;const hs=[];
+ for(let i=0;i<N;i++){const r=Math.floor(i/cols),c=i%cols,inRow=Math.min(cols,N-r*cols),step=sz*.92,x0=(jw-inRow*step)/2+(r%2?sz*.16:-sz*.16);
+  let x=x0+c*step+step/2+(rn()-.5)*8*k;x=Math.max(40*k+sz/2,Math.min(260*k-sz/2,x));
+  const y=316*k-sz*.5-r*sz*.7+(rn()-.5)*6*k,col=CL[(i*3+r)%CL.length],rot=Math.round((rn()-.5)*50);
+  const e=document.createElement('div');e.className='rh';e.style.cssText=`left:${(x-sz/2).toFixed(1)}px;top:${(y-sz*.47).toFixed(1)}px;width:${sz}px;height:${(sz*.94).toFixed(1)}px;rotate:${rot}deg;z-index:${r+1}`;
+  e.style.setProperty('--bd',(2.6+rn()*1.6).toFixed(2)+'s');e.style.setProperty('--dl',(-rn()*3).toFixed(2)+'s');e.innerHTML=HS(col);e.dataset.i=ord[i];e.dataset.rot=rot;
+  e.onclick=()=>open(e);box.appendChild(e);hs.push(e);if(!top||y<top.y)top={e,y,x}}
+ hand.style.display='block';hand.style.left=(top.x-14)+'px';hand.style.top=(top.y-6)+'px';
+ const showBtn=()=>{g.classList.remove('hid');g.classList.add('show')};
+ const finish=()=>{done=true;hint.textContent='';p.classList.add('done');
+  later(()=>{SFX.chime();lid.animate([{transform:'translateY(0) rotate(0deg)'},{transform:'translateY(-30px) rotate(-9deg)',offset:.4},{transform:'translateY(0) rotate(0deg)'}],{duration:900,easing:'cubic-bezier(.3,1.4,.5,1)'})},300);
+  later(()=>{SFX.burst();const r=wr.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height*.2,90,true);rain(36,true);dn.classList.add('in')},1100);
+  later(()=>rain(26,true),3000);later(showBtn,3400)};
+ const close=()=>{if(!canClose)return;canClose=false;
+  card.animate([{transform:'translateY(0) scale(1)',opacity:1},{transform:'translateY(-46px) scale(.72)',opacity:0}],{duration:330,easing:'ease-in',fill:'forwards'});
+  later(()=>{ov.classList.remove('on');card.getAnimations().forEach(a=>a.cancel());busy=false;if(k0>=N)finish();else arm()},340)};
+ ov.onclick=close;
+ const showCard=i=>{k0++;chip.textContent=k0+' / '+N;chip.animate([{transform:'scale(1.22)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'});
+  $('#rjk').textContent='reason no. '+k0;const t=R[i];tx.textContent=t;tx.style.fontSize=t.length>34?'1.65rem':t.length>18?'1.9rem':'2.3rem';
+  hint.textContent='';
+  card.getAnimations().forEach(a=>a.cancel());ov.classList.add('on');
+  card.animate([{transform:'scale(.16,.08) rotate(-14deg)',opacity:0},{transform:'scale(1,.1) rotate(-3deg)',opacity:1,offset:.34},{transform:'scale(1,1) rotate(0deg)',opacity:1}],{duration:780,easing:'cubic-bezier(.25,.9,.3,1.05)'});
+  tx.animate([{opacity:0},{opacity:1}],{duration:520,delay:420,fill:'backwards'});
+  SFX.unfold();later(()=>SFX.star(Math.round((k0-1)*13/Math.max(1,N-1))),420);
+  later(()=>{const r=card.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,12,true)},700);
+  canClose=false;later(()=>{canClose=true},900)};
+ const open=e=>{if(busy||done||e.classList.contains('gone'))return;busy=true;gen++;hand.style.display='none';
+  e.classList.add('gone');const pr=p.getBoundingClientRect(),er=e.getBoundingClientRect(),sr=st.getBoundingClientRect();
+  const ex=er.left+er.width/2-pr.left,ey=er.top+er.height/2-pr.top,tX=sr.left+sr.width/2-pr.left,tY=sr.top+sr.height/2-pr.top-H*.04;
+  const f=document.createElement('div');f.className='rfly';f.style.cssText=`left:${ex-er.width/2}px;top:${ey-er.height/2}px;width:${er.width}px;height:${er.height}px`;f.innerHTML=e.innerHTML;p.appendChild(f);
+  const rot=+e.dataset.rot||0,dx=tX-ex,dy=tY-ey;SFX.pop();
+  f.animate([{transform:`translate(0,0) rotate(${rot}deg) scale(1)`},{transform:`translate(${dx*.45}px,${dy*.5-80}px) rotate(${rot*.3}deg) scale(1.9)`,offset:.5},{transform:`translate(${dx}px,${dy}px) rotate(0deg) scale(2.7)`}],{duration:620,easing:'cubic-bezier(.3,.7,.3,1)',fill:'forwards'});
+  later(()=>{f.remove();showCard(+e.dataset.i)},620)};
+ // nobody gets stuck: show the hand again after 10s idle, and the button after 90s whatever happens
+ const arm=()=>{const my=++gen;later(()=>{if(my===gen&&!busy&&!done){const rem=hs.filter(e=>!e.classList.contains('gone'));if(rem.length){const e=rem[rem.length-1],r=e.getBoundingClientRect(),s=wr.getBoundingClientRect();hand.style.left=(r.left-s.left+r.width/2-14)+'px';hand.style.top=(r.top-s.top+r.height*.3)+'px';hand.style.display='block'}}},10000)};
+ arm();later(showBtn,90000);
+ g.onclick=()=>go(nextOf(20))};
 // ---------- p18: connect our stars (constellation heart) ----------
 init[18]=()=>{const st=$('#cst'),cv=$('#cvc'),cf=$('#cvf'),ring=$('#cring'),hand=$('#chand'),hint=$('#ch18'),g=$('#g18'),dn=$('#cdn'),p=$('#p18'),met=$('#met');
  const nm=$('#cnm');nm.textContent=C.name;nm.style.fontSize=Math.min(3.2,20/Math.max(C.name.length,4))+'rem';$('#cln').textContent=C.starLine||'my favourite constellation';
