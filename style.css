@@ -581,31 +581,81 @@ html.ds{overflow:visible}
 html,body,#p2,#sc0{touch-action:pan-x pan-y}
 
 /* ===== final page: minimal, elegant, with wish lanterns that turn into stars ===== */
-#p12{gap:0;justify-content:center;color:#8a2a78}
-#p12 .f-eye{font:600 .72rem Fredoka;letter-spacing:.95em;margin-right:-.95em;color:#9b2f78;opacity:0;filter:blur(6px);position:relative;z-index:2}
-#p12.run .f-eye{animation:feye 2.6s cubic-bezier(.2,.8,.2,1) .3s forwards}
-@keyframes feye{to{opacity:.85;letter-spacing:.5em;margin-right:-.5em;filter:none}}
-#p12 .orb{position:relative;z-index:2;width:min(80vw,340px);aspect-ratio:1;display:grid;place-items:center;margin-top:1rem;opacity:0;transform:scale(.88)}
-#p12.run .orb{animation:orbin 2.4s cubic-bezier(.2,.8,.2,1) .7s forwards}
-@keyframes orbin{to{opacity:1;transform:none}}
-#p12 .halo{position:absolute;inset:15%;border-radius:50%;background:radial-gradient(circle at 36% 30%,#fffffff2,#ffffff77 40%,#ffc4e6aa 80%,#ffffff22);border:1px solid #ffffffd0;box-shadow:0 0 70px #ff9ed17a,inset 0 0 44px #ffffffaa;animation:breathe 5s ease-in-out infinite}
-@keyframes breathe{50%{scale:1.05}}
-#p12 .ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 80s linear infinite;overflow:visible}
-#p12 .ring text{font:500 10.5px Fredoka;fill:#9b2f78;opacity:.7;letter-spacing:.12em}
-@keyframes spin{to{rotate:360deg}}
-#p12 .sp{position:absolute;inset:0;animation:spin 16s linear infinite;pointer-events:none}
-#p12 .sp:before{content:"\2726";position:absolute;left:50%;top:2.5%;translate:-50% 0;color:#f5b83d;font-size:15px;filter:drop-shadow(0 0 6px #ffd98a)}
-#p12 .sp.s2{inset:7%;animation-duration:23s;animation-direction:reverse}
-#p12 .sp.s2:before{font-size:11px;color:#ff8fc7;filter:drop-shadow(0 0 6px #ffc2e3)}
-#p12 .f-name{position:relative;z-index:2;font:italic 600 3.7rem/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.01em;text-align:center;background:linear-gradient(90deg,#b0286e,#ec5aa0,#8a4fd1,#ff7a59,#b0286e);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;opacity:0;filter:blur(14px);scale:1.08}
-#p12.run .f-name{animation:nin 2.8s cubic-bezier(.2,.8,.2,1) 1.5s forwards}
-@keyframes nin{to{opacity:1;filter:blur(0);scale:1}}
-#p12 .f-line{position:relative;z-index:2;margin-top:1.5rem;max-width:76vw;text-align:center;font:italic 500 1.18rem/1.5 "Cormorant Garamond",Georgia,serif;color:#8a2a78;opacity:0;transform:translateY(12px)}
-#p12.run .f-line{animation:up 1.4s cubic-bezier(.2,.8,.2,1) 3.4s forwards}
+#p12{gap:0;justify-content:flex-start;padding-top:calc(var(--sat) + 122px);color:#8a2a78;overflow:hidden}
+/* ===== final page: birthday card = bunting + big name + message card + balloon bouquets ===== */
+#p12 .fbg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#p12 .fbg i{position:absolute;border-radius:50%;opacity:0}
+#p12 .fbg .b1{width:96vw;height:96vw;left:-38vw;top:-10vh;background:radial-gradient(circle,#ffa6d4b0,#ffa6d400 68%)}
+#p12 .fbg .b2{width:108vw;height:108vw;right:-46vw;bottom:-16vh;background:radial-gradient(circle,#b7a2ff90,#b7a2ff00 68%)}
+#p12.run .fbg i{animation:bgin 2.4s ease .2s forwards,bgdrift 17s ease-in-out 2.6s infinite alternate}
+#p12.run .fbg .b2{animation-duration:2.4s,21s}
+@keyframes bgin{to{opacity:1}}
+@keyframes bgdrift{to{translate:7vw -3vh}}
+/* bunting */
+#bunt12{position:absolute;left:0;right:0;top:calc(var(--sat) + 24px);height:116px;pointer-events:none;z-index:2;opacity:0}
+#p12.run #bunt12{animation:bdrop 1.2s cubic-bezier(.3,1.35,.5,1) .15s both}
+@keyframes bdrop{from{translate:0 -150px;opacity:0}to{translate:0 0;opacity:1}}
+#bunt12 svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
+#bunt12 .fg{position:absolute;width:32px;height:42px;margin-left:-16px;transform-origin:50% 0;rotate:var(--r);clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(135deg,#ffffff70,#ffffff00 58%),var(--c);animation:fsw var(--sd) ease-in-out var(--dl) infinite alternate}
+#bunt12 .fg:after{content:"";position:absolute;left:50%;top:22%;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:#ffffffd8}
+@keyframes fsw{from{rotate:calc(var(--r) - 3.5deg)}to{rotate:calc(var(--r) + 3.5deg)}}
+/* title + name */
+#p12 .f-head{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+#p12 .f-hb{margin:0;display:flex;align-items:center;gap:.8rem;opacity:0;transform:translateY(-10px)}
+#p12 .f-hb b{font:700 clamp(2.1rem,9.4vw,2.7rem)/1.05 Caveat,"Segoe Script",cursive;background:linear-gradient(90deg,#b0286e,#ec5aa0 50%,#8a4fd1);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 .1em}
+#p12 .f-hb i{font-style:normal;color:#f5b83d;font-size:1rem;animation:ftw 2.8s ease-in-out infinite}
+#p12 .f-hb i:last-child{animation-delay:1.2s;color:#ff8fc7}
+#p12.run .f-hb{animation:up 1.4s cubic-bezier(.2,.8,.2,1) .6s forwards}
+@keyframes ftw{50%{opacity:.3;scale:.7}}
+#p12.pst .f-name{margin:.05rem 0 0;font:italic 600 5rem/1.05 "Cormorant Garamond",Georgia,serif;letter-spacing:.005em;text-align:center;white-space:nowrap;text-shadow:0 2px 0 #ffffffb8,0 10px 26px #ff8fc760}
+#p12 .f-name span{display:inline-block;opacity:0}
+#p12.run .f-name span{animation:lin 1.1s cubic-bezier(.2,.9,.3,1.25) var(--ld,1s) both}
+@keyframes lin{from{opacity:0;translate:0 30px;scale:.65}to{opacity:1;translate:0 0;scale:1}}
+#p12 .flo{width:min(54vw,214px);margin-top:.1rem;overflow:visible;opacity:0;pointer-events:none}
+#p12.run .flo{animation:fin 1.4s ease 2.3s forwards}
+@keyframes fin{to{opacity:1}}
+#p12 .gl{position:absolute;color:#f5b83d;font-size:14px;line-height:1;opacity:0;pointer-events:none}
+#p12 .gl.g2{color:#ff8fc7;font-size:11px}
+#p12.run .gl{animation:ftw 3.2s ease-in-out calc(2.2s + var(--d)) infinite}
+/* message card */
+#p12 .f-card{position:relative;z-index:2;margin-top:1.7rem;width:min(86vw,360px);box-sizing:border-box;padding:1.7rem 1.4rem 1.15rem;border-radius:22px;background:linear-gradient(160deg,#fffaf7f2,#fff2f9ee);border:1px solid #ffffffe6;box-shadow:0 18px 44px #b0286e28,0 2px 8px #b0286e18;opacity:0;transform:translateY(16px)}
+#p12 .f-card:before{content:"";position:absolute;inset:8px;border:1.4px dashed #f0b6d2;border-radius:16px;pointer-events:none}
+#p12.run .f-card{animation:up 1.5s cubic-bezier(.2,.8,.2,1) 2.6s forwards}
+#p12 .seal{position:absolute;left:50%;top:-17px;translate:-50% 0;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ff9db9,#e8335f 70%);color:#fff;font-size:.95rem;box-shadow:0 4px 10px #e8335f55;animation:sealb 2.2s ease-in-out infinite}
+@keyframes sealb{50%{scale:1.1}}
+#p12 .f-line{margin:0;max-width:none;font:italic 500 1.22rem/1.5 "Cormorant Garamond",Georgia,serif;color:#8a2a78;text-wrap:balance}
+#p12 .f-dv{display:block;width:46px;height:1.5px;margin:.75rem auto .55rem;background:linear-gradient(90deg,transparent,#e9a4c8,transparent)}
+#p12.pst .f-sig{margin:0;font:700 clamp(1.45rem,6.6vw,1.8rem)/1.15 Caveat,"Segoe Script",cursive;color:#b0286e;text-wrap:balance}
+/* balloon bouquets + gifts */
+#bal12{position:absolute;left:0;right:0;bottom:0;height:50vh;z-index:1;pointer-events:none;overflow:hidden}
+#bal12 .bl{position:absolute;transform-origin:50% 100%;rotate:var(--r);animation:blrise 1.9s cubic-bezier(.2,.9,.3,1) var(--dl,0s) both,blsw var(--sd,4s) ease-in-out calc(var(--dl,0s) + 1.9s) infinite alternate}
+#bal12 .bl svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+#bal12 .bl .bd{pointer-events:auto;cursor:pointer}
+#bal12 .bl.pop svg{animation:blpop .3s ease-out forwards;transform-origin:50% 22%}
+#bal12 .bl.pop .bd{pointer-events:none}
+@keyframes blrise{from{translate:0 55vh;opacity:0}15%{opacity:1}to{translate:0 0;opacity:1}}
+@keyframes blsw{from{rotate:calc(var(--r) - 3deg)}to{rotate:calc(var(--r) + 3deg)}}
+@keyframes blpop{to{transform:scale(1.4);opacity:0}}
+#bal12 .gift{position:absolute;bottom:calc(var(--sab) + 30px);width:88px;pointer-events:none;opacity:0;animation:gin .9s cubic-bezier(.3,1.4,.5,1) .5s forwards}
+#bal12 .gift svg{display:block;width:100%;height:auto;overflow:visible}
+@keyframes gin{from{opacity:0;translate:0 24px;scale:.8}to{opacity:1;translate:0 0;scale:1}}
+/* confetti + petals + butterflies */
+#pet{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+#pet i{position:absolute;top:-6vh;left:var(--x);width:var(--s);height:calc(var(--s)*1.3);background:var(--c);border-radius:80% 0 80% 0;opacity:0;font-style:normal;animation:pfall var(--d) linear var(--dl) infinite}
+#pet i.c{border-radius:2px;width:calc(var(--s)*.7);height:calc(var(--s)*1.15)}
+#pet i.h{background:none;color:var(--c);font-size:calc(var(--s)*1.15);line-height:1;border-radius:0;width:auto;height:auto}
+@keyframes pfall{0%{translate:0 0;rotate:0deg;opacity:0}8%{opacity:.9}30%{translate:var(--sw) 28vh;rotate:160deg}60%{translate:calc(var(--sw)*-.6) 62vh;rotate:330deg;opacity:.9}92%{opacity:.7}100%{translate:calc(var(--sw)*.4) 112vh;rotate:540deg;opacity:0}}
+#p12 .bf{position:absolute;left:0;top:0;z-index:5;pointer-events:none;font-size:1.5rem;line-height:1;opacity:0}
+#p12 .bf i{display:block;font-style:normal;animation:flap .3s ease-in-out infinite alternate}
+#p12.run .bfa{animation:fin 1.2s ease 4.4s forwards,bfa 24s ease-in-out 4.4s infinite}
+#p12.run .bfb{font-size:1.2rem;animation:fin 1.2s ease 5.6s forwards,bfb 29s ease-in-out 5.6s infinite}
+@keyframes flap{to{transform:scaleX(.3)}}
+@keyframes bfa{0%{translate:-12vw 74vh;rotate:20deg}16%{translate:22vw 55vh;rotate:-18deg}36%{translate:70vw 38vh;rotate:24deg}56%{translate:88vw 60vh;rotate:-22deg}76%{translate:28vw 20vh;rotate:16deg}100%{translate:-12vw 74vh;rotate:20deg}}
+@keyframes bfb{0%{translate:112vw 24vh;rotate:-20deg}20%{translate:66vw 66vh;rotate:22deg}42%{translate:14vw 44vh;rotate:-16deg}64%{translate:40vw 80vh;rotate:20deg}82%{translate:90vw 40vh;rotate:-24deg}100%{translate:112vw 24vh;rotate:-20deg}}
 #p12 .f-re{position:relative;z-index:2;margin-top:1.1rem;border:0;background:none;font:500 .78rem Fredoka;letter-spacing:.16em;color:#9b2f78;opacity:0}
 #p12.run .f-re{animation:fadeslow 1.2s ease 6.6s forwards}
 @keyframes fadeslow{to{opacity:.55}}
-#sky{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}
+#sky{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1}
 #sky .ln{position:absolute;width:64px;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
 #sky .lb{position:relative;width:54px;height:68px;border-radius:15px 15px 22px 22px/16px 16px 28px 28px;background:linear-gradient(180deg,#ffe9bf,#ffc08a 62%,#ff9b72);box-shadow:0 0 26px 8px #ffc98a99,0 0 70px 24px #ff9e7a44,inset 0 -10px 16px #ff7a5a66,inset 0 6px 10px #fffa;animation:lsway 5s ease-in-out infinite;transform-origin:50% 0}
 #sky .lb:before{content:"";position:absolute;left:4px;right:4px;top:-4px;height:8px;border-radius:8px;background:#e8895f}
@@ -615,7 +665,7 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #sky .lw{margin-top:10px;width:150px;text-align:center;font:italic 600 .92rem/1.25 "Cormorant Garamond",Georgia,serif;color:#8a2a6a;text-shadow:0 0 8px #fff,0 0 14px #fff}
 #sky .st{position:absolute;color:#f5b83d;filter:drop-shadow(0 0 5px #ffd98a);animation:starin 1.6s ease both,tw 2.6s ease-in-out var(--d) infinite 1.6s;translate:-50% -50%}
 @keyframes starin{from{opacity:0;scale:.2}to{opacity:1;scale:1}}
-@media (prefers-reduced-motion:reduce){#p12 .ring,#p12 .sp,#p12 .halo{animation:none}}
+@media (prefers-reduced-motion:reduce){#p12 .gl,#p12 .f-hb i,#p12 .seal,#bunt12 .fg,#bal12 .bl{animation:none}#p12 .bf,#pet,#p12 .fbg i{display:none}#bal12 .bl{opacity:1}}
 
 /* ===== p15 voucher book ===== */
 #vlist{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(21*var(--vh));overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y;display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:8px 0 22px;scrollbar-width:none}
@@ -754,9 +804,9 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .fr .dev{left:7px;top:7px;right:7px;bottom:40px;border-radius:3px}
 
 /* ===== p12 extras: secret note + live counters ===== */
-#p12 .f-secret{text-wrap:balance;position:absolute;left:50%;top:calc(81.5*var(--vh));translate:-50% 0;z-index:4;width:max-content;max-width:78vw;padding:.65rem 1.1rem;border-radius:16px;text-align:center;font:italic 500 1.05rem/1.4 "Cormorant Garamond",Georgia,serif;color:#8a2a78;background:linear-gradient(135deg,#ffffffbd,#ffffff78);border:1px solid #ffffffd0;opacity:0;transform:translateY(10px) scale(.96);pointer-events:none;transition:opacity .6s,transform .6s cubic-bezier(.2,.9,.3,1.2)}
+#p12 .f-secret{text-wrap:balance;position:absolute;left:50%;top:calc(69*var(--vh));translate:-50% 0;z-index:4;width:max-content;max-width:78vw;padding:.65rem 1.1rem;border-radius:16px;text-align:center;font:italic 500 1.05rem/1.4 "Cormorant Garamond",Georgia,serif;color:#8a2a78;background:linear-gradient(135deg,#ffffffbd,#ffffff78);border:1px solid #ffffffd0;opacity:0;transform:translateY(10px) scale(.96);pointer-events:none;transition:opacity .6s,transform .6s cubic-bezier(.2,.9,.3,1.2)}
 #p12 .f-secret.show{opacity:1;transform:none;pointer-events:auto}
-#p12 .f-cnt{position:absolute;left:0;right:0;bottom:calc(max(var(--sab,0px),14px) + 2vh);margin:0;padding:0 7vw;text-align:center;font:italic 500 1rem/1.5 "Cormorant Garamond",Georgia,serif;color:#8a2a78;font-variant-numeric:tabular-nums;opacity:0;pointer-events:none}
+#p12 .f-cnt{position:relative;z-index:2;margin:.15rem 0 0;padding:0 7vw;text-align:center;font:italic 500 1rem/1.5 "Cormorant Garamond",Georgia,serif;color:#8a2a78;font-variant-numeric:tabular-nums;opacity:0;pointer-events:none}
 #p12.run .f-cnt{animation:fadeslow 1.2s ease 7.4s forwards}
 
 /* ===== N8d: iris page wipe ===== */

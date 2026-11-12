@@ -677,7 +677,7 @@ function wallInit(){const keep=$('#keep'),T0='✦ keep this as a wallpaper';keep
  keep.onclick=()=>{if(keep.classList.contains('busy'))return;keep.classList.add('busy');if(wallF)return send(wallF);keep.textContent='✦ making it…';prep().then(send,()=>{keep.textContent='couldn’t make it, tap to retry';keep.classList.remove('busy')})}}
 // ---------- p12 extras: secret note (N8b) + live counters (N8c) ----------
 function p12Extras(){
- const sec=$('#sec12'),orb=$('#p12>.orb'),cn=$('#cnt12');sec.textContent=C.secret||'P.S. You are my favourite thing, always. ♡';sec.classList.remove('show');
+ const sec=$('#sec12'),orb=$('#p12 .f-head'),cn=$('#cnt12');sec.textContent=C.secret||'P.S. You are my favourite thing, always. ♡';sec.classList.remove('show');
  let taps=[];const toggle=()=>{if(sec.classList.contains('show')){sec.classList.remove('show');return}sec.classList.add('show');burst(innerWidth/2,innerHeight*.48,60,true);SFX.chime()};
  orb.onpointerdown=()=>{const n=performance.now();taps=taps.filter(t=>n-t<1200);taps.push(n);if(taps.length>=3){taps=[];toggle()}};sec.onclick=()=>sec.classList.remove('show');
  const pd=s=>{const q=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||'').trim());if(!q)return null;const d=new Date(+q[1],+q[2]-1,+q[3]);return isNaN(d)?null:d},since=pd(C.since),dob=pd(C.dob);
@@ -689,16 +689,45 @@ function p12Extras(){
   if(dob&&dob<=now){const[y]=ymd(dob,now),days=Math.floor((now-dob)/864e5);L.push(un(y,'year')+' = '+days.toLocaleString('en-US')+' days')}
   cn.textContent=L.join('\n')};
  cn.style.whiteSpace='pre-line';const tick=()=>{if(cur!==12)return;render();later(tick,1000)};tick()}
-init[12]=()=>{const p=$('#p12'),sky=$('#sky');p.classList.remove('run');void p.offsetWidth;p.classList.add('run');sky.innerHTML='';
- const nm=$('#n12');nm.textContent=C.name;nm.style.fontSize=Math.min(3.8,22/Math.max(C.name.length,4))+'rem';$('#fl').textContent=C.finalLine||'Another year of you, my favourite part of every single day.';
- const ph=`made with love ✦ for ${C.name} ✦ by ${C.from} ✦ `;$('#rt').textContent=ph+ph;SFX.chime();
- if(!RM){const lan=()=>{if(cur!==12)return;const W=p.clientWidth,H=p.clientHeight,el=document.createElement('div');el.className='ln';const x=Math.max(60,Math.min(W-60,W*(.12+.76*Math.random())));el.style.left=(x-32)+'px';el.style.top=(H-100)+'px';el.innerHTML='<div class="lb"></div>';sky.appendChild(el);
-  el.animate([{transform:'translate(0,0) scale(1)',opacity:0},{opacity:.95,offset:.1},{opacity:.95,offset:.75},{transform:`translate(${(Math.random()-.5)*90}px,${-H*.95}px) scale(.45)`,opacity:0}],{duration:16000,easing:'cubic-bezier(.3,.12,.3,1)',fill:'both'}).onfinish=()=>el.remove();later(lan,7000)};later(lan,2500);later(lan,6500)}
+init[12]=()=>{const p=$('#p12'),head=$('#p12 .f-head');p.classList.remove('run');void p.offsetWidth;p.classList.add('run');$('#sky').innerHTML='';
+ const W=p.clientWidth,H=p.clientHeight;let sd=29;const rn=()=>(sd=sd*16807%2147483647)/2147483647;
+ // ---- big name, letter by letter (colour glides pink -> violet) ----
+ const nm=$('#n12'),name=Array.from(String(C.name||'')),ST=[[176,40,110],[236,90,160],[138,79,209]];nm.innerHTML='';nm.setAttribute('aria-label',name.join(''));
+ nm.style.fontSize=Math.min(5.2,30/Math.max(name.length,4))+'rem';
+ name.forEach((ch,i)=>{const s=document.createElement('span'),t=name.length>1?i/(name.length-1):0,k=t*2,j=Math.min(1,Math.floor(k)),f=k-j,a=ST[j],b=ST[j+1];
+  s.textContent=ch===' '?' ':ch;s.style.color=`rgb(${a.map((v,m)=>Math.round(v+(b[m]-v)*f)).join(',')})`;s.style.setProperty('--ld',(1.15+i*.12).toFixed(2)+'s');nm.appendChild(s)});
+ $('#fl').textContent=C.finalLine||'Another year of you, my favourite part of every single day.';
+ $('#sig12').textContent=(C.signoff||'With all my love,')+' '+(C.from||'')+'\u00a0♡';
+ SFX.chime();
+ // ---- bunting: string + 9-10 swaying flags that follow the curve ----
+ const bu=$('#bunt12'),n=Math.max(8,Math.round(W/42)),sag=46,y0=8,FC=['#ff8fbe','#c4a2f2','#ffd27a','#ffa89a','#9fd8ff','#f78fd0'];
+ let fg='';for(let i=0;i<n;i++){const t=(i+.5)/n,x=(1-t)*(1-t)*-10+2*(1-t)*t*(W/2)+t*t*(W+10),y=(1-t)*(1-t)*y0+2*(1-t)*t*(y0+sag)+t*t*y0,dx=2*(1-t)*(W/2+10)+2*t*(W/2+10),dy=2*(1-t)*sag-2*t*sag,ang=Math.atan2(dy,dx)*180/Math.PI;
+  fg+=`<i class="fg" style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;--r:${ang.toFixed(1)}deg;--c:${FC[i%FC.length]};--sd:${(2.3+rn()*1.2).toFixed(2)}s;--dl:${(-rn()*3).toFixed(2)}s"></i>`}
+ bu.innerHTML=`<svg viewBox="0 0 ${W} 116" preserveAspectRatio="none" aria-hidden="true"><path d="M-10 ${y0}Q${W/2} ${y0+2*sag} ${W+10} ${y0}" fill="none" stroke="#c98fb6" stroke-width="1.6"/><circle cx="-2" cy="${y0}" r="3.2" fill="#f5b83d"/><circle cx="${W+2}" cy="${y0}" r="3.2" fill="#f5b83d"/></svg>`+fg;
+ // ---- balloon bouquets (tap one to pop it, a new one floats up) + gift boxes ----
+ const bl=$('#bal12');bl.innerHTML='';
+ const BC=[['#ffd0e4','#ff8fbe','#ec5a98'],['#e9dcff','#c4a2f2','#9a72e0'],['#fff0b8','#ffd27a','#ffb13d'],['#ffd9d0','#ffa89a','#ff7a66'],['#ffffff','#fbe4f1','#f0bfd9'],['#d8f0ff','#9fd8ff','#6bb8f0'],['#ffc6ea','#f78fd0','#e063b4']];
+ let uid=0;const bal=c=>{const k=++uid,[hi,c1,c2]=c;return `<svg viewBox="0 0 60 172"><defs><radialGradient id="bg${k}" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="${hi}"/><stop offset=".5" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient></defs><path d="M30 86C24 100 36 114 29 128C24 140 33 152 30 172" fill="none" stroke="#c58ab5" stroke-width="1.3" stroke-linecap="round"/><path class="bd" d="M30 2C13 2 2 15 2 33C2 55 19 72 30 77C41 72 58 55 58 33C58 15 47 2 30 2Z" fill="url(#bg${k})"/><path d="M30 77L24.5 86H35.5Z" fill="${c2}"/><ellipse cx="19" cy="22" rx="5.5" ry="10.5" transform="rotate(24 19 22)" fill="#fff" opacity=".55" pointer-events="none"/></svg>`};
+ const gift=(a,b,c,d)=>`<svg viewBox="0 0 100 84"><rect x="3" y="38" width="56" height="44" rx="5" fill="${a}"/><rect x="0" y="28" width="62" height="14" rx="4" fill="${b}"/><rect x="26" y="28" width="10" height="54" fill="${c}"/><path d="M31 27C20 10 6 14 12 24C16 29 27 28 31 27ZM31 27C42 10 56 14 50 24C46 29 35 28 31 27Z" fill="${c}"/><circle cx="31" cy="27" r="4.5" fill="${d}"/><rect x="52" y="56" width="44" height="26" rx="4" fill="${c}"/><rect x="49" y="49" width="50" height="10" rx="3" fill="${d}"/><rect x="69" y="49" width="10" height="33" fill="${a}"/></svg>`;
+ const sets=[{ax:.2,rots:[-11,3,17,30],sc:[1.02,1.16,.98,.84],cols:[0,1,2,3],g:gift('#ffb6d6','#ff8fbe','#c4a2f2','#f5b83d')},{ax:.8,rots:[11,-3,-17,-30],sc:[1.06,.92,1.14,.84],cols:[5,4,6,2],g:gift('#d9c8ff','#c4a2f2','#ffd27a','#ff8fbe')}];
+ sets.forEach((s,si)=>{const gw=88,gl=document.createElement('div');gl.className='gift';gl.style.left=(W*s.ax-gw/2-(si?14:-14)*0).toFixed(1)+'px';gl.innerHTML=s.g;bl.appendChild(gl);
+  s.rots.forEach((r,j)=>{const w=60*s.sc[j]*1.02,h=w*172/60,e=document.createElement('div');e.className='bl';
+   e.style.cssText=`left:${(W*s.ax-w/2+(si?-6:6)).toFixed(1)}px;bottom:calc(var(--sab) + 96px);width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;--r:${r}deg;--dl:${(.5+si*.18+j*.3).toFixed(2)}s;--sd:${(3.4+rn()*2).toFixed(2)}s`;
+   e.innerHTML=bal(BC[s.cols[j]]);bl.appendChild(e)})});
+ bl.onpointerdown=e=>{const b=e.target.closest('.bl');if(!b||b.classList.contains('pop'))return;const r=b.querySelector('.bd').getBoundingClientRect();
+  b.classList.add('pop');burst(r.left+r.width/2,r.top+r.height/2,26,true);SFX.pop();
+  later(()=>{b.classList.remove('pop');b.style.setProperty('--dl','0s');b.style.animation='none';void b.offsetWidth;b.style.animation=''},2600)};
+ // ---- confetti, petals and little hearts drifting down ----
+ const pet=$('#pet');pet.innerHTML='';
+ if(!RM){const cols=['#ffb3d4','#ff8fbe','#ffffff','#d9c2ff','#ffd27a','#9fd8ff','#ffa89a'];
+  for(let i=0;i<16;i++){const e=document.createElement('i');if(i%4===3){e.className='h';e.textContent='♥'}else if(i%4===1)e.className='c';
+   e.style.cssText=`--x:${(3+i*6+rn()*4).toFixed(1)}%;--s:${(9+rn()*8).toFixed(1)}px;--c:${cols[i%cols.length]};--d:${(10+rn()*8).toFixed(1)}s;--dl:${(2.5+rn()*9).toFixed(1)}s;--sw:${((rn()-.5)*90).toFixed(0)}px`;pet.appendChild(e)}
+  later(()=>{if(cur!==12)return;const r=nm.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,46,true)},2200)}
  $('#replay').onclick=()=>{bgm.currentTime=0;go(1)};wallInit();p12Extras();p12Para()};
 // ---------- p12: gentle parallax (iPhone: motion sensor after the first tap; elsewhere: finger / mouse move) ----------
 const PARA={tx:0,ty:0,x:0,y:0,raf:0,gyro:0,asked:0,l:0,bx:null,by:null};
 function p12Para(){
- const p=$('#p12'),orb=$('#p12>.orb'),ring=$('#p12 .ring'),sky=$('#sky');
+ const p=$('#p12'),orb=$('#p12 .f-head'),ring=$('#bal12'),sky=$('#sky');
  PARA.tx=PARA.ty=PARA.x=PARA.y=0;PARA.bx=PARA.by=null;PARA.gyro=0;[orb,ring,sky].forEach(e=>{e.style.translate=''});
  if(RM||C.gyro===false)return;
  const tr=(e,x,y)=>{e.style.translate=x.toFixed(2)+'px '+y.toFixed(2)+'px'};

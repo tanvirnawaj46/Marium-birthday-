@@ -104,5 +104,5 @@ window.CONFIG = {
   // ---- LETTER ----
   letter: "I keep thinking about how lucky I got with you. You have seen me at my worst and stayed anyway, and I do not say thank you nearly enough for that. This year, I hope life is gentle with you, that your days are full of laughter, and that you always know how loved you are.",
   finalLine: "Another year of you, my favourite part of every single day.",   // last page, name er niche
-  signoff: "With all my love,"   // letter-er sheshe, tarpor "from" name ashe
+  signoff: "With all my love,"   // letter-er sheshe, tarpor "from" name ashe (last page-er handwriting line-eo ei signoff + from)
 };
