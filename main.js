@@ -166,7 +166,7 @@ const FLT={
   pg.prepend(L)})})();
 // ---------- navigation ----------
 const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,20,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
-function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
+function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);sxArm(n);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
 let tapPt=[0,0,0],irisOn=0;addEventListener('pointerdown',e=>{tapPt=[e.clientX,e.clientY,performance.now()]},true);
@@ -178,6 +178,24 @@ function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; //
  ir.animate([{transform:'scale(0)',opacity:1},{transform:'scale('+sc+')',opacity:1}],{duration:520,easing:'cubic-bezier(.45,0,.75,.55)',fill:'forwards'}).onfinish=()=>{go0(n,seam,1);
   ir.animate([{transform:'scale('+sc+')',opacity:1},{transform:'scale('+sc+')',opacity:0}],{duration:420,easing:'ease-out',fill:'forwards'}).onfinish=()=>{ir.getAnimations().forEach(a=>a.cancel());irisOn=0}}}
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
+// ---- scroll-to-continue: on every page with a "Keep going" button the button is hidden; once the page's own job is done a
+// "swipe up" hint shows, the page (fixed) gets a little extra document height, and scrolling raises a Next pill that clicks the real button ----
+const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',15:'#g15',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20'};
+const SX={n:-1,b:null,mo:null,rdy:0,on:0,raf:0,force:0};
+function sxArm(n){const d=$('#nxd'),root=document.documentElement;if(SX.mo){SX.mo.disconnect();SX.mo=null}
+ SX.n=n;SX.b=null;SX.rdy=0;SX.on=0;SX.force=0;root.classList.remove('sx','sxr');d.classList.remove('rdy','on');d.style.setProperty('--sp',0);
+ const q=NXB[n];if(!q||C.scrollNext===false)return;const b=$(q);if(!b)return;SX.b=b;root.classList.add('sx');
+ $('#nxh span').textContent=C.scrollHint||'swipe up';
+ SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:1100)}
+function sxCheck(){const d=$('#nxd'),b=SX.b;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;document.documentElement.classList.toggle('sxr',r);
+ if(r){$('#nxb').textContent=b.textContent.trim()||'Keep going ✨';d.classList.add('rdy');sxProg()}else{d.classList.remove('rdy','on');SX.on=0}}
+function sxProg(){SX.raf=0;const d=$('#nxd');if(!SX.b||cur!==SX.n)return;const rg=document.documentElement.scrollHeight-innerHeight,
+ sp=SX.force?1:rg>12?Math.max(0,Math.min(1,scrollY/Math.max(rg-6,1))):0,on=SX.rdy&&sp>.6?1:0;d.style.setProperty('--sp',sp.toFixed(3));
+ if(on!==SX.on){SX.on=on;d.classList.toggle('on',!!on);if(on&&started)SFX.pop()}}
+addEventListener('scroll',()=>{if(SX.b&&!SX.raf)SX.raf=requestAnimationFrame(sxProg)},{passive:true});
+// tap the hint = scroll for her; if the browser refuses to scroll, unlock anyway so nobody gets stuck
+$('#nxh').onclick=()=>{scrollTo({top:1e5,behavior:RM?'auto':'smooth'});setTimeout(()=>{if(SX.b&&scrollY<4){SX.force=1;sxProg()}},900)};
+$('#nxb').onclick=()=>{if(SX.b&&SX.on)SX.b.click()};
 const init={};
 // ---------- 1: bow & arrow (aim at the hearts) ----------
 const HSV=(i,c,main)=>`<svg viewBox="-4 -4 108 98"><defs><radialGradient id="hg${i}" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path d="M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z" fill="url(#hg${i})" stroke="${main?'#ffd36e':c[2]}" stroke-opacity="${main?1:.35}" stroke-width="${main?3.5:1.5}" stroke-linejoin="round"/><path d="M14 21c0-8 5-13 13-13" stroke="#fff" stroke-opacity=".9" stroke-width="5.5" fill="none" stroke-linecap="round"/><ellipse cx="36" cy="14" rx="8" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-20 36 14)"/><path d="M73 20c3 3 5 6 5 10" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"/>${main?'<path d="M50 30l3.4 7.2 7.8 1-5.7 5.3 1.6 7.7L50 47.4l-7.1 3.8 1.6-7.7-5.7-5.3 7.8-1z" fill="#fff" opacity=".9"/>':''}</svg>`;

@@ -840,3 +840,17 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #rjdn{position:absolute;left:0;right:0;bottom:calc(17*var(--vh));padding:0 8vw;text-align:center;opacity:0;transform:translateY(12px);pointer-events:none}
 #rjdn.in{animation:up 1.4s cubic-bezier(.2,.8,.2,1) forwards}
 #rjend{margin:0;font:italic 600 1.5rem/1.35 "Cormorant Garamond",Georgia,serif;color:#8a2a78;text-wrap:balance}
+
+/* ===== scroll-to-continue: finish the page, swipe up, the Next button rises (config scrollNext) ===== */
+html.sx body{min-height:calc(142*var(--vh))}
+html.sx :is(#g3,#p6 .go,#g7,#p10 .go,#g11,#g14,#g15,#g16,#g17,#g18,#g19,#g20){visibility:hidden!important;pointer-events:none!important}
+#nxd{position:fixed;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:56px;pointer-events:none;--sp:0}
+#nxd .nh{position:absolute;bottom:0;display:flex;flex-direction:column;align-items:center;border:0;border-radius:99px;padding:.5rem 1.15rem .3rem;background:#ffffffb8;color:#b0286e;font:500 .78rem/1 Fredoka,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:0;visibility:hidden;transition:opacity .25s;-webkit-tap-highlight-color:transparent;cursor:pointer}
+#nxd .nh b{font-size:1.5rem;line-height:.8;margin-top:4px;animation:chb 1.5s ease-in-out infinite}
+#nxd.rdy .nh{visibility:visible;pointer-events:auto;opacity:calc(1 - var(--sp)*2.2)}
+#nxd #nxb{position:relative;visibility:hidden;pointer-events:none;translate:0 calc((1 - var(--sp))*84px);opacity:calc(var(--sp)*1.7 - .35);display:block}
+#nxd.rdy #nxb{visibility:visible}
+#nxd.on #nxb{pointer-events:auto}
+@media (prefers-reduced-motion:reduce){#nxd .nh b{animation:none}}
+/* once a page is finished its drag areas stop swallowing the swipe, so she can scroll from anywhere */
+html.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:pan-x pan-y!important}
