@@ -83,6 +83,9 @@ window.CONFIG = {
   loveQ2: "How much do I love you?",
   loveEnd: "Always one more ♡",
 
+  // ---- FINAL PAGE parallax (p12) : iPhone-e prothom tap-er por "motion access" chaibe, tarpor phone helale orb/ring halka nore. Na chaile false koro ----
+  gyro: true,
+
   // ---- CANDLE (p5) : true = phone-er mic-e fuu diye candle nibhano jabe (mic permission chaibe). Kaj na korle / deny korle candle-e tap korlei nibhe.
   //      iPhone-e ekbar test koro; kono somossa hole false koro (tokhon shudhu candle tap) ----
   blowMic: true,

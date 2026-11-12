@@ -693,7 +693,33 @@ init[12]=()=>{const p=$('#p12'),sky=$('#sky');p.classList.remove('run');void p.o
  const ph=`made with love ✦ for ${C.name} ✦ by ${C.from} ✦ `;$('#rt').textContent=ph+ph;SFX.chime();
  if(!RM){const lan=()=>{if(cur!==12)return;const W=p.clientWidth,H=p.clientHeight,el=document.createElement('div');el.className='ln';const x=Math.max(60,Math.min(W-60,W*(.12+.76*Math.random())));el.style.left=(x-32)+'px';el.style.top=(H-100)+'px';el.innerHTML='<div class="lb"></div>';sky.appendChild(el);
   el.animate([{transform:'translate(0,0) scale(1)',opacity:0},{opacity:.95,offset:.1},{opacity:.95,offset:.75},{transform:`translate(${(Math.random()-.5)*90}px,${-H*.95}px) scale(.45)`,opacity:0}],{duration:16000,easing:'cubic-bezier(.3,.12,.3,1)',fill:'both'}).onfinish=()=>el.remove();later(lan,7000)};later(lan,2500);later(lan,6500)}
- $('#replay').onclick=()=>{bgm.currentTime=0;go(1)};wallInit();p12Extras()};
+ $('#replay').onclick=()=>{bgm.currentTime=0;go(1)};wallInit();p12Extras();p12Para()};
+// ---------- p12: gentle parallax (iPhone: motion sensor after the first tap; elsewhere: finger / mouse move) ----------
+const PARA={tx:0,ty:0,x:0,y:0,raf:0,gyro:0,asked:0,l:0,bx:null,by:null};
+function p12Para(){
+ const p=$('#p12'),orb=$('#p12>.orb'),ring=$('#p12 .ring'),sky=$('#sky');
+ PARA.tx=PARA.ty=PARA.x=PARA.y=0;PARA.bx=PARA.by=null;PARA.gyro=0;[orb,ring,sky].forEach(e=>{e.style.translate=''});
+ if(RM||C.gyro===false)return;
+ const tr=(e,x,y)=>{e.style.translate=x.toFixed(2)+'px '+y.toFixed(2)+'px'};
+ const step=()=>{PARA.raf=0;if(cur!==12)return;
+  PARA.x+=(PARA.tx-PARA.x)*.09;PARA.y+=(PARA.ty-PARA.y)*.09;
+  tr(orb,PARA.x*4,PARA.y*4);tr(ring,PARA.x*4,PARA.y*4);tr(sky,-PARA.x*8,-PARA.y*8); // orb 4px + ring 4px more = 8px; sky moves the other way
+  if(Math.abs(PARA.tx-PARA.x)>.002||Math.abs(PARA.ty-PARA.y)>.002)PARA.raf=requestAnimationFrame(step)};
+ const set=(x,y)=>{PARA.tx=Math.max(-1,Math.min(1,x));PARA.ty=Math.max(-1,Math.min(1,y));if(!PARA.raf&&cur===12)PARA.raf=requestAnimationFrame(step)};
+ p.onpointermove=e=>{if(PARA.gyro)return;const r=p.getBoundingClientRect();set((e.clientX-r.left)/r.width*2-1,(e.clientY-r.top)/r.height*2-1)};
+ p.onpointerup=p.onpointercancel=e=>{if(!PARA.gyro&&e.pointerType==='touch')set(0,0)};
+ p.onpointerleave=()=>{if(!PARA.gyro)set(0,0)};
+ const onO=e=>{if(cur!==12||e.gamma==null||e.beta==null)return;
+  if(PARA.bx==null){PARA.bx=e.gamma;PARA.by=e.beta}PARA.gyro=1;
+  PARA.bx+=(e.gamma-PARA.bx)*.004;PARA.by+=(e.beta-PARA.by)*.004; // slowly re-centre, so however she holds the phone becomes the middle
+  set((e.gamma-PARA.bx)/18,(e.beta-PARA.by)/18)};
+ const listen=()=>{if(PARA.l)return;PARA.l=1;window.addEventListener('deviceorientation',onO)};
+ if(PARA.asked===2)listen(); // already allowed earlier this visit
+ // iOS only allows the motion-sensor prompt inside a real tap (click), so ask on the first tap of this page (not on buttons)
+ p.onclick=e=>{if(PARA.asked||e.target.closest('button'))return;PARA.asked=1;
+  try{const D=window.DeviceOrientationEvent;
+   if(D&&typeof D.requestPermission==='function')D.requestPermission().then(r=>{if(r==='granted'){PARA.asked=2;listen()}else PARA.asked=3}).catch(()=>{PARA.asked=3});
+   else if(D){PARA.asked=2;listen()}else PARA.asked=3}catch(_){PARA.asked=3}}}
 // ---------- scratch cards ----------
 const REC=/[?&]record/.test(location.search),hnd=$('#hnd');
 function scratchInit(cv,type,onDone,hint){
