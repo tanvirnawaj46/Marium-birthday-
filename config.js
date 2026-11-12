@@ -83,8 +83,11 @@ window.CONFIG = {
   loveQ2: "How much do I love you?",
   loveEnd: "Always one more ♡",
 
-  // ---- FINAL PAGE parallax (p12) : iPhone-e prothom tap-er por "motion access" chaibe, tarpor phone helale orb/ring halka nore. Na chaile false koro ----
-  gyro: true,
+  // ---- FINAL PAGE parallax (p12) : true hole iPhone prothom tap-er por "Motion & Orientation Access" chaibe, tarpor phone helale orb/ring halka nore. Permission popup chai na tai false ----
+  gyro: false,
+
+  // ---- FINAL PAGE wallpaper button ("keep this as a wallpaper") : false = button thakbe na. Abar chaile true koro ----
+  wallpaper: false,
 
   // ---- CANDLE (p5) : true = phone-er mic-e fuu diye candle nibhano jabe (mic permission chaibe). Kaj na korle / deny korle candle-e tap korlei nibhe.
   //      iPhone-e ekbar test koro; kono somossa hole false koro (tokhon shudhu candle tap) ----

@@ -667,6 +667,7 @@ async function makeWall(){
 function wallShow(f){let o=$('#wp');if(!o){o=document.createElement('div');o.id='wp';o.innerHTML='<button id="wpx" type="button" aria-label="close">✕</button><div class="wpc"><img id="wpi" alt="wallpaper"><p>press &amp; hold the picture, then <b>Save to Photos</b></p><a id="wpd">⬇ download</a></div>';document.body.appendChild(o);$('#wpx').onclick=()=>o.classList.remove('on')}
  const u=URL.createObjectURL(f);$('#wpi').src=u;const a=$('#wpd');a.href=u;a.download=f.name;o.classList.add('on')}
 function wallInit(){const keep=$('#keep'),T0='✦ keep this as a wallpaper';keep.textContent=T0;keep.classList.remove('busy');
+ if(C.wallpaper===false){keep.style.display='none';return}keep.style.display='';
  const prep=()=>wallP||(wallP=makeWall().then(b=>{wallF=new File([b],`happy-birthday-${(C.name||'').replace(/[^\w-]+/g,'')||'you'}.png`,{type:'image/png'});return wallF}).catch(e=>{wallP=null;throw e}));
  if(!wallF)later(()=>{prep().catch(()=>{})},4800);
  const reset=()=>{keep.textContent=T0;keep.classList.remove('busy')},done=()=>{keep.textContent='saved ✓';keep.classList.remove('busy');SFX.chime()};

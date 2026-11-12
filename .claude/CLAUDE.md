@@ -138,3 +138,6 @@ using the specs here as they are (do NOT redesign, do NOT re-ask). Tick each box
 
 
 All Job 5 items are finished. Do NOT redo them; wait for the owner's next request.
+
+## Owner feedback 2026-11-12
+- [x] (DONE, pushed) Owner did NOT like the wallpaper feature and was confused by an iPhone permission popup on the final page (= the Motion & Orientation prompt from the N8f parallax). Now config `wallpaper:false` (button hidden, no pre-render) and `gyro:false` (no popup). Code kept; set true to bring back.
