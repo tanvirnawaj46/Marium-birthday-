@@ -457,7 +457,7 @@ init[19]=()=>{const p=$('#p19'),bx=$('#mbx'),ball=$('#mbb'),nt=$('#mbn'),lyr=$('
  const syl=['Hap-','py ','birth-','day ','to ','you','Hap-','py ','birth-','day ','to ','you','Hap-','py ','birth-','day ','dear ',n1,n2,'Hap-','py ','birth-','day ','to ','you'],starts=[0,6,12,19],T=MEL.length;
  let i=0,auto=false,fin=false,sg=0;
  nt.innerHTML='';ball.classList.remove('spin');lyr.textContent='';end.textContent='Happy birthday, '+C.name+' ♡';end.classList.remove('in');bar.style.transform='scaleX(0)';
- pl.textContent='▶ play it for me';pl.classList.remove('hid');g.classList.remove('show');g.classList.add('hid');hand.style.display='block';hint.textContent='tap the music box to play the tune, one note at a time ✦';
+ pl.textContent='▶ play it for me';pl.classList.remove('hid');g.classList.remove('show');g.classList.add('hid');hand.style.display='block';hint.textContent='tap the music box, one note at a time ✦';
  const lineOf=k=>starts.filter(s=>s<=k).pop();
  const float=k=>{if(nt.children.length>=8)nt.firstChild.remove();const e=document.createElement('i');e.className='mbn';e.textContent='♪ '+syl[k].trim().replace(/-$/,'');
   e.style.cssText='left:'+(18+Math.random()*50)+'%;top:8%;color:'+['#d6428f','#8a4fd1','#e8821c','#2f9e8f'][k%4];nt.appendChild(e);
@@ -521,7 +521,7 @@ init[17]=()=>{const st=$('#gst'),fl=$('#gfl'),big=$('#gbig'),chip=$('#fcn'),hint
  fl.innerHTML='';big.innerHTML='';gw.classList.remove('br');dn.classList.remove('in');g.classList.remove('show');g.classList.add('hid');p.classList.remove('done');ring.classList.remove('on');
  gl.style.top=gy+'px';gw.style.transformOrigin='50% '+gy+'px';
  $('#gend').textContent=(C.gardenEnd||'{n} flowers for {n} years, and one more to grow with you ♡').replace(/\{n\}/g,N);
- chip.textContent='0 / '+N;hint.textContent='tap anywhere to plant ✦';hand.style.display='block';
+ chip.textContent='0 / '+N;hint.textContent='tap the garden to plant ✦';hand.style.display='block';
  const rows=[[-34,.7],[0,.85],[34,1]],BASE=1.45,xs=[[],[],[]],lim=x=>Math.max(.08*w,Math.min(.92*w,x));let k=0,done=false,down=false,fx=0,fy=0,gen=0;
  const showBtn=()=>{g.classList.remove('hid');g.classList.add('show')};
  const finish=()=>{done=true;down=false;hand.style.display='none';hint.textContent='';p.classList.add('done');

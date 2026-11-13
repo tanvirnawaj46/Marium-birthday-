@@ -864,3 +864,25 @@ html.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:pan-x pan-y!important}
 @keyframes vin{from{opacity:0;scale:.88}to{opacity:1;scale:1}}
 @keyframes vcap{0%{opacity:0;translate:0 -10px}14%,82%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -6px}}
 @media (prefers-reduced-motion:reduce){#p11 #vf,#vcap span{animation:none}#vend{transition:none}}
+
+/* ===== Stage 2: iPhone "liquid glass" kit (buttons + chips). Static only: no animated blur/shadow, blur only on SMALL chips ===== */
+:root{--lg-clear:linear-gradient(150deg,#ffffffb0 0%,#ffffff40 46%,#ffffff66 100%);
+ --lg-rim:inset 1.5px 1.5px 1px #fffffff0,inset -1.2px -1.2px 1px #ffffff80,inset 0 0 14px #ffffff59;
+ --lg-drop:0 8px 24px #b0286e26,0 2px 6px #b0286e1a;--lg-ink:#8f2a74}
+/* main button = tinted glass candy */
+.btn{background:linear-gradient(150deg,#ff8aa6e6 0%,#ff9a78d9 55%,#ffbe6cd9 100%);border:1px solid #ffffff80;
+ box-shadow:inset 1.5px 1.5px 1px #fffffff2,inset -1.5px -2px 2px #c2410c33,inset 0 0 16px #ffffff40,0 10px 26px #ff7a8f66,0 2px 6px #ff7a8f44;
+ text-shadow:0 1px 2px #b0286e55}
+.btn:before{content:"";position:absolute;left:6%;right:6%;top:1px;height:48%;border-radius:99px 99px 60% 60%;background:linear-gradient(180deg,#ffffffa6,#ffffff00);pointer-events:none}
+/* clear glass chips */
+#mus,.skip,#nxd .nh,#vpp,#vcap span,#fcn,#rjn,#p5 #wish,#p7 .cap,#p14 .cap,#p8 .cap,#p16 .vbar .cap,#p17 .vbar .cap,#p18 .vbar .cap,#p19 .vbar .cap,#p20 .vbar .cap{
+ background:var(--lg-clear);-webkit-backdrop-filter:blur(12px) saturate(1.7);backdrop-filter:blur(12px) saturate(1.7);
+ border:1px solid #ffffff8c;box-shadow:var(--lg-rim),var(--lg-drop)}
+#mus,.skip,#nxd .nh,#fcn,#rjn,#p5 #wish,#p7 .cap,#p14 .cap,#p8 .cap,#p16 .vbar .cap,#p17 .vbar .cap,#p18 .vbar .cap,#p19 .vbar .cap,#p20 .vbar .cap{color:var(--lg-ink)}
+/* on the video the glass is dark-tinted so white text stays readable */
+#p11 .skip,#vpp,#vcap span{background:linear-gradient(150deg,#ffffff55,#ffffff1a 50%,#ffffff33);color:#fff;border-color:#ffffff70;box-shadow:inset 1.5px 1.5px 1px #ffffffc0,inset -1px -1px 1px #ffffff40,0 6px 18px #2a0f4a55;text-shadow:0 1px 3px #2a0f4a88}
+#mus:active,.skip:active,#vpp:active{scale:.93}
+@media (prefers-reduced-motion:reduce){.btn:after{animation:none}}
+/* glass over the playing video: NO backdrop blur (smoothness), a dark tint keeps the white text readable */
+#p11 .skip,#vpp,#vcap span{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(150deg,#ffffff55,#ffffff1a 50%,#ffffff33),#2a0f4a40}
+body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
