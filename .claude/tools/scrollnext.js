@@ -1,9 +1,9 @@
 const {chromium}=require('playwright');
-const W=+process.argv[2]||393,H=+process.argv[3]||852,pages=(process.argv[4]||'3,6,7,10,11,14,15,16,17,18,19,20').split(',').map(Number);
+const W=+process.argv[2]||393,H=+process.argv[3]||852,pages=(process.argv[4]||'3,6,7,10,11,14,16,17,18,19,20,12').split(',').map(Number);
 (async()=>{const b=await chromium.launch();const c=await b.newContext({viewport:{width:W,height:H},hasTouch:true,isMobile:true,deviceScaleFactor:1});const p=await c.newPage();const er=[];
 p.on('pageerror',e=>er.push(e.message));p.on('console',m=>{if(m.type()==='error'&&!/agent-proxy|Allowed|googleapis|ERR_|Failed to load/.test(m.text()))er.push(m.text())});
 await p.goto('http://localhost:8766/index.html');await p.waitForTimeout(800);
-const Q={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',15:'#g15',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20'};
+const Q={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
 for(const n of pages){
  await p.evaluate(n=>{started=true;go(n)},n);await p.waitForTimeout(2300);
  const pre=await p.evaluate(()=>({sx:document.documentElement.classList.contains('sx'),sh:document.documentElement.scrollHeight,ih:innerHeight,cls:$('#nxd').className}));
