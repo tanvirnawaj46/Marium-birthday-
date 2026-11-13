@@ -180,13 +180,13 @@ function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; //
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
 // ---- scroll-to-continue: on every page with a "Keep going" button the button is hidden; once the page's own job is done a
 // "swipe up" hint shows, the page (fixed) gets a little extra document height, and scrolling raises a Next pill that clicks the real button ----
-const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',15:'#g15',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20'};
+const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',15:'#g15',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
 const SX={n:-1,b:null,mo:null,rdy:0,on:0,raf:0,force:0};
 function sxArm(n){const d=$('#nxd'),root=document.documentElement;if(SX.mo){SX.mo.disconnect();SX.mo=null}
  SX.n=n;SX.b=null;SX.rdy=0;SX.on=0;SX.force=0;root.classList.remove('sx','sxr');d.classList.remove('rdy','on');d.style.setProperty('--sp',0);
  const q=NXB[n];if(!q||C.scrollNext===false)return;const b=$(q);if(!b)return;SX.b=b;root.classList.add('sx');
  $('#nxh span').textContent=C.scrollHint||'swipe up';
- SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:1100)}
+ SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:n===12?6500:1100)}
 function sxCheck(){const d=$('#nxd'),b=SX.b;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;document.documentElement.classList.toggle('sxr',r);
  if(r){$('#nxb').textContent=b.textContent.trim()||'Keep going ✨';d.classList.add('rdy');if(document.documentElement.scrollHeight-innerHeight<12)SX.force=1;sxProg()}else{d.classList.remove('rdy','on');SX.on=0}}
 function sxProg(){SX.raf=0;const d=$('#nxd');if(!SX.b||cur!==SX.n)return;const rg=document.documentElement.scrollHeight-innerHeight,

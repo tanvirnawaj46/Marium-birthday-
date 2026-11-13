@@ -843,7 +843,7 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 
 /* ===== scroll-to-continue: finish the page, swipe up, the Next button rises (config scrollNext) ===== */
 html.sx body{min-height:calc(142*var(--vh))}
-html.sx :is(#g3,#p6 .go,#g7,#p10 .go,#g11,#g14,#g15,#g16,#g17,#g18,#g19,#g20){visibility:hidden!important;pointer-events:none!important}
+html.sx :is(#g3,#p6 .go,#g7,#p10 .go,#g11,#g14,#g15,#g16,#g17,#g18,#g19,#g20,#replay){visibility:hidden!important;pointer-events:none!important}
 #nxd{position:fixed;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:56px;pointer-events:none;--sp:0}
 #nxd .nh{position:absolute;bottom:0;display:flex;flex-direction:column;align-items:center;border:0;border-radius:99px;padding:.5rem 1.15rem .3rem;background:#ffffffb8;color:#b0286e;font:500 .78rem/1 Fredoka,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:0;visibility:hidden;transition:opacity .25s;pointer-events:none}
 #nxd .nh b{font-size:1.5rem;line-height:.8;margin-top:4px;animation:chb 1.5s ease-in-out infinite}
