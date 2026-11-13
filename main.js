@@ -427,11 +427,16 @@ function primeVideo(){const v=$('#vid');v.onplay=v.onpause=v.onended=null;if(v.d
  v.muted=true;try{const p=v.play();vprime=p&&p.then?p.then(()=>{v.pause();try{v.currentTime=0}catch(e){}}).catch(()=>{}):Promise.resolve()}catch(e){vprime=Promise.resolve()}}
 $('#g10').addEventListener('click',primeVideo);
 init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#unm');g.classList.remove('show');um.classList.remove('show');um.classList.add('hid');sk.style.display='';pl.style.display='none';
- if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}v.controls=true;v.playsInline=true;
- const fin=()=>{g.classList.add('show');sk.style.display='none';burst(W/2,H/3,80)};
+ if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}v.controls=false;v.playsInline=true;
+ const vf=$('#vf'),vt=$('#vtap'),vpi=$('#vpr i'),vcs=$('#vcap span');
+ vf.classList.remove('end');vt.classList.remove('on');vpi.style.scale='0 1';$('#vend').textContent='Happy Birthday, '+(C.name||'')+' \u{1F496}';vcs.textContent=C.videoTitle||'a little wish for you \u{1F48C}';
+ for(const e of [vf,vcs]){e.style.animation='none';void e.offsetWidth;e.style.animation=''}
+ vf.onclick=e=>{if(e.target.closest('button'))return;v.paused?v.play().catch(()=>{}):v.pause()};
+ v.ontimeupdate=()=>{if(v.duration)vpi.style.scale=Math.min(1,v.currentTime/v.duration)+' 1'};
+ const fin=()=>{vt.classList.remove('on');vf.classList.add('end');vpi.style.scale='1 1';g.classList.add('show');sk.style.display='none';burst(W/2,H/3,80)};
  v.onerror=()=>{pl.style.display='';pl.textContent='Video not found — continue ›';pl.onclick=()=>go(nextOf(11))};
- v.onplay=()=>{MIXS.video=1;applyMix(.25)};
- v.onpause=()=>{MIXS.video=0;applyMix(.7)};
+ v.onplay=()=>{MIXS.video=1;applyMix(.25);vt.classList.remove('on')};
+ v.onpause=()=>{MIXS.video=0;applyMix(.7);if(!v.ended&&v.currentTime>.3&&cur===11)vt.classList.add('on')};
  v.onended=()=>{MIXS.video=0;applyMix(.7);fin()};
  pl.onclick=()=>{pl.style.display='none';v.muted=false;v.volume=1;v.play().catch(()=>{})};
  sk.onclick=()=>{v.pause();go(nextOf(11))};

@@ -10,6 +10,7 @@ window.CONFIG = {
   // ---- FILES (assets folder) ----
   music: "assets/music.mp3",
   video: "assets/birthday.mp4",
+  videoTitle: "a little wish for you 💌",   // video-r upore ekta choto lekha (kichukkhon pore mile jay)
   voice: ["assets/voice.mp3","assets/voice.m4a","assets/voice.webm","assets/voice.ogg"],
   videoPoster: "assets/poster.jpg",
 
