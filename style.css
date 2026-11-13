@@ -886,3 +886,22 @@ html.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:pan-x pan-y!important}
 /* glass over the playing video: NO backdrop blur (smoothness), a dark tint keeps the white text readable */
 #p11 .skip,#vpp,#vcap span{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(150deg,#ffffff55,#ffffff1a 50%,#ffffff33),#2a0f4a40}
 body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
+
+/* ===== Stage 3: liquid glass cards/panels (BIG surfaces = gradient + rim light only, no backdrop blur) ===== */
+/* p12 final: message card */
+#p12 .f-card{background:linear-gradient(155deg,#ffffffe6 0%,#fff6faab 48%,#ffffffcf 100%);border:1px solid #ffffffe0;
+ box-shadow:inset 1.5px 1.5px 1px #fff,inset -1.2px -1.2px 1px #ffffffa6,inset 0 0 28px #ffffff8c,0 18px 44px #b0286e2c,0 2px 8px #b0286e1c}
+#p12 .f-card:after{content:"";position:absolute;left:0;right:0;top:0;height:46%;border-radius:22px 22px 55% 55%/22px 22px 22% 22%;background:linear-gradient(180deg,#ffffff99,#ffffff00);z-index:-1;pointer-events:none}
+#p12 .f-secret{background:linear-gradient(150deg,#ffffffe8,#ffffffb4 55%,#ffffffd2);border:1px solid #ffffffe6;box-shadow:inset 1.5px 1.5px 1px #fff,inset -1px -1px 1px #ffffff99,0 12px 30px #b0286e30}
+/* p13 voice card + mic button */
+#s13 .vcard{background:linear-gradient(155deg,#ffffff8c,#ffffff30 52%,#ffffff5c);border:1px solid #ffffffb8;
+ box-shadow:inset 1.5px 1.5px 1px #fffffff2,inset -1.2px -1.2px 1px #ffffff80,inset 0 0 44px #ffffff5c,0 14px 50px #e56fb344}
+.vmic{background:radial-gradient(circle at 32% 26%,#fff,#ffe3f1 45%,#ffb9d8);box-shadow:inset 2px 2px 2px #fff,inset -2px -3px 6px #e56fb355,0 8px 24px #e56fb366}
+/* p6 balloon field */
+#p6 #bfield{background:linear-gradient(155deg,#ffffff78,#ffffff26 55%,#ffffff4d);border:1.5px solid #ffffffa8;
+ box-shadow:inset 1.5px 1.5px 1px #ffffffe8,inset -1px -1px 1px #ffffff70,inset 0 0 40px #ffffff66,0 10px 36px #e879a82e}
+/* p16 love meter + p19 music-box progress: glass tracks (fills stay transform-only) */
+#lmbar,#mbp{background:linear-gradient(180deg,#ffffff70,#ffffffa8);border:1px solid #ffffffb8;box-shadow:inset 0 2px 3px #b0286e22,0 1px 0 #ffffffcc}
+#lmbar:after,#mbp:after{content:"";position:absolute;left:4%;right:4%;top:1px;height:38%;border-radius:99px;background:linear-gradient(180deg,#ffffffa6,#ffffff00);pointer-events:none}
+/* photo lightbox caption */
+#lb p{display:inline-block;padding:.3rem 1.1rem;border-radius:99px;background:linear-gradient(150deg,#ffffff4d,#ffffff1a 50%,#ffffff2e);border:1px solid #ffffff70;box-shadow:inset 1.5px 1.5px 1px #ffffffc0,inset -1px -1px 1px #ffffff40,0 6px 18px #0006;color:#fff}
