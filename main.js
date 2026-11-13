@@ -188,13 +188,12 @@ function sxArm(n){const d=$('#nxd'),root=document.documentElement;if(SX.mo){SX.m
  $('#nxh span').textContent=C.scrollHint||'swipe up';
  SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:1100)}
 function sxCheck(){const d=$('#nxd'),b=SX.b;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;document.documentElement.classList.toggle('sxr',r);
- if(r){$('#nxb').textContent=b.textContent.trim()||'Keep going ✨';d.classList.add('rdy');sxProg()}else{d.classList.remove('rdy','on');SX.on=0}}
+ if(r){$('#nxb').textContent=b.textContent.trim()||'Keep going ✨';d.classList.add('rdy');if(document.documentElement.scrollHeight-innerHeight<12)SX.force=1;sxProg()}else{d.classList.remove('rdy','on');SX.on=0}}
 function sxProg(){SX.raf=0;const d=$('#nxd');if(!SX.b||cur!==SX.n)return;const rg=document.documentElement.scrollHeight-innerHeight,
  sp=SX.force?1:rg>12?Math.max(0,Math.min(1,scrollY/Math.max(rg-6,1))):0,on=SX.rdy&&sp>.6?1:0;d.style.setProperty('--sp',sp.toFixed(3));
  if(on!==SX.on){SX.on=on;d.classList.toggle('on',!!on);if(on&&started)SFX.pop()}}
 addEventListener('scroll',()=>{if(SX.b&&!SX.raf)SX.raf=requestAnimationFrame(sxProg)},{passive:true});
-// tap the hint = scroll for her; if the browser refuses to scroll, unlock anyway so nobody gets stuck
-$('#nxh').onclick=()=>{scrollTo({top:1e5,behavior:RM?'auto':'smooth'});setTimeout(()=>{if(SX.b&&scrollY<4){SX.force=1;sxProg()}},900)};
+// the hint is only a hint (not tappable): she scrolls herself. Only if the browser gives the page no scroll range at all, unlock so nobody gets stuck
 $('#nxb').onclick=()=>{if(SX.b&&SX.on)SX.b.click()};
 const init={};
 // ---------- 1: bow & arrow (aim at the hearts) ----------
