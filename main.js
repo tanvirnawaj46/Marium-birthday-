@@ -94,7 +94,6 @@ const SFX={
  seal(){noise(.07,.5,{hp:1500});tone(240,.22,'sine',.4,70,0,0);tone(1800,.16,'triangle',.12,900,0,.2);noise(.25,.2,{bp:3000,bp2:1500,q:.6,dl:.05})},
  whoosh(){noise(.7,.32,{bp:400,bp2:3200,q:.5,a:.18,rv:.3});tone(300,.6,'sine',.1,900,0,.3)},
  flap(){noise(.26,.42,{bp:2000,bp2:800,q:.5,a:.02,rv:.15});noise(.05,.3,{hp:4500,dl:.04});tone(120,.16,'sine',.4,58,.78,0);noise(.04,.3,{bp:1500,q:.8,dl:.8})},
- stamp(){tone(120,.14,'sine',.55,50,0,0);noise(.05,.3,{bp:2800,q:.8});tone(1568,.35,'sine',.08,0,.08,.4);tone(2093,.3,'sine',.04,0,.14,.4)},
  star(i){const f=PENT[Math.max(0,Math.min(13,i|0))];tone(f,.9,'sine',.12,0,0,.5);tone(f*2,.5,'sine',.04,0,0,.4)},
  meter(){tone(300,1.6,'sine',.12,1400,0,.3)},
  mb(f=0){if(f<60)f=MEL[f%MEL.length][0];tone(f,1.2,'sine',.14,0,0,.5);tone(f*3,.4,'sine',.035,0,0,.3);tone(f*2,.6,'sine',.05,0,0,.4)},
@@ -107,8 +106,8 @@ const SFX={
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={star:1.3,puff:1.2,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,stamp:1.3,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
-const DIP={star:[.6,400],puff:[.6,600],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],stamp:[.55,500],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
+const CAT={star:1.3,puff:1.2,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={star:[.6,400],puff:[.6,600],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -165,7 +164,7 @@ const FLT={
    s.style.cssText=`left:${R(2,94).toFixed(1)}%;${m==='bob'?`top:${R(4,92).toFixed(1)}%;`:''}--z:${R(17,36).toFixed(0)}px;--t:${T.toFixed(1)}s;--w:${R(2.5,5).toFixed(1)}s;--dl:-${R(0,T).toFixed(1)}s;--dx:${R(-40,40).toFixed(0)}px;--op:${R(.6,.92).toFixed(2)}`;L.append(s)}
   pg.prepend(L)})})();
 // ---------- navigation ----------
-const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,20,8,10,15,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
+const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,20,8,10,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
 function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);sxArm(n);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
  later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
@@ -180,7 +179,7 @@ function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; //
 $$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
 // ---- scroll-to-continue: on every page with a "Keep going" button the button is hidden; once the page's own job is done a
 // "swipe up" hint shows, the page (fixed) gets a little extra document height, and scrolling raises a Next pill that clicks the real button ----
-const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',15:'#g15',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
+const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
 const SX={n:-1,b:null,mo:null,rdy:0,on:0,raf:0,force:0};
 function sxArm(n){const d=$('#nxd'),root=document.documentElement;if(SX.mo){SX.mo.disconnect();SX.mo=null}
  SX.n=n;SX.b=null;SX.rdy=0;SX.on=0;SX.force=0;root.classList.remove('sx','sxr');d.classList.remove('rdy','on');d.style.setProperty('--sp',0);
@@ -436,7 +435,7 @@ init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#
  const fin=()=>{vt.classList.remove('on');vf.classList.add('end');vpi.style.scale='1 1';g.classList.add('show');sk.style.display='none';burst(W/2,H/3,80)};
  v.onerror=()=>{pl.style.display='';pl.textContent='Video not found — continue ›';pl.onclick=()=>go(nextOf(11))};
  v.onplay=()=>{MIXS.video=1;applyMix(.25);vt.classList.remove('on')};
- v.onpause=()=>{MIXS.video=0;applyMix(.7);if(!v.ended&&v.currentTime>.3&&cur===11)vt.classList.add('on')};
+ v.onpause=()=>{MIXS.video=0;applyMix(.7);if(!v.ended&&v.currentTime>.3&&cur===11&&!vf.classList.contains('end'))vt.classList.add('on')};
  v.onended=()=>{MIXS.video=0;applyMix(.7);fin()};
  pl.onclick=()=>{pl.style.display='none';v.muted=false;v.volume=1;v.play().catch(()=>{})};
  sk.onclick=()=>{v.pause();go(nextOf(11))};
@@ -448,14 +447,6 @@ init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#
   .catch(()=>{v.muted=false;pl.style.display=''});
  startRain(false,600)};
 // ---------- 12: final ----------
-init[15]=()=>{const V=C.vouchers||[],L=$('#vlist'),p=$('#p15'),hint=$('#vh15'),g=$('#g15');let got=[];try{got=JSON.parse(localStorage.getItem('vouch')||'[]')}catch(e){}
- $('#t15').textContent=C.voucherTitle||'A few little gifts 🎁';hint.textContent=C.voucherHint||'tap a gift to redeem it ✦';
- L.innerHTML=V.map((v,i)=>`<div class="vw" style="--k:${i}"><div class="vt${got.includes(i)?' done':''}" data-i="${i}"><div class="ve">${v.e||'🎁'}</div><div class="vb"><b>${v.t||''}</b><span>${v.n||''}</span></div><div class="vr">REDEEM</div><div class="vs">REDEEMED ♡</div></div></div>`).join('');
- L.scrollTop=0;p.classList.remove('in');void p.offsetWidth;p.classList.add('in');
- const show=()=>{g.classList.remove('hid');g.classList.add('show')};g.classList.remove('show');g.classList.add('hid');if(got.length)show();else later(show,6500);
- L.onclick=e=>{const t=e.target.closest('.vt');if(!t||t.classList.contains('done'))return;t.classList.add('done');got.push(+t.dataset.i);try{localStorage.setItem('vouch',JSON.stringify(got))}catch(e){}
-  const r=t.getBoundingClientRect();SFX.stamp();burst(r.left+r.width*.78,r.top+r.height/2,26,true);hint.textContent='show this to '+C.from+' 💌';show()};
- g.onclick=()=>go(nextOf(15))};
 // ---------- p19: tiny music box (Happy Birthday, one note per tap or auto) ----------
 init[19]=()=>{const p=$('#p19'),bx=$('#mbx'),ball=$('#mbb'),nt=$('#mbn'),lyr=$('#mbl'),bar=$('#mbf'),pl=$('#mbplay'),end=$('#mbend'),hint=$('#mbh'),g=$('#g19'),hand=$('#mbhand');
  const nm=(C.name||'').trim()||'you',cut=Math.ceil(nm.length/2),n1=nm.length>1?nm.slice(0,cut)+'-':nm+' ',n2=nm.length>1?nm.slice(cut):'♡';

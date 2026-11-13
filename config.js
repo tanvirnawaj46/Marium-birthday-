@@ -43,18 +43,6 @@ window.CONFIG = {
     {src:"assets/Forever.jpeg", caption:"Forever"}
   ],
 
-  // ---- VOUCHERS (p15 "A few little gifts") : e=emoji, t=title, n=small note. Jototuku khushi add/remove koro ----
-  voucherTitle: "A few little gifts 🎁",
-  voucherHint: "tap a gift to redeem it, then show it to Akib ✦",
-  vouchers: [
-    {e:"🤗", t:"One long hug",           n:"any time you want, no questions asked"},
-    {e:"🍳", t:"Breakfast in bed",       n:"made by me, burnt toast included"},
-    {e:"🍽️", t:"Your favourite dinner",  n:"my treat, your choice"},
-    {e:"🌙", t:"A whole day, just us",   n:"phones away, you pick the plan"},
-    {e:"🎬", t:"Movie night",            n:"you choose the film, I bring the snacks"},
-    {e:"💌", t:"One surprise",           n:"I will not tell you when"}
-  ],
-
   // ---- STARS (p18 "Connect our stars") : heart complete hole name-er niche ei line ashbe ----
   starLine: "my favourite constellation",
 
