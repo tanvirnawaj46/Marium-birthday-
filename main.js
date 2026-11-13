@@ -119,8 +119,9 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){wake();if
 addEventListener('pointerdown',startMusic,{once:true});
 // iOS only accepts audio from touchend/click, not pointerdown: keep retrying on every gesture until the music is really playing
 (()=>{const ev=['pointerdown','touchstart','touchend','click'],f=()=>{AC.resume().catch(()=>{});if(musOn&&!hold&&bgm.paused){started=true;const p=bgm.play();if(p&&p.then)p.then(()=>applyMix(.9)).catch(()=>{})}if(AC.state==='running'&&!bgm.paused)ev.forEach(t=>removeEventListener(t,f,true))};ev.forEach(t=>addEventListener(t,f,true))})();
-// every tap/click gets its own sound (bow, balloons and scratch cards have their own)
-addEventListener('pointerdown',e=>{const t=e.target;if(!t||!t.closest)return;const kind=t.closest('#arena,.bal,canvas,#cst')?0:t.closest('.pol,.fr')?'photo':t.closest('#mus')?'tap':t.closest('.btn,button')?'btn':'tap';if(!kind)return;const go_=()=>SFX[kind]();if(AC.state!=='running'){AC.resume().then(go_).catch(()=>{})}else go_()},true);
+// buttons and real objects get a tap sound (bow, balloons and scratch cards have their own); taps on empty screen are silent
+let lastTapSnd=0;
+addEventListener('pointerdown',e=>{const t=e.target;if(!t||!t.closest)return;const kind=t.closest('#arena,.bal,canvas,#cst')?0:t.closest('.pol,.fr')?'photo':t.closest('#mus')?'tap':t.closest('.btn,button')?'btn':t.closest('.rh,.ev,#lb')?'tap':0;if(!kind)return;const now=performance.now();if(now-lastTapSnd<80)return;lastTapSnd=now;const go_=()=>SFX[kind]();if(AC.state!=='running'){AC.resume().then(go_).catch(()=>{})}else go_()},true);
 function bgmResume(){if(musOn&&started&&!hold&&bgm.paused)bgm.play().catch(()=>{});applyMix(.5)}
 const VS=[].concat(C.voice||[]);let vi=0,voiceOk=false;const voice=new Audio();voice.preload='auto';
 let VOICE_WA=false;if(WA){try{AC.createMediaElementSource(voice).connect(VG);VOICE_WA=true}catch(e){VOICE_WA=false}}
@@ -170,13 +171,14 @@ function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.paus
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
 let tapPt=[0,0,0],irisOn=0;addEventListener('pointerdown',e=>{tapPt=[e.clientX,e.clientY,performance.now()]},true);
 function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; // ignore double taps while the wipe runs
+ if(!seam&&started&&n===cur)return; // the page we are already on: nothing happens (no accidental replay / double init)
  if(!ir||seam||RM||!started||n===5||n===8||n===10)return go0(n,seam);
  irisOn=1;setTimeout(()=>{irisOn=0},2500);const t=performance.now()-tapPt[2]<2000,x=t?tapPt[0]:innerWidth/2,y=t?tapPt[1]:innerHeight*.6,sz=Math.max(innerWidth,innerHeight)*.4,
   sc=(2*Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y))/sz*1.08).toFixed(2);
  ir.style.translate=x+'px '+y+'px';
  ir.animate([{transform:'scale(0)',opacity:1},{transform:'scale('+sc+')',opacity:1}],{duration:520,easing:'cubic-bezier(.45,0,.75,.55)',fill:'forwards'}).onfinish=()=>{go0(n,seam,1);
   ir.animate([{transform:'scale('+sc+')',opacity:1},{transform:'scale('+sc+')',opacity:0}],{duration:420,easing:'ease-out',fill:'forwards'}).onfinish=()=>{ir.getAnimations().forEach(a=>a.cancel());irisOn=0}}}
-$$('.go').forEach(b=>b.addEventListener('click',()=>go(nextOf(+b.closest('.pg').id.slice(1)))));
+$$('.go').forEach(b=>{const id=+b.closest('.pg').id.slice(1);b.addEventListener('click',()=>{if(cur===id)go(nextOf(id))})});
 // ---- scroll-to-continue: on every page with a "Keep going" button the button is hidden; once the page's own job is done a
 // "swipe up" hint shows, the page (fixed) gets a little extra document height, and scrolling raises a Next pill that clicks the real button ----
 const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
@@ -302,7 +304,7 @@ init[5]=()=>{if(micStop)micStop();QUIET=0;$('#cake2').innerHTML=cakeSVG(1);$('#h
  const enableTap=()=>{if(tapOk)return;tapOk=true;tp.classList.add('vis')};
  later(()=>{SFX.chime();burst(W/2,H*.45,90)},700);later(()=>{startRain(false,300);fireworks()},1500);
  later(()=>hb.classList.add('vis'),1200);later(()=>wi.classList.add('vis'),2200);later(()=>{if(mic&&lit)bl.classList.add('vis')},3000);
- later(()=>{if(lit)enableTap()},12000); // fallback: tap anywhere to continue
+ later(()=>{if(lit)enableTap()},12000); // fallback: the Continue button appears (only that button moves on)
  const smoke=()=>{const sv=$('#cake2 .cake'),pr=$('#p5').getBoundingClientRect(),r=sv.getBoundingClientRect(),sc=Math.min(r.width/260,r.height/210),x=r.left+(r.width-260*sc)/2+130*sc-pr.left,y=r.top+(r.height-210*sc)/2+8*sc-pr.top;
   for(let k=0;k<5;k++){const e=document.createElement('i');e.className='smk';$('#p5').appendChild(e);const dx=(Math.random()-.5)*60;
    const a=e.animate([{transform:`translate(${x}px,${y}px) scale(.6)`,opacity:0},{transform:`translate(${x+dx*.4}px,${y-40}px) scale(1.3)`,opacity:.85,offset:.25},{transform:`translate(${x+dx}px,${y-110-Math.random()*50}px) scale(2.8)`,opacity:0}],{duration:1800+Math.random()*700,delay:k*140,easing:'ease-out',fill:'backwards'});a.onfinish=()=>e.remove()}};
@@ -312,7 +314,8 @@ init[5]=()=>{if(micStop)micStop();QUIET=0;$('#cake2').innerHTML=cakeSVG(1);$('#h
   later(enableTap,1700);later(()=>{if(cur===5&&tapOk){tapOk=false;go(nextOf(5))}},3200)};
  const fail=()=>{listening=false;QUIET=0;if(!lit)return;bl.classList.remove('on');bl.style.display='none';wi.textContent='tap the candle to blow it out ✨'};
  bl.onclick=e=>{e.stopPropagation();if(!lit||listening)return;listening=true;QUIET=1;bl.classList.add('on');bl.textContent='🎤 now blow on your phone 💨';dip(.25,12000);listenBlow(blowOut,fail)};
- $('#p5').onclick=e=>{if(lit&&e.target.closest('.chit')){blowOut();return}if(tapOk){tapOk=false;go(nextOf(5))}}};
+ $('#p5').onclick=e=>{if(lit&&e.target.closest('.chit'))blowOut()};
+ tp.onclick=e=>{e.stopPropagation();if(tapOk){tapOk=false;go(nextOf(5))}}};
 // ---------- 6: balloon game (many drifting balloons, only some hold a reason) ----------
 const balSVG=(c,i)=>`<svg viewBox="0 0 100 160"><defs><radialGradient id="bg${i}" cx="34%" cy="26%" r="78%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".5" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path class="body" d="M50 2C21 2 4 27 4 54c0 31 26 58 46 62C70 112 96 85 96 54 96 27 79 2 50 2z" fill="url(#bg${i})"/><path d="M41 121l9-9 9 9z" fill="${c[2]}"/><path class="str" d="M50 121c-9 9 9 17 0 27s-7 9-2 12" stroke="#fffb" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="30" rx="8" ry="15" fill="#fff" opacity=".6" transform="rotate(25 29 30)"/><ellipse cx="72" cy="88" rx="7" ry="3" fill="#fff" opacity=".22" transform="rotate(-30 72 88)"/></svg>`;
 let balRAF=0;
@@ -427,15 +430,16 @@ function primeVideo(){const v=$('#vid');v.onplay=v.onpause=v.onended=null;if(v.d
 $('#g10').addEventListener('click',primeVideo);
 init[11]=()=>{const v=$('#vid'),pl=$('#vplay'),g=$('#g11'),sk=$('#skip'),um=$('#unm');g.classList.remove('show');um.classList.remove('show');um.classList.add('hid');sk.style.display='';pl.style.display='none';
  if(v.dataset.s!==C.video){v.dataset.s=C.video;v.src=C.video;v.poster=C.videoPoster}v.controls=false;v.playsInline=true;
- const vf=$('#vf'),vt=$('#vtap'),vpi=$('#vpr i'),vcs=$('#vcap span');
- vf.classList.remove('end');vt.classList.remove('on');vpi.style.scale='0 1';$('#vend').textContent='Happy Birthday, '+(C.name||'')+' \u{1F496}';vcs.textContent=C.videoTitle||'a little wish for you \u{1F48C}';
+ const vf=$('#vf'),vpp=$('#vpp'),vpi=$('#vpr i'),vcs=$('#vcap span');
+ vf.classList.remove('end');vpp.classList.remove('gone');vpp.textContent='\u275A\u275A';vpi.style.scale='0 1';$('#vend').textContent='Happy Birthday, '+(C.name||'')+' \u{1F496}';vcs.textContent=C.videoTitle||'a little wish for you \u{1F48C}';
  for(const e of [vf,vcs]){e.style.animation='none';void e.offsetWidth;e.style.animation=''}
- vf.onclick=e=>{if(e.target.closest('button'))return;v.paused?v.play().catch(()=>{}):v.pause()};
+ vf.onclick=null; // tapping the picture does nothing (a stray tap used to pause it, or replay it after the end)
+ vpp.onclick=e=>{e.stopPropagation();if(v.ended||vf.classList.contains('end'))return;v.paused?v.play().catch(()=>{}):v.pause()};
  v.ontimeupdate=()=>{if(v.duration)vpi.style.scale=Math.min(1,v.currentTime/v.duration)+' 1'};
- const fin=()=>{vt.classList.remove('on');vf.classList.add('end');vpi.style.scale='1 1';g.classList.add('show');sk.style.display='none';burst(W/2,H/3,80)};
- v.onerror=()=>{pl.style.display='';pl.textContent='Video not found — continue ›';pl.onclick=()=>go(nextOf(11))};
- v.onplay=()=>{MIXS.video=1;applyMix(.25);vt.classList.remove('on')};
- v.onpause=()=>{MIXS.video=0;applyMix(.7);if(!v.ended&&v.currentTime>.3&&cur===11&&!vf.classList.contains('end'))vt.classList.add('on')};
+ const fin=()=>{vpp.classList.add('gone');vf.classList.add('end');vpi.style.scale='1 1';g.classList.add('show');sk.style.display='none';burst(W/2,H/3,80)};
+ v.onerror=()=>{vpp.classList.add('gone');pl.style.display='';pl.textContent='Video not found — continue ›';pl.onclick=()=>go(nextOf(11))};
+ v.onplay=()=>{MIXS.video=1;applyMix(.25);vpp.textContent='\u275A\u275A'};
+ v.onpause=()=>{MIXS.video=0;applyMix(.7);if(!v.ended&&!vf.classList.contains('end'))vpp.textContent='\u25B6'};
  v.onended=()=>{MIXS.video=0;applyMix(.7);fin()};
  pl.onclick=()=>{pl.style.display='none';v.muted=false;v.volume=1;v.play().catch(()=>{})};
  sk.onclick=()=>{v.pause();go(nextOf(11))};
@@ -453,7 +457,7 @@ init[19]=()=>{const p=$('#p19'),bx=$('#mbx'),ball=$('#mbb'),nt=$('#mbn'),lyr=$('
  const syl=['Hap-','py ','birth-','day ','to ','you','Hap-','py ','birth-','day ','to ','you','Hap-','py ','birth-','day ','dear ',n1,n2,'Hap-','py ','birth-','day ','to ','you'],starts=[0,6,12,19],T=MEL.length;
  let i=0,auto=false,fin=false,sg=0;
  nt.innerHTML='';ball.classList.remove('spin');lyr.textContent='';end.textContent='Happy birthday, '+C.name+' ♡';end.classList.remove('in');bar.style.transform='scaleX(0)';
- pl.textContent='▶ play it for me';pl.classList.remove('hid');g.classList.remove('show');g.classList.add('hid');hand.style.display='block';hint.textContent='tap anywhere to play the tune, one note at a time ✦';
+ pl.textContent='▶ play it for me';pl.classList.remove('hid');g.classList.remove('show');g.classList.add('hid');hand.style.display='block';hint.textContent='tap the music box to play the tune, one note at a time ✦';
  const lineOf=k=>starts.filter(s=>s<=k).pop();
  const float=k=>{if(nt.children.length>=8)nt.firstChild.remove();const e=document.createElement('i');e.className='mbn';e.textContent='♪ '+syl[k].trim().replace(/-$/,'');
   e.style.cssText='left:'+(18+Math.random()*50)+'%;top:8%;color:'+['#d6428f','#8a4fd1','#e8821c','#2f9e8f'][k%4];nt.appendChild(e);
@@ -465,7 +469,7 @@ init[19]=()=>{const p=$('#p19'),bx=$('#mbx'),ball=$('#mbb'),nt=$('#mbn'),lyr=$('
   ball.classList.add('spin');const my=++sg;later(()=>{if(my===sg)ball.classList.remove('spin')},1700);
   bx.animate([{transform:'scale(1)'},{transform:'scale(.975)'},{transform:'scale(1)'}],{duration:220,easing:'ease-out'});
   lyr.textContent=syl.slice(lineOf(k),k+1).join('');bar.style.transform='scaleX('+((k+1)/T)+')';if(k===T-1)finish()};
- p.onpointerdown=e=>{if(auto||fin||e.target.closest('button'))return;hand.style.display='none';hint.textContent='';note(i++)};
+ bx.onpointerdown=e=>{if(auto||fin)return;hand.style.display='none';hint.textContent='';note(i++)};
  pl.onclick=()=>{if(auto)return;auto=true;fin=false;i=0;end.classList.remove('in');lyr.textContent='';bar.style.transform='scaleX(0)';hand.style.display='none';hint.textContent='';pl.classList.add('hid');pl.classList.remove('show');
   let t=350;MEL.forEach((n,k)=>{later(()=>{if(auto)note(k)},t);t+=n[1]*500})};
  later(()=>{g.classList.remove('hid');g.classList.add('show')},60000);
