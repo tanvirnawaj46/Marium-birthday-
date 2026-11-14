@@ -260,17 +260,24 @@ function treeSVG(n){
   </g></g>`);
  }
  const branches=[
-  ['M200 420C191 365 209 315 198 264C190 224 174 194 154 161',19],
-  ['M198 322C166 299 137 274 115 235C102 212 89 192 72 178',10],
-  ['M201 315C231 291 261 260 281 222C296 194 314 180 333 164',10],
-  ['M195 272C173 245 154 220 139 189C128 165 120 144 121 121',7],
-  ['M204 269C224 240 240 207 253 176C263 151 278 133 297 119',7],
-  ['M198 253C199 220 200 191 199 155',6],
-  ['M155 193C132 184 113 176 92 160',4],
-  ['M253 180C276 174 294 162 311 144',4]
+  ['M200 421C166 400 176 378 161 354C148 333 174 312 166 287C158 263 179 244 185 219C193 190 178 163 191 137C198 116 216 99 224 75',18],
+  ['M166 344C139 327 112 315 91 294C72 275 54 258 35 247',9],
+  ['M178 308C207 299 230 281 251 259C274 237 298 224 330 214C350 207 365 194 380 180',9],
+  ['M185 231C156 216 135 199 115 178C95 157 73 151 48 147',6],
+  ['M189 197C216 184 237 165 252 142C270 117 292 106 319 95C340 86 354 71 365 57',6],
+  ['M198 162C179 145 163 127 154 103C146 82 130 71 111 61',5],
+  ['M211 143C226 122 233 102 231 80C230 60 241 47 257 33',4],
+  ['M139 323C111 307 88 306 68 314C50 321 35 333 20 347',4],
+  ['M250 260C254 239 247 220 236 203C227 188 224 174 225 158',4],
+  ['M294 227C301 204 297 184 287 166C279 151 279 136 286 119',4],
+  ['M115 179C108 162 111 146 121 131C130 118 131 104 125 90',3],
+  ['M319 96C328 78 325 61 314 47',3]
  ];
  const wood=branches.map(([d,w],i)=>`<path class="branch" pathLength="1" d="${d}" stroke-width="${w}" style="--bd:${(.2+i*.16).toFixed(2)}s"/>`).join('');
- const roots=`<path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#805047" stroke-width="5" stroke-linecap="round"/>`;
+ const roots=`<path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#50383a" stroke-width="8" stroke-linecap="round"/>
+ <path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#ba8271" stroke-opacity=".52" stroke-width="2" stroke-linecap="round"/>
+ <path d="M190 420C169 398 180 376 166 353C152 332 177 310 168 286C159 263 180 243 186 219C194 190 179 163 192 137" fill="none" stroke="#211c20" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
+ <path d="M166 342C139 326 112 314 91 293M180 306C208 297 230 280 251 258M186 228C156 214 135 198 115 178" fill="none" stroke="#d0a08a" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/>`;
  const leaves=Array.from({length:25},(_,i)=>{
   const x=38+Math.random()*324,y=74+Math.random()*228,s=4+Math.random()*5;
   const heart=Math.random()<.28;
@@ -285,6 +292,8 @@ function treeSVG(n){
  </defs>
  <ellipse class="tree-aura" cx="200" cy="170" rx="205" ry="185" fill="url(#sakuraGlow)"/>
  <ellipse cx="200" cy="429" rx="145" ry="13" fill="url(#groundGlow)"/>
+ <path d="M0 426Q35 413 76 417L140 430Q163 408 188 420Q216 437 249 419Q310 400 400 422V440H0Z" fill="#866965" stroke="#503e41" stroke-width="3"/>
+ <path d="M8 431l47-13 26 13-36 9m89-7 32-17 24 16-31 8m88-4 39-15 28 13-36 9" fill="none" stroke="#c39a8e" stroke-width="2" opacity=".7"/>
  <g class="trunk" fill="none" stroke="url(#sakuraWood)" stroke-linecap="round" stroke-linejoin="round">${wood}</g>
  <g class="roots">${roots}</g>
  <g class="canopy">${flowers.join('')}</g>
