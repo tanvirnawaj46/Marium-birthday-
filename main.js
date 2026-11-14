@@ -274,7 +274,7 @@ function treeSVG(n){
  const leaves=Array.from({length:25},(_,i)=>{
   const x=38+Math.random()*324,y=74+Math.random()*228,s=4+Math.random()*5;
   const heart=Math.random()<.28;
-  return heart?`<text class="float-heart" x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${s+5}" style="--fd:${(2+Math.random()*6).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s">♡</text>`:
+  return heart?`<text class="float-heart" x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${s+5}" style="--fd:${(2+Math.random()*6).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s;--dx:${(Math.random()*90-45).toFixed(1)}px">♡</text>`:
    `<ellipse class="fall" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s*.72).toFixed(1)}" ry="${(s*1.5).toFixed(1)}" fill="${blossomColors[i%blossomColors.length]}" style="--fd:${(Math.random()*7).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s;--dx:${(Math.random()*90-45).toFixed(1)}px" transform="rotate(${Math.random()*90-45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`
  }).join('');
  return `<svg viewBox="0 0 400 440" role="img" aria-label="A blooming Japanese cherry blossom tree with drifting petals">
