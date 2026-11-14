@@ -251,7 +251,7 @@ function treeSVG(n){
   const x=200+u*157, y=159+v*111;
   const s=4.2+Math.random()*6.2, col=blossomColors[Math.floor(Math.random()*blossomColors.length)];
   const delay=(.65+(y/440)*1.4+Math.random()*.9).toFixed(2);
-  flowers.push(`<g class="blossom" style="--bd:${delay}s" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(Math.random()*50-25).toFixed(0)}) scale(${(s/10).toFixed(2)})">
+  flowers.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(Math.random()*50-25).toFixed(0)})"><g class="blossom" style="--bd:${delay}s" transform="scale(${(s/10).toFixed(2)})">
    <g fill="${col}" stroke="#e98dad" stroke-opacity=".26" stroke-width=".7">
     <ellipse cy="-5.2" rx="3.8" ry="5.6"/><ellipse cx="5" cy="-1.6" rx="3.8" ry="5.6" transform="rotate(72 5 -1.6)"/>
     <ellipse cx="3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(144 3.1 4.2)"/><ellipse cx="-3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(216 -3.1 4.2)"/>
@@ -269,13 +269,13 @@ function treeSVG(n){
   ['M155 193C132 184 113 176 92 160',4],
   ['M253 180C276 174 294 162 311 144',4]
  ];
- const wood=branches.map(([d,w],i)=>`<path class="branch" d="${d}" stroke-width="${w}" style="--bd:${(.2+i*.16).toFixed(2)}s"/>`).join('');
+ const wood=branches.map(([d,w],i)=>`<path class="branch" pathLength="1" d="${d}" stroke-width="${w}" style="--bd:${(.2+i*.16).toFixed(2)}s"/>`).join('');
  const roots=`<path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#805047" stroke-width="5" stroke-linecap="round"/>`;
  const leaves=Array.from({length:25},(_,i)=>{
   const x=38+Math.random()*324,y=74+Math.random()*228,s=4+Math.random()*5;
   const heart=Math.random()<.28;
   return heart?`<text class="float-heart" x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${s+5}" style="--fd:${(2+Math.random()*6).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s">♡</text>`:
-   `<ellipse class="fall" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s*.72).toFixed(1)}" ry="${(s*1.5).toFixed(1)}" fill="${blossomColors[i%blossomColors.length]}" style="--fd:${(Math.random()*7).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s" transform="rotate(${Math.random()*90-45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`
+   `<ellipse class="fall" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s*.72).toFixed(1)}" ry="${(s*1.5).toFixed(1)}" fill="${blossomColors[i%blossomColors.length]}" style="--fd:${(Math.random()*7).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s;--dx:${(Math.random()*90-45).toFixed(1)}px" transform="rotate(${Math.random()*90-45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`
  }).join('');
  return `<svg viewBox="0 0 400 440" role="img" aria-label="A blooming Japanese cherry blossom tree with drifting petals">
  <defs>
