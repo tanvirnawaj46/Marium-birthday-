@@ -934,3 +934,14 @@ body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
 #p3 .txt3 h2{color:#a34e69;text-shadow:0 1px #fff8}
 #p3 .txt3 .btn{background:linear-gradient(100deg,#dc7e8f,#be5c7c);box-shadow:0 8px 24px #9b496144}
 @media(prefers-reduced-motion:reduce){#tree .branch{animation:none!important;stroke-dashoffset:0}}
+
+
+/* Sakura v2 (realistic procedural tree): grow-from-base limbs, clustered blossoms, soft sway. transform/opacity only */
+#tree{width:min(92vw,430px);height:auto;aspect-ratio:400/460;filter:none}
+#tree svg{filter:none}
+#tree .br{transform-box:view-box;transform-origin:var(--ox) var(--oy);scale:.02;opacity:0;animation:brgrow var(--bl,.9s) cubic-bezier(.3,.7,.3,1) var(--bd) forwards}
+@keyframes brgrow{to{scale:1;opacity:1}}
+#tree .cl{transform-box:fill-box;transform-origin:center;scale:0;opacity:0;animation:sakura-pop .85s cubic-bezier(.2,1.4,.4,1) var(--bd) forwards}
+#tree .sw{transform-box:view-box;transform-origin:var(--ox) var(--oy);animation:swayk 7s ease-in-out var(--sd,0s) infinite alternate}
+@keyframes swayk{from{rotate:-.7deg}to{rotate:.8deg}}
+@media(prefers-reduced-motion:reduce){#tree .br,#tree .cl{animation:none!important;scale:1;opacity:1}#tree .sw{animation:none}}

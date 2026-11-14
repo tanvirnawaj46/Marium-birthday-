@@ -242,62 +242,65 @@ init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach
 const HG=[['#ff9db3','#f0365f','#9f1239'],['#ffc2d4','#f43f78','#be185d'],['#ffd9e6','#f472b6','#c026a3'],['#ffb8a6','#fb5470','#be123c'],['#fff1a8','#fbbf24','#d97706']];
 const HP='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z';
 function treeSVG(n){
- const blossomColors=['#fff1f3','#ffd6e3','#ffc0d5','#ffe4ec','#f8bfd7'];
- const flowers=[];
- // Layered blossom clouds follow a soft, asymmetrical sakura silhouette.
- for(let i=0;i<n;i++){
-  const u=Math.random()*2-1, v=Math.random()*2-1;
-  if(u*u+v*v*.88>1)continue;
-  const x=200+u*157, y=159+v*111;
-  const s=4.2+Math.random()*6.2, col=blossomColors[Math.floor(Math.random()*blossomColors.length)];
-  const delay=(.65+(y/440)*1.4+Math.random()*.9).toFixed(2);
-  flowers.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(Math.random()*50-25).toFixed(0)})"><g class="blossom" style="--bd:${delay}s" transform="scale(${(s/10).toFixed(2)})">
-   <g fill="${col}" stroke="#e98dad" stroke-opacity=".26" stroke-width=".7">
-    <ellipse cy="-5.2" rx="3.8" ry="5.6"/><ellipse cx="5" cy="-1.6" rx="3.8" ry="5.6" transform="rotate(72 5 -1.6)"/>
-    <ellipse cx="3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(144 3.1 4.2)"/><ellipse cx="-3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(216 -3.1 4.2)"/>
-    <ellipse cx="-5" cy="-1.6" rx="3.8" ry="5.6" transform="rotate(288 -5 -1.6)"/>
-   </g><circle r="2.2" fill="#ffd46b"/><circle cx="-.6" cy="-.7" r=".8" fill="#fff8d9"/>
-  </g></g>`);
- }
- const branches=[
-  ['M200 421C166 400 176 378 161 354C148 333 174 312 166 287C158 263 179 244 185 219C193 190 178 163 191 137C198 116 216 99 224 75',18],
-  ['M166 344C139 327 112 315 91 294C72 275 54 258 35 247',9],
-  ['M178 308C207 299 230 281 251 259C274 237 298 224 330 214C350 207 365 194 380 180',9],
-  ['M185 231C156 216 135 199 115 178C95 157 73 151 48 147',6],
-  ['M189 197C216 184 237 165 252 142C270 117 292 106 319 95C340 86 354 71 365 57',6],
-  ['M198 162C179 145 163 127 154 103C146 82 130 71 111 61',5],
-  ['M211 143C226 122 233 102 231 80C230 60 241 47 257 33',4],
-  ['M139 323C111 307 88 306 68 314C50 321 35 333 20 347',4],
-  ['M250 260C254 239 247 220 236 203C227 188 224 174 225 158',4],
-  ['M294 227C301 204 297 184 287 166C279 151 279 136 286 119',4],
-  ['M115 179C108 162 111 146 121 131C130 118 131 104 125 90',3],
-  ['M319 96C328 78 325 61 314 47',3]
- ];
- const wood=branches.map(([d,w],i)=>`<path class="branch" pathLength="1" d="${d}" stroke-width="${w}" style="--bd:${(.2+i*.16).toFixed(2)}s"/>`).join('');
- const roots=`<path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#50383a" stroke-width="8" stroke-linecap="round"/>
- <path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#ba8271" stroke-opacity=".52" stroke-width="2" stroke-linecap="round"/>
- <path d="M190 420C169 398 180 376 166 353C152 332 177 310 168 286C159 263 180 243 186 219C194 190 179 163 192 137" fill="none" stroke="#211c20" stroke-opacity=".7" stroke-width="2.5" stroke-linecap="round"/>
- <path d="M166 342C139 326 112 314 91 293M180 306C208 297 230 280 251 258M186 228C156 214 135 198 115 178" fill="none" stroke="#d0a08a" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round"/>`;
- const leaves=Array.from({length:25},(_,i)=>{
-  const x=38+Math.random()*324,y=74+Math.random()*228,s=4+Math.random()*5;
-  const heart=Math.random()<.28;
-  return heart?`<text class="float-heart" x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${s+5}" style="--fd:${(2+Math.random()*6).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s;--dx:${(Math.random()*90-45).toFixed(1)}px">♡</text>`:
-   `<ellipse class="fall" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s*.72).toFixed(1)}" ry="${(s*1.5).toFixed(1)}" fill="${blossomColors[i%blossomColors.length]}" style="--fd:${(Math.random()*7).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s;--dx:${(Math.random()*90-45).toFixed(1)}px" transform="rotate(${Math.random()*90-45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`
- }).join('');
- return `<svg viewBox="0 0 400 440" role="img" aria-label="A blooming Japanese cherry blossom tree with drifting petals">
+ // original procedural sakura: twisted tapered trunk on a rocky ledge, recursive limbs, dense blossom clusters (seeded = same tree every time)
+ let sd=20261114;const rnd=()=>{sd|=0;sd=sd+0x6D2B79F5|0;let t=Math.imul(sd^sd>>>15,1|sd);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},rr=(a,b)=>a+rnd()*(b-a);
+ const f1=v=>v.toFixed(1);
+ const cr=(P,seg)=>{const o=[];for(let i=0;i<P.length-1;i++){const a=P[Math.max(0,i-1)],b=P[i],c=P[i+1],d=P[Math.min(P.length-1,i+2)];for(let s=0;s<seg;s++){const t=s/seg,t2=t*t,t3=t2*t;o.push([0,1].map(k=>.5*(2*b[k]+(-a[k]+c[k])*t+(2*a[k]-5*b[k]+4*c[k]-d[k])*t2+(-a[k]+3*b[k]-3*c[k]+d[k])*t3)))}}o.push(P[P.length-1]);return o};
+ const taper=(P,w0,w1,cv,bump)=>{const m=P.length,L=[],R=[];for(let i=0;i<m;i++){const a=P[Math.max(0,i-1)],b=P[Math.min(m-1,i+1)];let dx=b[0]-a[0],dy=b[1]-a[1];const l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;const t=i/(m-1);let w=(w0+(w1-w0)*Math.pow(t,cv||1))/2;if(bump)w*=1+bump*Math.sin(i*1.9)*.5+bump*.4*Math.sin(i*.7+1);L.push([P[i][0]-dy*w,P[i][1]+dx*w]);R.push([P[i][0]+dy*w,P[i][1]-dx*w])}const q=A=>A.map(p=>f1(p[0])+' '+f1(p[1])).join('L');return 'M'+q(L)+'L'+q(R.reverse())+'Z'};
+ const cols=['#fff0f5','#ffdbe8','#ffc6da','#ffb0cb','#ffc6da','#f8a0c0','#ffb0cb'];
+ let wood='',fl='',clouds='',tw=0;const groups=[];
+ const trunkPts=cr([[110,436],[128,408],[152,386],[146,358],[116,336],[126,308],[160,292],[190,268],[197,238],[191,208],[201,176]],6);
+ wood+=`<path class="br" style="--ox:118px;--oy:436px;--bd:.15s;--bl:1.5s" fill="url(#skW)" d="${taper(trunkPts,52,15,.55,.12)}"/>`;
+ // bark grooves
+ let bark='';for(let k=0;k<9;k++){const off=(k-4)*.16,P=trunkPts.filter((_,i)=>i%2===0&&i>2&&i<trunkPts.length-8).map((p,i,A)=>{const q=A[Math.min(A.length-1,i+1)],dx=q[0]-p[0],dy=q[1]-p[1],l=Math.hypot(dx,dy)||1,t=i/A.length,w=(52-(52-15)*Math.pow(t*.8,.55))*off*.5;return[p[0]-dy/l*w+rr(-1,1),p[1]+dx/l*w+rr(-1,1)]});if(P.length>3)bark+=`<path d="M${P.map(p=>f1(p[0])+' '+f1(p[1])).join('L')}" fill="none" stroke="#2a1a1d" stroke-opacity="${rr(.25,.5).toFixed(2)}" stroke-width="${rr(.7,1.5).toFixed(1)}" stroke-linecap="round"/>`}
+ wood+=`<g class="br" style="--ox:118px;--oy:436px;--bd:.9s;--bl:1s">${bark}<path d="M${trunkPts.slice(2,10).map(p=>f1(p[0]-6)+' '+f1(p[1])).join('L')}" fill="none" stroke="#d9a58e" stroke-opacity=".35" stroke-width="2.2" stroke-linecap="round"/></g>`;
+ // roots over the rock
+ [[[110,436],[88,430],[60,436],[34,452]],[[116,430],[136,438],[166,436],[196,448]],[[122,424],[146,424],[172,418],[204,424]],[[108,430],[92,422],[72,414],[50,414]]].forEach((r,i)=>{wood+=`<path class="br" style="--ox:${r[0][0]}px;--oy:${r[0][1]}px;--bd:${(.5+i*.1).toFixed(2)}s;--bl:.8s" fill="url(#skW)" d="${taper(cr(r,5),i<2?17:11,3,.8,.1)}"/>`});
+ const limbs=[
+  {p:[[168,298],[204,292],[246,298],[286,314],[322,338]],w:[15,5],g:.9,d:3,at:.9},
+  {p:[[192,252],[228,236],[262,206],[300,184],[336,176]],w:[13,4],g:.3,d:3,at:1.1},
+  {p:[[195,226],[172,198],[152,164],[150,124],[168,90]],w:[12,4],g:0,d:3,at:1.3},
+  {p:[[200,188],[212,152],[234,120],[262,94]],w:[10,3],g:.1,d:3,at:1.5},
+  {p:[[128,308],[102,296],[80,288],[58,292]],w:[10,3],g:.5,d:3,at:1.0},
+  {p:[[160,292],[142,266],[118,250],[96,236]],w:[9,3],g:.2,d:3,at:1.2}];
+ const spawn=(P,w0,w1,g,depth,t0,gi)=>{ // P polyline; returns nothing, appends wood + clusters
+  const C=cr(P,5);const id=tw++;
+  wood+=`<path class="br" style="--ox:${f1(C[0][0])}px;--oy:${f1(C[0][1])}px;--bd:${t0.toFixed(2)}s;--bl:${(.5+.1*(4-depth)).toFixed(2)}s" fill="url(#skW)" d="${taper(C,w0,w1,.9,depth>2?.08:0)}"/>`;
+  const tip=C[C.length-1];
+  if(depth<=1||C.length<5){groups[gi].push([tip[0],tip[1],1.2,t0+.5])}
+  if(depth>=1){const kids=depth===3?3:2;for(let k=0;k<kids;k++){const ti=Math.min(C.length-2,Math.floor(C.length*(.3+.7*(k+1)/(kids+1)*(k%2?1:.9))));const a0=C[Math.max(0,ti-1)],b0=C[Math.min(C.length-1,ti+1)];let ang=Math.atan2(b0[1]-a0[1],b0[0]-a0[0])+(k%2?1:-1)*rr(.5,1.0);const len=rr(.28,.55)*Math.hypot(tip[0]-C[0][0],tip[1]-C[0][1])+14;const q=[C[ti]];let cx=C[ti][0],cy=C[ti][1];for(let s=0;s<3;s++){ang+=(Math.PI/2-ang%(Math.PI*2)>0?0:0);cx+=Math.cos(ang)*len/3;cy+=Math.sin(ang)*len/3+g*(s+1)*2.2;q.push([cx,cy]);ang+=rr(-.35,.35)}const wk=w0*(1-ti/C.length*.5);spawn(q,Math.max(1.4,wk*.55),Math.max(.7,w1*.5),g,depth-1,t0+.25+ti/C.length*.4,gi)}}
+  if(depth===2&&rnd()<.5)groups[gi].push([C[C.length>>1][0],C[C.length>>1][1],.7,t0+.4]);
+ };
+ limbs.forEach((L,gi)=>{groups.push([]);const C=cr(L.p,5);wood+=`<path class="br" style="--ox:${L.p[0][0]}px;--oy:${L.p[0][1]}px;--bd:${L.at}s;--bl:1.1s" fill="url(#skW)" d="${taper(C,L.w[0],L.w[1],.85,.06)}"/>`;
+  const tip=C[C.length-1];groups[gi].push([tip[0],tip[1],1.9,L.at+1],[tip[0]-16,tip[1]+12,1.2,L.at+1.2],[tip[0]+10,tip[1]-14,1.1,L.at+1.3]);
+  for(let k=1;k<=3;k++){const ti=Math.min(C.length-2,Math.floor(C.length*(.3+.2*k)));const a0=C[Math.max(0,ti-1)],b0=C[Math.min(C.length-1,ti+1)];let ang=Math.atan2(b0[1]-a0[1],b0[0]-a0[0])+(k%2?-1:1)*rr(.45,.9);const len=rr(34,58);const q=[C[ti]];let cx=C[ti][0],cy=C[ti][1];for(let s=0;s<3;s++){cx+=Math.cos(ang)*len/3;cy+=Math.sin(ang)*len/3+L.g*(s+1)*2.4;q.push([cx,cy]);ang+=rr(-.3,.3)}spawn(q,Math.max(2,L.w[0]*.5),1,L.g,L.d-1,L.at+.5+k*.14,gi)}});
+ // blossoms
+ const dens=n>150?1:.6;let canopy='';
+ groups.forEach((G,gi)=>{let s='';G.forEach(([x,y,sz,t])=>{const cnt=Math.round((5+rnd()*3)*sz*dens),R=7+sz*5;
+   clouds+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(R*1.3)}" fill="url(#skC)"/>`;
+   let c='';for(let i=0;i<cnt;i++){const a=rnd()*6.283,d=Math.sqrt(rnd())*R,fx=x+Math.cos(a)*d,fy=y+Math.sin(a)*d*.85,sc=rr(.5,.92);c+=`<use href="#skF" transform="translate(${f1(fx)} ${f1(fy)}) rotate(${(rnd()*72).toFixed(0)}) scale(${sc.toFixed(2)})" style="color:${cols[Math.floor(rnd()*cols.length)]}"/>`}
+   s+=`<g class="cl" style="--bd:${(t+.3).toFixed(2)}s">${c}</g>`});
+  const o=limbs[gi].p[0];canopy+=`<g class="sw" style="--ox:${o[0]}px;--oy:${o[1]}px;--sd:${(-gi*1.1).toFixed(1)}s">${s}</g>`});
+ const lf=Array.from({length:18},(_,i)=>{const x=40+rnd()*320,y=70+rnd()*230,s=3.4+rnd()*3.6;return `<ellipse class="fall" cx="${f1(x)}" cy="${f1(y)}" rx="${(s*.62).toFixed(1)}" ry="${(s*1.3).toFixed(1)}" fill="${cols[i%cols.length]}" style="--fd:${(rnd()*7).toFixed(2)}s;--fs:${(5+rnd()*5).toFixed(2)}s;--dx:${(rnd()*90-30).toFixed(1)}px" transform="rotate(${(rnd()*90-45).toFixed(0)} ${f1(x)} ${f1(y)})"/>`}).join('')+Array.from({length:5},()=>{const x=60+rnd()*280,y=90+rnd()*180;return `<text class="float-heart" x="${f1(x)}" y="${f1(y)}" font-size="${(9+rnd()*5).toFixed(0)}" style="--fd:${(2+rnd()*6).toFixed(2)}s;--fs:${(5+rnd()*5).toFixed(2)}s;--dx:${(rnd()*80-30).toFixed(1)}px">♡</text>`}).join('');
+ // rocky ledge (jagged, faceted, original shape)
+ const rk0=[[14,380],[44,364],[86,374],[118,398],[160,418],[212,434],[264,444],[316,452],[250,460],[120,460],[40,456],[10,434]],rk=[];rk0.forEach((q,i)=>{const z=rk0[(i+1)%rk0.length];rk.push([q[0],q[1]]);const m=[(q[0]+z[0])/2+rr(-5,5),(q[1]+z[1])/2+rr(-4,4)];rk.push([+m[0].toFixed(1),+m[1].toFixed(1)])});
+ let rock=`<mask id="skM"><rect width="400" height="460" fill="url(#skFd)"/></mask><clipPath id="skK"><path d="M${rk.map(p=>p.join(' ')).join('L')}Z"/></clipPath><g mask="url(#skM)"><path d="M${rk.map(p=>p.join(' ')).join('L')}Z" fill="url(#skR)"/><g clip-path="url(#skK)">`;
+ for(let i=0;i<14;i++){const bx=rr(0,300),by=rr(380,456),w=rr(30,70);rock+=`<path d="M${f1(bx)} ${f1(by)}q${f1(w*.4)} ${f1(-rr(4,10))} ${f1(w)} ${f1(rr(-3,6))}" fill="none" stroke="${i%2?'#2f2022':'#b08c84'}" stroke-opacity="${rr(.18,.4).toFixed(2)}" stroke-width="${rr(1,2.2).toFixed(1)}" stroke-linecap="round"/>`}
+ for(let i=0;i<7;i++){const bx=rr(30,250),by=rr(396,448);rock+=`<path d="M${f1(bx)} ${f1(by)}l${f1(rr(6,14))} ${f1(rr(12,26))}" stroke="#2a1b1e" stroke-opacity=".35" stroke-width="1.2" fill="none" stroke-linecap="round"/>`}
+ rock+=`</g><path d="M14 380L44 364L86 374L118 398L160 418L212 434L264 444L316 452" fill="none" stroke="#d1aea2" stroke-width="2" stroke-opacity=".6" stroke-linejoin="round" stroke-linecap="round"/></g>`;
+ let ground='';for(let i=0;i<26;i++){const x=rr(20,330),y=rr(392,448);ground+=`<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${rr(2.4,4.6).toFixed(1)}" ry="${rr(1.4,2.6).toFixed(1)}" fill="${cols[i%cols.length]}" transform="rotate(${(rnd()*180).toFixed(0)} ${f1(x)} ${f1(y)})"/>`}
+ return `<svg viewBox="0 0 400 460" role="img" aria-label="A blooming Japanese cherry blossom tree on a rocky ledge with drifting petals">
  <defs>
-  <linearGradient id="sakuraWood" x1="0" x2="1" y1="0" y2=".2"><stop stop-color="#6d4145"/><stop offset=".48" stop-color="#a66c5c"/><stop offset="1" stop-color="#654044"/></linearGradient>
-  <radialGradient id="sakuraGlow"><stop stop-color="#fff4f7" stop-opacity=".92"/><stop offset=".55" stop-color="#ffb7d0" stop-opacity=".35"/><stop offset="1" stop-color="#ffb7d0" stop-opacity="0"/></radialGradient>
-  <linearGradient id="groundGlow" x1="0" x2="1"><stop stop-color="#f8a9c4" stop-opacity="0"/><stop offset=".5" stop-color="#ffd6e5" stop-opacity=".75"/><stop offset="1" stop-color="#f8a9c4" stop-opacity="0"/></linearGradient>
+  <linearGradient id="skW" x1="0" x2="1" y1="0" y2=".3"><stop stop-color="#3b2326"/><stop offset=".5" stop-color="#6a403d"/><stop offset="1" stop-color="#4a2c2e"/></linearGradient>
+  <linearGradient id="skR" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#8d6b66"/><stop offset=".6" stop-color="#5e4244"/><stop offset="1" stop-color="#3c292d"/></linearGradient>
+  <linearGradient id="skFd" x1="0" y1="0" x2="0" y2="1"><stop offset=".86" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><radialGradient id="skC"><stop stop-color="#ffb6d0" stop-opacity=".62"/><stop offset=".6" stop-color="#ffc4d8" stop-opacity=".3"/><stop offset="1" stop-color="#ffc4d8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="skG"><stop stop-color="#fff4f7" stop-opacity=".9"/><stop offset=".55" stop-color="#ffb7d0" stop-opacity=".3"/><stop offset="1" stop-color="#ffb7d0" stop-opacity="0"/></radialGradient>
+  <g id="skF"><g fill="currentColor" stroke="#e5799f" stroke-opacity=".3" stroke-width=".5"><path id="skP" d="M0 0C-5-2-6.4-8.2-2.4-9.8L0-8.4L2.4-9.8C6.4-8.2 5-2 0 0Z"/><use href="#skP" transform="rotate(72)"/><use href="#skP" transform="rotate(144)"/><use href="#skP" transform="rotate(216)"/><use href="#skP" transform="rotate(288)"/></g><circle r="1.5" fill="#e0527f"/><circle r=".55" cx=".3" cy="-.3" fill="#ffd36b"/></g>
  </defs>
- <ellipse class="tree-aura" cx="200" cy="170" rx="205" ry="185" fill="url(#sakuraGlow)"/>
- <ellipse cx="200" cy="429" rx="145" ry="13" fill="url(#groundGlow)"/>
- <path d="M0 426Q35 413 76 417L140 430Q163 408 188 420Q216 437 249 419Q310 400 400 422V440H0Z" fill="#866965" stroke="#503e41" stroke-width="3"/>
- <path d="M8 431l47-13 26 13-36 9m89-7 32-17 24 16-31 8m88-4 39-15 28 13-36 9" fill="none" stroke="#c39a8e" stroke-width="2" opacity=".7"/>
- <g class="trunk" fill="none" stroke="url(#sakuraWood)" stroke-linecap="round" stroke-linejoin="round">${wood}</g>
- <g class="roots">${roots}</g>
- <g class="canopy">${flowers.join('')}</g>
- <g class="breeze">${leaves}</g>
+ <ellipse class="tree-aura" cx="215" cy="150" rx="205" ry="165" fill="url(#skG)"/>
+ ${rock}<g class="trunk">${wood}</g>${ground}
+ <g>${clouds}</g>${canopy}
+ <g class="breeze">${lf}</g>
  </svg>`;
 }
 init[3]=()=>{const p3=$('#p3');p3.classList.remove('in');void p3.offsetWidth;p3.classList.add('in');$('#g3').onclick=()=>go(2);$('#tree').innerHTML=treeSVG(RM?110:210);$('#t3n').innerHTML=`Happy<br>Birthday, ${C.name}`;$('#t3a').textContent=`and just like that, you're turning ${C.age} ✨`;startRain(true,300);later(SFX.chime,1200)};
