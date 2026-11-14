@@ -905,3 +905,18 @@ body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
 #lmbar:after,#mbp:after{content:"";position:absolute;left:4%;right:4%;top:1px;height:38%;border-radius:99px;background:linear-gradient(180deg,#ffffffa6,#ffffff00);pointer-events:none}
 /* photo lightbox caption */
 #lb p{display:inline-block;padding:.3rem 1.1rem;border-radius:99px;background:linear-gradient(150deg,#ffffff4d,#ffffff1a 50%,#ffffff2e);border:1px solid #ffffff70;box-shadow:inset 1.5px 1.5px 1px #ffffffc0,inset -1px -1px 1px #ffffff40,0 6px 18px #0006;color:#fff}
+
+
+/* Sakura scene: warm bark, layered blossoms, and a soft drifting breeze */
+#tree svg{overflow:visible;filter:drop-shadow(0 14px 22px #7c3d5a24)}
+#tree .tree-aura{opacity:0;animation:haloin 1.6s .25s forwards, sakura-aura 5s 1.8s ease-in-out infinite}
+#tree .trunk .branch{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.45s cubic-bezier(.45,0,.25,1) var(--bd) forwards}
+#tree .roots{opacity:0;animation:fadein .7s 1.15s forwards}
+#tree .blossom{transform-box:fill-box;transform-origin:center;opacity:0;scale:0;animation:sakura-pop .72s cubic-bezier(.2,1.55,.45,1) var(--bd) forwards}
+#tree .fall{transform-box:fill-box;transform-origin:center;opacity:0;animation:petal-drift var(--fs) ease-in var(--fd) infinite}
+#tree .float-heart{font-family:system-ui,sans-serif;font-weight:500;fill:#f477a4;opacity:0;animation:heart-drift var(--fs) ease-in-out var(--fd) infinite}
+@keyframes sakura-pop{0%{opacity:0;scale:0}72%{opacity:1;scale:1.22}100%{opacity:1;scale:1}}
+@keyframes sakura-aura{50%{opacity:.72;scale:1.035}}
+@keyframes petal-drift{0%{opacity:0;translate:0 0;rotate:0deg}14%{opacity:.9}75%{opacity:.82}100%{opacity:0;translate:var(--dx) 190px;rotate:210deg}}
+@keyframes heart-drift{0%,10%{opacity:0;translate:0 0;rotate:-12deg}25%{opacity:.8}75%{opacity:.7}100%{opacity:0;translate:var(--dx) 155px;rotate:18deg}}
+@media(prefers-reduced-motion:reduce){#tree .branch,#tree .blossom,#tree .fall,#tree .float-heart,#tree .tree-aura{animation:none!important;opacity:1;scale:1;stroke-dashoffset:0}}
