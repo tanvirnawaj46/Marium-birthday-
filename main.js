@@ -242,18 +242,55 @@ init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach
 const HG=[['#ff9db3','#f0365f','#9f1239'],['#ffc2d4','#f43f78','#be185d'],['#ffd9e6','#f472b6','#c026a3'],['#ffb8a6','#fb5470','#be123c'],['#fff1a8','#fbbf24','#d97706']];
 const HP='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z';
 function treeSVG(n){
- const defs=HG.map((c,i)=>`<radialGradient id="tg${i}" cx="34%" cy="26%" r="85%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient><symbol id="th${i}" viewBox="-2 -2 104 94"><path d="${HP}" fill="url(#tg${i})" stroke="${c[2]}" stroke-opacity=".5" stroke-width="1.5"/><path d="M13 21c0-8 5-12 12-12" stroke="#fff" stroke-opacity=".85" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="33" cy="15" rx="8" ry="4" fill="#fff" opacity=".4" transform="rotate(-20 33 15)"/></symbol>`).join('');
- const O=Array.from({length:240},(_,i)=>{const a=i/240*6.283;return[200+16*Math.pow(Math.sin(a),3)*10.8,165-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a))*9.6]});
- const inside=(x,y)=>{let c=false;for(let i=0,j=O.length-1;i<O.length;j=i++){const[xi,yi]=O[i],[xj,yj]=O[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)c=!c}return c};
- const hs=[];let guard=0;while(hs.length<n&&guard++<20000){const x=27+Math.random()*346,y=40+Math.random()*295;if(inside(x,y))hs.push({cx:x,cy:y,s:20+Math.random()*22})}
- O.filter((_,i)=>i%4===0).forEach(([x,y])=>hs.push({cx:x,cy:y,s:24+Math.random()*12}));
- hs.forEach((h,i)=>{h.rot=(Math.random()-.5)*70;h.k=Math.random()<.08?4:[0,0,1,1,2,3][i%6]});hs.sort((a,b)=>a.s-b.s);
- const heartsSVG=hs.map(h=>{const d=(1.3+(1-(h.cy-40)/300)*1.8+Math.random()*.3).toFixed(2);return`<g class="th" style="animation-delay:${d}s"><use href="#th${h.k}" x="${(h.cx-h.s/2).toFixed(1)}" y="${(h.cy-h.s*.45).toFixed(1)}" width="${h.s.toFixed(1)}" height="${(h.s*.9).toFixed(1)}" transform="rotate(${h.rot.toFixed(0)} ${h.cx.toFixed(1)} ${h.cy.toFixed(1)})"/></g>`}).join('');
- const br=[['M200 425C194 380 206 330 200 262',18,0,1.2],['M200 330C170 310 148 280 128 232',9,.7,.9],['M200 318C232 296 258 270 276 226',9,.8,.9],['M200 285C188 250 172 220 160 176',7,1,.8],['M200 280C214 244 232 214 244 170',7,1.05,.8],['M200 262C200 230 198 200 200 150',6,1.1,.8]].map(([d,w,dl,du])=>`<path class="tk" pathLength="1" d="${d}" stroke-width="${w}" style="animation-delay:${dl}s;animation-duration:${du}s"/>`).join('');
- const sp=Array.from({length:30},(_,i)=>{const x=40+Math.random()*320,y=20+Math.random()*320,s=3+Math.random()*5;return`<path class="spk2" style="animation-delay:${(Math.random()*3).toFixed(2)}s" d="M${x} ${y-s}l${s*.3} ${s*.7} ${s*.7} ${s*.3}-${s*.7} ${s*.3}-${s*.3} ${s*.7}-${s*.3}-${s*.7}-${s*.7}-${s*.3} ${s*.7}-${s*.3}z" fill="#fff"/>`}).join('');
- return`<svg viewBox="0 0 400 440" xmlns="http://www.w3.org/2000/svg"><defs>${defs}<radialGradient id="glw"><stop offset="0" stop-color="#ff5c8a" stop-opacity=".55"/><stop offset=".6" stop-color="#ff8fb0" stop-opacity=".18"/><stop offset="1" stop-color="#ff8fb0" stop-opacity="0"/></radialGradient><linearGradient id="tkg" gradientUnits="userSpaceOnUse" x1="120" y1="0" x2="280" y2="0"><stop offset="0" stop-color="#8a5668"/><stop offset=".5" stop-color="#5a3347"/><stop offset="1" stop-color="#8a5668"/></linearGradient></defs>
-<ellipse class="halo" cx="200" cy="175" rx="215" ry="205" fill="url(#glw)"/><ellipse cx="200" cy="428" rx="95" ry="9" fill="#f472b6" opacity=".35"/>
-<g stroke="url(#tkg)" fill="none" stroke-linecap="round">${br}</g><g class="canopy">${heartsSVG}</g>${sp}</svg>`}
+ const blossomColors=['#fff1f3','#ffd6e3','#ffc0d5','#ffe4ec','#f8bfd7'];
+ const flowers=[];
+ // Layered blossom clouds follow a soft, asymmetrical sakura silhouette.
+ for(let i=0;i<n;i++){
+  const u=Math.random()*2-1, v=Math.random()*2-1;
+  if(u*u+v*v*.88>1)continue;
+  const x=200+u*157, y=159+v*111;
+  const s=4.2+Math.random()*6.2, col=blossomColors[Math.floor(Math.random()*blossomColors.length)];
+  const delay=(.65+(y/440)*1.4+Math.random()*.9).toFixed(2);
+  flowers.push(`<g class="blossom" style="--bd:${delay}s" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(Math.random()*50-25).toFixed(0)}) scale(${(s/10).toFixed(2)})">
+   <g fill="${col}" stroke="#e98dad" stroke-opacity=".26" stroke-width=".7">
+    <ellipse cy="-5.2" rx="3.8" ry="5.6"/><ellipse cx="5" cy="-1.6" rx="3.8" ry="5.6" transform="rotate(72 5 -1.6)"/>
+    <ellipse cx="3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(144 3.1 4.2)"/><ellipse cx="-3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(216 -3.1 4.2)"/>
+    <ellipse cx="-5" cy="-1.6" rx="3.8" ry="5.6" transform="rotate(288 -5 -1.6)"/>
+   </g><circle r="2.2" fill="#ffd46b"/><circle cx="-.6" cy="-.7" r=".8" fill="#fff8d9"/>
+  </g>`);
+ }
+ const branches=[
+  ['M200 420C191 365 209 315 198 264C190 224 174 194 154 161',19],
+  ['M198 322C166 299 137 274 115 235C102 212 89 192 72 178',10],
+  ['M201 315C231 291 261 260 281 222C296 194 314 180 333 164',10],
+  ['M195 272C173 245 154 220 139 189C128 165 120 144 121 121',7],
+  ['M204 269C224 240 240 207 253 176C263 151 278 133 297 119',7],
+  ['M198 253C199 220 200 191 199 155',6],
+  ['M155 193C132 184 113 176 92 160',4],
+  ['M253 180C276 174 294 162 311 144',4]
+ ];
+ const wood=branches.map(([d,w],i)=>`<path class="branch" d="${d}" stroke-width="${w}" style="--bd:${(.2+i*.16).toFixed(2)}s"/>`).join('');
+ const roots=`<path d="M193 410C170 416 160 427 146 433M202 411C225 416 238 426 253 432M198 414C191 425 190 431 190 437" fill="none" stroke="#805047" stroke-width="5" stroke-linecap="round"/>`;
+ const leaves=Array.from({length:25},(_,i)=>{
+  const x=38+Math.random()*324,y=74+Math.random()*228,s=4+Math.random()*5;
+  const heart=Math.random()<.28;
+  return heart?`<text class="float-heart" x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${s+5}" style="--fd:${(2+Math.random()*6).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s">♡</text>`:
+   `<ellipse class="fall" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(s*.72).toFixed(1)}" ry="${(s*1.5).toFixed(1)}" fill="${blossomColors[i%blossomColors.length]}" style="--fd:${(Math.random()*7).toFixed(2)}s;--fs:${(5+Math.random()*5).toFixed(2)}s" transform="rotate(${Math.random()*90-45} ${x.toFixed(1)} ${y.toFixed(1)})"/>`
+ }).join('');
+ return `<svg viewBox="0 0 400 440" role="img" aria-label="A blooming Japanese cherry blossom tree with drifting petals">
+ <defs>
+  <linearGradient id="sakuraWood" x1="0" x2="1" y1="0" y2=".2"><stop stop-color="#6d4145"/><stop offset=".48" stop-color="#a66c5c"/><stop offset="1" stop-color="#654044"/></linearGradient>
+  <radialGradient id="sakuraGlow"><stop stop-color="#fff4f7" stop-opacity=".92"/><stop offset=".55" stop-color="#ffb7d0" stop-opacity=".35"/><stop offset="1" stop-color="#ffb7d0" stop-opacity="0"/></radialGradient>
+  <linearGradient id="groundGlow" x1="0" x2="1"><stop stop-color="#f8a9c4" stop-opacity="0"/><stop offset=".5" stop-color="#ffd6e5" stop-opacity=".75"/><stop offset="1" stop-color="#f8a9c4" stop-opacity="0"/></linearGradient>
+ </defs>
+ <ellipse class="tree-aura" cx="200" cy="170" rx="205" ry="185" fill="url(#sakuraGlow)"/>
+ <ellipse cx="200" cy="429" rx="145" ry="13" fill="url(#groundGlow)"/>
+ <g class="trunk" fill="none" stroke="url(#sakuraWood)" stroke-linecap="round" stroke-linejoin="round">${wood}</g>
+ <g class="roots">${roots}</g>
+ <g class="canopy">${flowers.join('')}</g>
+ <g class="breeze">${leaves}</g>
+ </svg>`;
+}
 init[3]=()=>{const p3=$('#p3');p3.classList.remove('in');void p3.offsetWidth;p3.classList.add('in');$('#g3').onclick=()=>go(2);$('#tree').innerHTML=treeSVG(RM?110:210);$('#t3n').innerHTML=`Happy<br>Birthday, ${C.name}`;$('#t3a').textContent=`and just like that, you're turning ${C.age} ✨`;startRain(true,300);later(SFX.chime,1200)};
 // ---------- cake ----------
 const dripsRow=(y,xs,hs,d)=>xs.map((x,i)=>`<rect class="dr" style="animation-delay:${d+i*.12}s" x="${x}" y="${y}" width="9" height="${hs[i]}" rx="4.5" fill="#fff"/>`).join('');
