@@ -257,7 +257,7 @@ function treeSVG(n){
     <ellipse cx="3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(144 3.1 4.2)"/><ellipse cx="-3.1" cy="4.2" rx="3.8" ry="5.6" transform="rotate(216 -3.1 4.2)"/>
     <ellipse cx="-5" cy="-1.6" rx="3.8" ry="5.6" transform="rotate(288 -5 -1.6)"/>
    </g><circle r="2.2" fill="#ffd46b"/><circle cx="-.6" cy="-.7" r=".8" fill="#fff8d9"/>
-  </g>`);
+  </g></g>`);
  }
  const branches=[
   ['M200 420C191 365 209 315 198 264C190 224 174 194 154 161',19],
