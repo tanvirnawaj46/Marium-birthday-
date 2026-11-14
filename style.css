@@ -920,3 +920,17 @@ body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
 @keyframes petal-drift{0%{opacity:0;translate:0 0;rotate:0deg}14%{opacity:.9}75%{opacity:.82}100%{opacity:0;translate:var(--dx) 190px;rotate:210deg}}
 @keyframes heart-drift{0%,10%{opacity:0;translate:0 0;rotate:-12deg}25%{opacity:.8}75%{opacity:.7}100%{opacity:0;translate:var(--dx) 155px;rotate:18deg}}
 @media(prefers-reduced-motion:reduce){#tree .branch,#tree .blossom,#tree .fall,#tree .float-heart,#tree .tree-aura{animation:none!important;opacity:1;scale:1;stroke-dashoffset:0}}
+
+/* Reference-inspired sakura portrait scene */
+#p3{background:radial-gradient(ellipse at 52% 23%,#fff4f0 0%,#ffe9e6 52%,#f9d9dd 100%);color:#593d3d}
+#tree{width:min(92vw,430px);height:min(calc(57*var(--vh)),455px);filter:drop-shadow(0 9px 12px #70484a18)}
+#tree svg{overflow:visible}
+#tree .branch{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.35s ease-out var(--bd) forwards}
+#tree .blossom{filter:drop-shadow(0 1px 1px #b2577040)}
+#tree .roots{filter:drop-shadow(1px 2px 1px #251b1d55)}
+#tree .canopy{transform-origin:50% 60%;animation:cany 6s 3s infinite ease-in-out}
+#p3 .txt3{width:min(86vw,400px);color:#765454;text-shadow:0 1px #fff9}
+#p3 .txt3 p{color:#806263}
+#p3 .txt3 h2{color:#a34e69;text-shadow:0 1px #fff8}
+#p3 .txt3 .btn{background:linear-gradient(100deg,#dc7e8f,#be5c7c);box-shadow:0 8px 24px #9b496144}
+@media(prefers-reduced-motion:reduce){#tree .branch{animation:none!important;stroke-dashoffset:0}}
