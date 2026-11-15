@@ -876,7 +876,7 @@ html.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:pan-x pan-y!important}
 .btn:before{content:"";position:absolute;left:6%;right:6%;top:1px;height:48%;border-radius:99px 99px 60% 60%;background:linear-gradient(180deg,#ffffffa6,#ffffff00);pointer-events:none}
 /* clear glass chips */
 #mus,.skip,#nxd .nh,#vpp,#vcap span,#fcn,#rjn,#p5 #wish,#p7 .cap,#p14 .cap,#p8 .cap,#p16 .vbar .cap,#p17 .vbar .cap,#p18 .vbar .cap,#p19 .vbar .cap,#p20 .vbar .cap{
- background:var(--lg-clear);-webkit-backdrop-filter:blur(12px) saturate(1.7);backdrop-filter:blur(12px) saturate(1.7);
+ background:var(--lg-clear);
  border:1px solid #ffffff8c;box-shadow:var(--lg-rim),var(--lg-drop)}
 #mus,.skip,#nxd .nh,#fcn,#rjn,#p5 #wish,#p7 .cap,#p14 .cap,#p8 .cap,#p16 .vbar .cap,#p17 .vbar .cap,#p18 .vbar .cap,#p19 .vbar .cap,#p20 .vbar .cap{color:var(--lg-ink)}
 /* on the video the glass is dark-tinted so white text stays readable */
@@ -945,3 +945,32 @@ body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
 #tree .sw{transform-box:view-box;transform-origin:var(--ox) var(--oy);animation:swayk 7s ease-in-out var(--sd,0s) infinite alternate}
 @keyframes swayk{from{rotate:-.7deg}to{rotate:.8deg}}
 @media(prefers-reduced-motion:reduce){#tree .br,#tree .cl{animation:none!important;scale:1;opacity:1}#tree .sw{animation:none}}
+
+
+/* ===== S1 perf (Job 8): lag fixes ===== */
+/* no backdrop blur on persistent chips (re-blurred every frame on iPhone); frosted look = a bit more white instead */
+:root{--lg-clear:linear-gradient(150deg,#ffffffd1,#ffffff82 52%,#ffffffa8)}
+/* pages that are not showing do not render (their infinite animations are paused by park() in main.js) */
+.pg.off{visibility:hidden}
+/* dvh re-lays out the whole page every frame while Safari's toolbars move; svh stays put */
+@supports (height:1svh){:root{--vh:1svh}}
+
+/* ===== S1: sakura v3 = static layers + compositor-only motion (no looping SVG internals) ===== */
+#tree .tL{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+#tree .tAura{position:absolute;left:2.5%;top:-3.3%;width:102.5%;height:71.7%;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,#fff4f7e6,#ffb7d04d 55%,#ffb7d000);opacity:0;animation:haloin 1.6s .25s forwards,aurab 5s 1.8s ease-in-out infinite;will-change:transform,opacity}
+@keyframes aurab{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.72;transform:scale(1.035)}}
+#tree .tCl{position:absolute;display:block;pointer-events:none;opacity:0;animation:haloin 2s .5s forwards}
+#tree .tG{position:absolute;pointer-events:none;transform-origin:var(--ox) var(--oy);animation:swayg 7s ease-in-out var(--sd,0s) infinite alternate;will-change:transform}
+@keyframes swayg{from{transform:rotate(-.8deg)}to{transform:rotate(.9deg)}}
+#tree .tC{position:absolute;display:block;pointer-events:none;opacity:0;animation:bloomin .9s cubic-bezier(.2,1.3,.4,1) var(--bd,0s) forwards}
+@keyframes bloomin{0%{opacity:0;transform:scale(.8)}70%{opacity:1;transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+#tree .tP{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#tree .pt{position:absolute;display:block;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--c);opacity:0;animation:ptd var(--fs) ease-in var(--fd) infinite;will-change:transform,opacity}
+@keyframes ptd{0%{opacity:0;transform:translate(0,0) rotate(var(--r))}14%{opacity:.9}75%{opacity:.82}100%{opacity:0;transform:translate(var(--dx),190px) rotate(calc(var(--r) + 210deg))}}
+#tree .hh{position:absolute;display:block;color:#f477a4;font:500 var(--fz,11px)/1 system-ui,sans-serif;opacity:0;animation:hhd var(--fs) ease-in-out var(--fd) infinite;will-change:transform,opacity}
+@keyframes hhd{0%,10%{opacity:0;transform:translate(0,0) rotate(-12deg)}25%{opacity:.8}75%{opacity:.7}100%{opacity:0;transform:translate(var(--dx),155px) rotate(18deg)}}
+@media(prefers-reduced-motion:reduce){#tree .tC,#tree .tAura,#tree .tCl{animation:none!important;opacity:1;transform:none}#tree .tG{animation:none}#tree .pt,#tree .hh{animation:none!important;display:none}}
+#tree{width:min(86vw,420px)}
+/* S1: an infinite loop on an invisible element is NOT compositor-driven (it ticks the main thread every frame) -> sleep while hidden */
+#chh:not(.show) b,#nxd:not(.rdy) .nh b,#nxd:not(.on) #nxb:after{animation:none}
+html.sx :is(#g3,#p6 .go,#g7,#p10 .go,#g11,#g14,#g16,#g17,#g18,#g19,#g20,#replay):after{animation:none}

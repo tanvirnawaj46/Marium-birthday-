@@ -11,7 +11,7 @@ function setTheme(n){const t=THEME[n]||['#fbe0f2','#d9dfff'];if(TM)TM.setAttribu
 $$('.pg').forEach(pg=>{const t=THEME[+pg.id.slice(1)];if(!t)return;['T','B'].forEach((k,i)=>{const s=document.createElement('i');s.className='edge e'+k;s.style.setProperty('--ec',t[i]);pg.append(s)})});
 let cur=0,timers=[];const later=(f,t)=>timers.push(setTimeout(f,t));
 // ---------- stars ----------
-for(let i=0;i<70;i++){const s=document.createElement('i');s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;opacity:${.3+Math.random()*.7}`;$('#stars').append(s)}
+for(let i=0;i<34;i++){const s=document.createElement('i');s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;opacity:${.3+Math.random()*.7}`;$('#stars').append(s)}
 // ---------- audio ----------
 const AC=new(window.AudioContext||window.webkitAudioContext)();
 try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){} // iPhone: play even with silent switch on
@@ -131,11 +131,13 @@ $('#mus').onclick=e=>{e.stopPropagation();musOn=!musOn;$('#mus').textContent=mus
 const cv=$('#fx'),cx=cv.getContext('2d');let P=[],W,H;
 function rs(){W=innerWidth;H=innerHeight;const d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(W*d);cv.height=Math.round(H*d);cx.setTransform(d,0,0,d,0,0)}rs();let rt;const rsd=()=>{clearTimeout(rt);rt=setTimeout(()=>{if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>140)rs()},200)};addEventListener('resize',rsd);addEventListener('orientationchange',()=>setTimeout(rs,300));
 const COL=['#f472b6','#fbbf24','#fff','#818cf8','#22d3ee','#fb923c'];
-function burst(x,y,n=60,hearts=false){if(RM)n=15;for(let i=0;i<n;i++){const a=Math.random()*6.28,s=2+Math.random()*7;P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.12,l:1,d:.014+Math.random()*.01,r:3+Math.random()*5,c:COL[i%6],h:hearts&&i%2==0})}}
-function rain(n,hearts){for(let i=0;i<n;i++)P.push({x:Math.random()*W,y:-10,vx:Math.random()*2-1,vy:1+Math.random()*2.5,g:0,l:1,d:.003,r:4+Math.random()*4,c:COL[i%6],h:hearts,rect:!hearts})}
+function burst(x,y,n=60,hearts=false){if(RM)n=15;for(let i=0;i<n;i++){const a=Math.random()*6.28,s=2+Math.random()*7;P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,g:.12,l:1,d:.014+Math.random()*.01,r:3+Math.random()*5,c:COL[i%6],h:hearts&&i%2==0})}kick()}
+function rain(n,hearts){for(let i=0;i<n;i++)P.push({x:Math.random()*W,y:-10,vx:Math.random()*2-1,vy:1+Math.random()*2.5,g:0,l:1,d:.003,r:4+Math.random()*4,c:COL[i%6],h:hearts,rect:!hearts});kick()}
 let rainOn=null;
 function heartPath(x,y,r){cx.beginPath();cx.moveTo(x,y+r*.4);cx.bezierCurveTo(x-r,y-r*.4,x-r*.5,y-r*1.1,x,y-r*.4);cx.bezierCurveTo(x+r*.5,y-r*1.1,x+r,y-r*.4,x,y+r*.4);cx.fill()}
-let dirty=0;(function loop(){if(P.length||dirty){cx.clearRect(0,0,W,H);dirty=P.length>0;P=P.filter(p=>p.l>0&&p.y<H+20);if(P.length>420)P=P.slice(-420);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}}requestAnimationFrame(loop)})();
+// the particle loop only runs while there is something to draw: a rAF loop that never stops forces a style recalc of every running CSS animation each frame
+let dirty=0,lpOn=0;function kick(){if(!lpOn){lpOn=1;requestAnimationFrame(loop)}}
+function loop(){if(P.length||dirty){cx.clearRect(0,0,W,H);dirty=P.length>0;P=P.filter(p=>p.l>0&&p.y<H+20);if(P.length>420)P=P.slice(-420);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}requestAnimationFrame(loop)}else lpOn=0}
 function startRain(hearts,rate=400){stopRain();rainOn=setInterval(()=>rain(1,hearts&&Math.random()<.7),RM?900:rate*.4)}
 function stopRain(){clearInterval(rainOn);rainOn=null}
 let QUIET=0; // 1 while the microphone listens (no chimes then, they would be heard as a blow)
@@ -166,8 +168,13 @@ const FLT={
   pg.prepend(L)})})();
 // ---------- navigation ----------
 const FLOW=[0,1,3,2,4,5,19,6,16,7,14,17,20,8,10,11,18,12];const nextOf=n=>{const i=FLOW.indexOf(n);return i<0?n+1:(FLOW[i+1]??n)};
-function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p))p.classList.remove('on')});if(seam)setTimeout(()=>old.forEach(p=>p.classList.remove('on')),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);sxArm(n);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
- later(()=>{$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
+// ---- S1 perf: pages that are not showing neither render nor run their infinite animations (SVG ones force a layout every frame) ----
+const parkT=new WeakMap(),isInf=a=>{try{return a.effect.getComputedTiming().iterations===Infinity}catch(e){return false}};
+function pgPark(p,ms){clearTimeout(parkT.get(p));parkT.set(p,setTimeout(()=>{if(p.classList.contains('on'))return;p.classList.add('off');p.getAnimations({subtree:true}).forEach(a=>{if(a.playState==='running'&&isInf(a)){a._pk=1;a.pause()}})},ms==null?1300:ms))}
+function pgWake(p){clearTimeout(parkT.get(p));p.classList.remove('off');p.getAnimations({subtree:true}).forEach(a=>{if(a._pk){a._pk=0;a.play()}})}
+setTimeout(()=>$$('.pg').forEach(p=>{if(!p.classList.contains('on'))pgPark(p,0)}),500);
+function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p)){if(p.classList.contains('on'))pgPark(p);p.classList.remove('on')}});if(seam)setTimeout(()=>old.forEach(p=>{p.classList.remove('on');pgPark(p,400)}),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);sxArm(n);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
+ later(()=>{pgWake($('#p'+n));$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
 let tapPt=[0,0,0],irisOn=0;addEventListener('pointerdown',e=>{tapPt=[e.clientX,e.clientY,performance.now()]},true);
 function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; // ignore double taps while the wipe runs
@@ -241,7 +248,7 @@ init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach
 // ---------- 3: tree ----------
 const HG=[['#ff9db3','#f0365f','#9f1239'],['#ffc2d4','#f43f78','#be185d'],['#ffd9e6','#f472b6','#c026a3'],['#ffb8a6','#fb5470','#be123c'],['#fff1a8','#fbbf24','#d97706']];
 const HP='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z';
-function treeSVG(n){
+function treeBuild(n){
  // original procedural sakura: twisted tapered trunk on a rocky ledge, recursive limbs, dense blossom clusters (seeded = same tree every time)
  let sd=20261114;const rnd=()=>{sd|=0;sd=sd+0x6D2B79F5|0;let t=Math.imul(sd^sd>>>15,1|sd);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},rr=(a,b)=>a+rnd()*(b-a);
  const f1=v=>v.toFixed(1);
@@ -275,13 +282,12 @@ function treeSVG(n){
   const tip=C[C.length-1];groups[gi].push([tip[0],tip[1],1.9,L.at+1],[tip[0]-16,tip[1]+12,1.2,L.at+1.2],[tip[0]+10,tip[1]-14,1.1,L.at+1.3]);
   for(let k=1;k<=3;k++){const ti=Math.min(C.length-2,Math.floor(C.length*(.3+.2*k)));const a0=C[Math.max(0,ti-1)],b0=C[Math.min(C.length-1,ti+1)];let ang=Math.atan2(b0[1]-a0[1],b0[0]-a0[0])+(k%2?-1:1)*rr(.45,.9);const len=rr(34,58);const q=[C[ti]];let cx=C[ti][0],cy=C[ti][1];for(let s=0;s<3;s++){cx+=Math.cos(ang)*len/3;cy+=Math.sin(ang)*len/3+L.g*(s+1)*2.4;q.push([cx,cy]);ang+=rr(-.3,.3)}spawn(q,Math.max(2,L.w[0]*.5),1,L.g,L.d-1,L.at+.5+k*.14,gi)}});
  // blossoms
- const dens=n>150?1:.6;let canopy='';
- groups.forEach((G,gi)=>{let s='';G.forEach(([x,y,sz,t])=>{const cnt=Math.round((5+rnd()*3)*sz*dens),R=7+sz*5;
-   clouds+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(R*1.3)}" fill="url(#skC)"/>`;
-   let c='';for(let i=0;i<cnt;i++){const a=rnd()*6.283,d=Math.sqrt(rnd())*R,fx=x+Math.cos(a)*d,fy=y+Math.sin(a)*d*.85,sc=rr(.5,.92);c+=`<use href="#skF" transform="translate(${f1(fx)} ${f1(fy)}) rotate(${(rnd()*72).toFixed(0)}) scale(${sc.toFixed(2)})" style="color:${cols[Math.floor(rnd()*cols.length)]}"/>`}
-   s+=`<g class="cl" style="--bd:${(t+.3).toFixed(2)}s">${c}</g>`});
-  const o=limbs[gi].p[0];canopy+=`<g class="sw" style="--ox:${o[0]}px;--oy:${o[1]}px;--sd:${(-gi*1.1).toFixed(1)}s">${s}</g>`});
- const lf=Array.from({length:18},(_,i)=>{const x=40+rnd()*320,y=70+rnd()*230,s=3.4+rnd()*3.6;return `<ellipse class="fall" cx="${f1(x)}" cy="${f1(y)}" rx="${(s*.62).toFixed(1)}" ry="${(s*1.3).toFixed(1)}" fill="${cols[i%cols.length]}" style="--fd:${(rnd()*7).toFixed(2)}s;--fs:${(5+rnd()*5).toFixed(2)}s;--dx:${(rnd()*90-30).toFixed(1)}px" transform="rotate(${(rnd()*90-45).toFixed(0)} ${f1(x)} ${f1(y)})"/>`}).join('')+Array.from({length:5},()=>{const x=60+rnd()*280,y=90+rnd()*180;return `<text class="float-heart" x="${f1(x)}" y="${f1(y)}" font-size="${(9+rnd()*5).toFixed(0)}" style="--fd:${(2+rnd()*6).toFixed(2)}s;--fs:${(5+rnd()*5).toFixed(2)}s;--dx:${(rnd()*80-30).toFixed(1)}px">♡</text>`}).join('');
+ const dens=n>150?1:.6;const CL=[]; // CL[group] = clusters {x,y,R,t,fl:[[x,y,rot,scale,colour]]} (same seeded random order as before)
+ groups.forEach((G,gi)=>{const arr=[];G.forEach(([x,y,sz,t])=>{const cnt=Math.round((5+rnd()*3)*sz*dens),R=7+sz*5,fl=[];
+   for(let i=0;i<cnt;i++){const a=rnd()*6.283,d=Math.sqrt(rnd())*R,fx=x+Math.cos(a)*d,fy=y+Math.sin(a)*d*.85,sc=rr(.5,.92),rot=+(rnd()*72).toFixed(0),ci=Math.floor(rnd()*cols.length);fl.push([fx,fy,rot,sc,ci])}
+   arr.push({x,y,R:R*1.3,t:t+.3,fl})});CL.push(arr)});
+ const lf=Array.from({length:18},(_,i)=>{const x=40+rnd()*320,y=70+rnd()*230,s=3.4+rnd()*3.6;return{x,y,s,c:cols[i%cols.length],fd:rnd()*7,fs:5+rnd()*5,dx:rnd()*90-30,r:rnd()*90-45}});
+ const hr=Array.from({length:5},()=>({x:60+rnd()*280,y:90+rnd()*180,fz:9+rnd()*5,fd:2+rnd()*6,fs:5+rnd()*5,dx:rnd()*80-30}));
  // rocky ledge (jagged, faceted, original shape)
  const rk0=[[14,380],[44,364],[86,374],[118,398],[160,418],[212,434],[264,444],[316,452],[250,460],[120,460],[40,456],[10,434]],rk=[];rk0.forEach((q,i)=>{const z=rk0[(i+1)%rk0.length];rk.push([q[0],q[1]]);const m=[(q[0]+z[0])/2+rr(-5,5),(q[1]+z[1])/2+rr(-4,4)];rk.push([+m[0].toFixed(1),+m[1].toFixed(1)])});
  let rock=`<mask id="skM"><rect width="400" height="460" fill="url(#skFd)"/></mask><clipPath id="skK"><path d="M${rk.map(p=>p.join(' ')).join('L')}Z"/></clipPath><g mask="url(#skM)"><path d="M${rk.map(p=>p.join(' ')).join('L')}Z" fill="url(#skR)"/><g clip-path="url(#skK)">`;
@@ -289,21 +295,38 @@ function treeSVG(n){
  for(let i=0;i<7;i++){const bx=rr(30,250),by=rr(396,448);rock+=`<path d="M${f1(bx)} ${f1(by)}l${f1(rr(6,14))} ${f1(rr(12,26))}" stroke="#2a1b1e" stroke-opacity=".35" stroke-width="1.2" fill="none" stroke-linecap="round"/>`}
  rock+=`</g><path d="M14 380L44 364L86 374L118 398L160 418L212 434L264 444L316 452" fill="none" stroke="#d1aea2" stroke-width="2" stroke-opacity=".6" stroke-linejoin="round" stroke-linecap="round"/></g>`;
  let ground='';for(let i=0;i<26;i++){const x=rr(20,330),y=rr(392,448);ground+=`<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${rr(2.4,4.6).toFixed(1)}" ry="${rr(1.4,2.6).toFixed(1)}" fill="${cols[i%cols.length]}" transform="rotate(${(rnd()*180).toFixed(0)} ${f1(x)} ${f1(y)})"/>`}
- return `<svg viewBox="0 0 400 460" role="img" aria-label="A blooming Japanese cherry blossom tree on a rocky ledge with drifting petals">
- <defs>
-  <linearGradient id="skW" x1="0" x2="1" y1="0" y2=".3"><stop stop-color="#3b2326"/><stop offset=".5" stop-color="#6a403d"/><stop offset="1" stop-color="#4a2c2e"/></linearGradient>
-  <linearGradient id="skR" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#8d6b66"/><stop offset=".6" stop-color="#5e4244"/><stop offset="1" stop-color="#3c292d"/></linearGradient>
-  <linearGradient id="skFd" x1="0" y1="0" x2="0" y2="1"><stop offset=".86" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><radialGradient id="skC"><stop stop-color="#ffb6d0" stop-opacity=".62"/><stop offset=".6" stop-color="#ffc4d8" stop-opacity=".3"/><stop offset="1" stop-color="#ffc4d8" stop-opacity="0"/></radialGradient>
-  <radialGradient id="skG"><stop stop-color="#fff4f7" stop-opacity=".9"/><stop offset=".55" stop-color="#ffb7d0" stop-opacity=".3"/><stop offset="1" stop-color="#ffb7d0" stop-opacity="0"/></radialGradient>
-  <g id="skF"><g fill="currentColor" stroke="#e5799f" stroke-opacity=".3" stroke-width=".5"><path id="skP" d="M0 0C-5-2-6.4-8.2-2.4-9.8L0-8.4L2.4-9.8C6.4-8.2 5-2 0 0Z"/><use href="#skP" transform="rotate(72)"/><use href="#skP" transform="rotate(144)"/><use href="#skP" transform="rotate(216)"/><use href="#skP" transform="rotate(288)"/></g><circle r="1.5" fill="#e0527f"/><circle r=".55" cx=".3" cy="-.3" fill="#ffd36b"/></g>
- </defs>
- <ellipse class="tree-aura" cx="215" cy="150" rx="205" ry="165" fill="url(#skG)"/>
- ${rock}<g class="trunk">${wood}</g>${ground}
- <g>${clouds}</g>${canopy}
- <g class="breeze">${lf}</g>
- </svg>`;
+  // ---- assemble: 2 static SVG layers (rock+ground, wood grow-in) + canvas blossom layers + HTML petals.
+  // Nothing inside an SVG loops: the only infinite motion is transform/opacity on wrappers (GPU only) ----
+  const NB=3,pct=(v,o,sz)=>(((v-o)/sz)*100).toFixed(3)+'%',bbx=(l,pad)=>{let a=1e9,b=1e9,c=-1e9,d=-1e9;l.forEach(([x,y])=>{a=Math.min(a,x-pad);c=Math.max(c,x+pad);b=Math.min(b,y-pad);d=Math.max(d,y+pad)});return[a,b,c-a,d-b]};
+  let gh='';const cvs=[];
+  CL.forEach((cs,gi)=>{
+   cs.sort((p,q)=>p.t-q.t);const per=Math.ceil(cs.length/NB),bks=[];for(let i=0;i<cs.length;i+=per)bks.push(cs.slice(i,i+per));
+   const bbs=bks.map(bk=>bbx(bk.flatMap(c=>c.fl),10)),G=bbx(bbs.flatMap(r=>[[r[0],r[1]],[r[0]+r[2],r[1]+r[3]]]),0),o=limbs[gi].p[0];
+   let inner='';bks.forEach((bk,bi)=>{const r=bbs[bi],id=cvs.length;cvs.push({bk,r});const d=bk.reduce((u,c)=>u+c.t,0)/bk.length;
+    inner+=`<canvas class="tC" data-i="${id}" style="left:${pct(r[0],G[0],G[2])};top:${pct(r[1],G[1],G[3])};width:${(r[2]/G[2]*100).toFixed(3)}%;height:${(r[3]/G[3]*100).toFixed(3)}%;--bd:${d.toFixed(2)}s"></canvas>`});
+   gh+=`<div class="tG" style="left:${(G[0]/4).toFixed(3)}%;top:${(G[1]/4.6).toFixed(3)}%;width:${(G[2]/4).toFixed(3)}%;height:${(G[3]/4.6).toFixed(3)}%;--ox:${pct(o[0],G[0],G[2])};--oy:${pct(o[1],G[1],G[3])};--sd:${(-gi*1.1).toFixed(1)}s">${inner}</div>`});
+  const cb=bbx(CL.flatMap(cs=>cs.map(c=>[c.x,c.y])),0),cR=Math.max(...CL.flatMap(cs=>cs.map(c=>c.R))),cBB=[cb[0]-cR,cb[1]-cR,cb[2]+2*cR,cb[3]+2*cR];
+  const cloudH=`<canvas class="tCl" style="left:${(cBB[0]/4).toFixed(3)}%;top:${(cBB[1]/4.6).toFixed(3)}%;width:${(cBB[2]/4).toFixed(3)}%;height:${(cBB[3]/4.6).toFixed(3)}%"></canvas>`;
+  const ptH=lf.slice(0,13).map(p=>`<i class="pt" style="left:${(p.x/4).toFixed(2)}%;top:${(p.y/4.6).toFixed(2)}%;width:${(p.s*1.24/4).toFixed(2)}%;height:${(p.s*2.6/4.6).toFixed(2)}%;--c:${p.c};--fd:${p.fd.toFixed(2)}s;--fs:${p.fs.toFixed(2)}s;--dx:${p.dx.toFixed(1)}px;--r:${p.r.toFixed(0)}deg"></i>`).join('')
+   +hr.slice(0,4).map(h=>`<b class="hh" style="left:${(h.x/4).toFixed(2)}%;top:${(h.y/4.6).toFixed(2)}%;--fz:${h.fz.toFixed(0)}px;--fd:${h.fd.toFixed(2)}s;--fs:${h.fs.toFixed(2)}s;--dx:${h.dx.toFixed(1)}px">♡</b>`).join('');
+  const html=`<div class="tAura"></div>
+  <svg class="tL" viewBox="0 0 400 460" role="img" aria-label="A blooming Japanese cherry blossom tree on a rocky ledge with drifting petals"><defs>
+   <linearGradient id="skR" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#8d6b66"/><stop offset=".6" stop-color="#5e4244"/><stop offset="1" stop-color="#3c292d"/></linearGradient>
+   <linearGradient id="skFd" x1="0" y1="0" x2="0" y2="1"><stop offset=".86" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient></defs>${rock}${ground}</svg>
+  <svg class="tL" viewBox="0 0 400 460" aria-hidden="true"><defs><linearGradient id="skW" x1="0" x2="1" y1="0" y2=".3"><stop stop-color="#3b2326"/><stop offset=".5" stop-color="#6a403d"/><stop offset="1" stop-color="#4a2c2e"/></linearGradient></defs><g class="trunk">${wood}</g></svg>
+  ${cloudH}${gh}<div class="tP">${ptH}</div>`;
+  const paint=root=>{ // draw every blossom once into small canvases; they are then plain GPU bitmaps
+   const W0=root.clientWidth||Math.min(innerWidth*.92,430),dpr=Math.min(window.devicePixelRatio||1,3),ppu=W0/400*dpr;
+   const S=Math.ceil(22*ppu),petal=new Path2D('M0 0C-5-2-6.4-8.2-2.4-9.8L0-8.4L2.4-9.8C6.4-8.2 5-2 0 0Z');
+   const spr=cols.map(col=>{const c=document.createElement('canvas');c.width=c.height=S;const g=c.getContext('2d');g.translate(S/2,S/2);g.scale(ppu,ppu);g.fillStyle=col;g.strokeStyle='rgba(229,121,159,.3)';g.lineWidth=.5;for(let i=0;i<5;i++){g.save();g.rotate(i*1.25664);g.fill(petal);g.stroke(petal);g.restore()}g.fillStyle='#e0527f';g.beginPath();g.arc(0,0,1.5,0,6.2832);g.fill();g.fillStyle='#ffd36b';g.beginPath();g.arc(.3,-.3,.55,0,6.2832);g.fill();return c});
+   root.querySelectorAll('canvas.tC').forEach(cv=>{const{bk,r}=cvs[+cv.dataset.i];cv.width=Math.max(1,Math.ceil(r[2]*ppu));cv.height=Math.max(1,Math.ceil(r[3]*ppu));const g=cv.getContext('2d');g.imageSmoothingQuality='high';
+    bk.forEach(c=>c.fl.forEach(([fx,fy,rot,sc,ci])=>{const a=rot*Math.PI/180,co=Math.cos(a)*sc,si=Math.sin(a)*sc;g.setTransform(co*ppu,si*ppu,-si*ppu,co*ppu,(fx-r[0])*ppu,(fy-r[1])*ppu);g.drawImage(spr[ci],-11,-11,22,22)}))});
+   const cl=root.querySelector('canvas.tCl');if(cl){const q=Math.min(dpr,1.5)*W0/400;cl.width=Math.ceil(cBB[2]*q);cl.height=Math.ceil(cBB[3]*q);const g=cl.getContext('2d');g.scale(q,q);g.translate(-cBB[0],-cBB[1]);
+    CL.forEach(cs=>cs.forEach(c=>{const gr=g.createRadialGradient(c.x,c.y,0,c.x,c.y,c.R);gr.addColorStop(0,'rgba(255,182,208,.62)');gr.addColorStop(.6,'rgba(255,196,216,.3)');gr.addColorStop(1,'rgba(255,196,216,0)');g.fillStyle=gr;g.beginPath();g.arc(c.x,c.y,c.R,0,6.2832);g.fill()}))}
+  };
+  return{html,paint};
 }
-init[3]=()=>{const p3=$('#p3');p3.classList.remove('in');void p3.offsetWidth;p3.classList.add('in');$('#g3').onclick=()=>go(2);$('#tree').innerHTML=treeSVG(RM?110:210);$('#t3n').innerHTML=`Happy<br>Birthday, ${C.name}`;$('#t3a').textContent=`and just like that, you're turning ${C.age} ✨`;startRain(true,300);later(SFX.chime,1200)};
+init[3]=()=>{const p3=$('#p3');p3.classList.remove('in');void p3.offsetWidth;p3.classList.add('in');$('#g3').onclick=()=>go(2);{const T=treeBuild(RM?110:210),tr=$('#tree');tr.innerHTML=T.html;T.paint(tr)}$('#t3n').innerHTML=`Happy<br>Birthday, ${C.name}`;$('#t3a').textContent=`and just like that, you're turning ${C.age} ✨`;startRain(true,300);later(SFX.chime,1200)};
 // ---------- cake ----------
 const dripsRow=(y,xs,hs,d)=>xs.map((x,i)=>`<rect class="dr" style="animation-delay:${d+i*.12}s" x="${x}" y="${y}" width="9" height="${hs[i]}" rx="4.5" fill="#fff"/>`).join('');
 const cakeSVG=(c)=>`<svg class="cake${c?' static':''}" viewBox="0 0 260 210"><defs>
@@ -455,9 +478,10 @@ init[10]=()=>{const t=$('#ltxt'),s=$('#lsign'),g=$('#g10'),L=$('#letter'),dr=$('
   const k=document.createElement('span');k.className='c';k.textContent=c;w.append(k)};
  const erase=()=>{if(w&&w.lastChild){w.lastChild.remove();if(!w.lastChild){w.remove();w=null}}};
  const fx=c=>{if(RM)return;c==='\n'?SFX.enter():/\s/.test(c)?SFX.keyS():SFX.key(c)};
- const dust=()=>{if(RM||Math.random()>.4)return;const d=document.createElement('i');d.className='dust';d.style.left=(cr.offsetLeft+1)+'px';d.style.top=(cr.offsetTop+6)+'px';d.style.setProperty('--dx',(Math.random()*34-17)+'px');L.append(d);setTimeout(()=>d.remove(),950)};
- const follow=()=>{const y=cr.offsetTop;if(y!==ly){ly=y;L.scrollTo({top:Math.max(0,y-L.clientHeight*.55),behavior:'smooth'})}};
- const press=c=>{add(c);fx(c);dust();follow()};
+ const dust=(x,y)=>{if(RM||Math.random()>.87)return;const d=document.createElement('i');d.className='dust';d.style.left=(x+1)+'px';d.style.top=(y+6)+'px';d.style.setProperty('--dx',(Math.random()*34-17)+'px');L.append(d);setTimeout(()=>d.remove(),950)};
+ const follow=y=>{if(y!==ly){ly=y;L.scrollTo({top:Math.max(0,y-L.clientHeight*.55),behavior:'smooth'})}};
+  // layout is read at most once per key and only for ~1 key in 3 (+ every space/punctuation): a forced layout per character was the main cost of the letter page
+  const press=c=>{add(c);fx(c);if(!/[\s.,!?;:]/.test(c)&&Math.random()>.34)return;const x=cr.offsetLeft,y=cr.offsetTop;dust(x,y);follow(y)};
  const base=RM?2:Math.max(24,Math.min(46,8200/ch.length));
  // human rhythm: quick inside words, a beat after spaces, longer after commas / full stops, a rare thinking pause, sometimes a fast burst
  const delay=(c,prev)=>{if(RM)return 2;let d=base*(.6+Math.random()*.8);if(/\s/.test(prev||''))d+=16;if(Math.random()<.16)d*=.55;
