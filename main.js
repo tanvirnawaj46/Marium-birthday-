@@ -173,7 +173,7 @@ const parkT=new WeakMap(),isInf=a=>{try{return a.effect.getComputedTiming().iter
 function pgPark(p,ms){clearTimeout(parkT.get(p));parkT.set(p,setTimeout(()=>{if(p.classList.contains('on'))return;p.classList.add('off');p.getAnimations({subtree:true}).forEach(a=>{if(a.playState==='running'&&isInf(a)){a._pk=1;a.pause()}})},ms==null?1300:ms))}
 function pgWake(p){clearTimeout(parkT.get(p));p.classList.remove('off');p.getAnimations({subtree:true}).forEach(a=>{if(a._pk){a._pk=0;a.play()}})}
 setTimeout(()=>$$('.pg').forEach(p=>{if(!p.classList.contains('on'))pgPark(p,0)}),500);
-function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p)){if(p.classList.contains('on'))pgPark(p);p.classList.remove('on')}});if(seam)setTimeout(()=>old.forEach(p=>{p.classList.remove('on');pgPark(p,400)}),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);sxArm(n);$('#chd').classList.remove('show');$('#chh').classList.remove('show');
+function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p)){if(p.classList.contains('on'))pgPark(p);p.classList.remove('on')}});if(seam)setTimeout(()=>old.forEach(p=>{p.classList.remove('on');pgPark(p,400)}),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');scrollTo(0,0);sxArm(n);$('#chd').classList.remove('show');
  later(()=>{pgWake($('#p'+n));$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
 let tapPt=[0,0,0],irisOn=0;addEventListener('pointerdown',e=>{tapPt=[e.clientX,e.clientY,performance.now()]},true);
@@ -910,13 +910,12 @@ go(REC?13:0);
 
 // ---------- one continuous scroll page: wish -> tree -> voice ----------
 let chIO=null;
-function chapter(){const root=document.documentElement,dots=[...$('#chd').children],hint=$('#chh'),S=[$('#s2'),$('#s13')],seen={};root.classList.add('ds');scrollTo(0,0);if(chIO)chIO.disconnect();
- $('#chd').classList.add('show');hint.classList.remove('show');later(()=>hint.classList.add('show'),3400);
+function chapter(){const root=document.documentElement,dots=[...$('#chd').children],mk=$('#mark'),S=[$('#s2'),$('#s13')],seen={};root.classList.add('ds');scrollTo(0,0);if(chIO)chIO.disconnect();
+ $('#chd').classList.add('show');mk.classList.remove('on');later(()=>{if(cur===2&&scrollY<=60)mk.classList.add('on')},3400); // same glass chevron mark as every other page (no text)
  const fire=i=>{if(seen[i])return;seen[i]=1;if(i===1)init[13]()};
  chIO=new IntersectionObserver(es=>es.forEach(e=>{const i=S.indexOf(e.target);if(e.isIntersecting&&e.intersectionRatio>=.4){fire(i);S[i].classList.add('in')}}),{threshold:[.4,.7]});S.slice(1).forEach(s=>chIO.observe(s));
- const upd=()=>{if(cur!==2)return;const H=innerHeight,k=Math.round(scrollY/H);dots.forEach((d,j)=>d.classList.toggle('on',j===Math.min(k,1)));hint.classList.toggle('gone',scrollY>60)};
+ const upd=()=>{if(cur!==2)return;const H=innerHeight,k=Math.round(scrollY/H);dots.forEach((d,j)=>d.classList.toggle('on',j===Math.min(k,1)));if(scrollY>60)mk.classList.remove('on')};
  onscroll=upd;upd();
- $('#chh').onclick=()=>{const k=Math.round(scrollY/innerHeight);S[Math.min(k+1,1)].scrollIntoView({behavior:'smooth'})};
 }
 
 // block double-tap zoom and pinch zoom (iOS Safari ignores user-scalable on its own)
