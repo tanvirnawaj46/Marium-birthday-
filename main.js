@@ -186,23 +186,46 @@ function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; //
  ir.animate([{transform:'scale(0)',opacity:1},{transform:'scale('+sc+')',opacity:1}],{duration:520,easing:'cubic-bezier(.45,0,.75,.55)',fill:'forwards'}).onfinish=()=>{go0(n,seam,1);
   ir.animate([{transform:'scale('+sc+')',opacity:1},{transform:'scale('+sc+')',opacity:0}],{duration:420,easing:'ease-out',fill:'forwards'}).onfinish=()=>{ir.getAnimations().forEach(a=>a.cancel());irisOn=0}}}
 $$('.go').forEach(b=>{const id=+b.closest('.pg').id.slice(1);b.addEventListener('click',()=>{if(cur===id)go(nextOf(id))})});
-// ---- scroll-to-continue: on every page with a "Keep going" button the button is hidden; once the page's own job is done a
-// "swipe up" hint shows, the page (fixed) gets a little extra document height, and scrolling raises a Next pill that clicks the real button ----
+// ---- scroll-to-continue 2.0: the PAGE itself becomes the native scroller (content follows the finger, no document scroll, no Safari bar jumps).
+// On pages with a "Keep going" button the real button is hidden; once the page's own job is done a chevron MARK (no text) hints at scrolling and an
+// "Up next" glass card (next page title + progress ring + the button) rises from below. Its button presses the page's real button. Stray taps do nothing. ----
+const ROOT=document.documentElement;
 const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
-const SX={n:-1,b:null,mo:null,rdy:0,on:0,raf:0,force:0};
-function sxArm(n){const d=$('#nxd'),root=document.documentElement;if(SX.mo){SX.mo.disconnect();SX.mo=null}
- SX.n=n;SX.b=null;SX.rdy=0;SX.on=0;SX.force=0;root.classList.remove('sx','sxr');d.classList.remove('rdy','on');d.style.setProperty('--sp',0);
- const q=NXB[n];if(!q||C.scrollNext===false)return;const b=$(q);if(!b)return;SX.b=b;root.classList.add('sx');
- $('#nxh span').textContent=C.scrollHint||'swipe up';
+// title shown on the card = the page that comes NEXT (key = page you are on). Override in config.js: nextTitles:{3:"..."}
+const NXT={3:'A little wish ✨',19:'Pop the balloons 🎈',6:'A very serious question 🧐',16:'Our little memories 📸',7:'More memories 🖼️',14:'Planted just for you 🌷',17:'A jar full of reasons 💌',20:'A letter, just for you 💌',10:'A wish in motion 🎬',11:'Connect our stars ✨',18:'Happy Birthday, '+(C.name||'you')+' 🎂'};
+const SX={n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:null,mo:null,rdy:0,raf:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0};
+const RING=125.66; // circumference of the r=20 progress ring
+function sxClear(){const pg=SX.pg,card=SX.card;if(SX.mo){SX.mo.disconnect();SX.mo=null}
+ if(pg){pg.removeEventListener('scroll',sxOnScroll);
+  // the old page is still fading out: reset it only after it is gone (no visible jump back to the top)
+  setTimeout(()=>{if(SX.pg!==pg){pg.classList.remove('sc');pg.scrollTop=0}if(card)card.remove()},1300)}
+ ROOT.classList.remove('sxr');const mk=$('#mark');if(mk)mk.classList.remove('on');
+ Object.assign(SX,{n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:mk,rdy:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0})}
+function sxArm(n){sxClear();SX.n=n;const q=NXB[n];if(!q||C.scrollNext===false)return;const b=$(q),pg=$('#p'+n);if(!b||!pg)return;
+ SX.b=b;SX.pg=pg;b.classList.add('nxh');
+ const nt=C.nextTitles||{},kick=n===12?'THE END ♡':'UP NEXT',ttl=n===12?(nt[12]||'Watch it all again'):(nt[n]||NXT[n]||'Keep going'),lab=n===12?'Play again ✨':(b.textContent.trim()||'Keep going ✨');
+ const el=document.createElement('div');el.className='upn';
+ el.innerHTML='<div class="upc"><div class="upt"><svg class="upr" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="upg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff7aa8"/><stop offset="1" stop-color="#9b6dff"/></linearGradient></defs><circle class="upb" cx="24" cy="24" r="20"/><circle class="upf" cx="24" cy="24" r="20"/><path class="upm" d="M16.5 28.5l7.5-7.5 7.5 7.5"/><path class="upv" d="M16 24.5l5.6 5.6L32.5 19"/></svg><div class="upx"><small></small><b></b></div></div><button class="btn upk" type="button"></button></div>';
+ const u=el.firstChild;u.querySelector('small').textContent=kick;u.querySelector('b').textContent=ttl;const k=u.querySelector('.upk');k.textContent=lab;k.setAttribute('aria-label',lab.replace(/[^\w\s,.!'’-]/g,'').trim()+': '+ttl.replace(/[^\w\s,.!'’-]/g,'').trim());
+ k.onclick=()=>{if(!SX.live||cur!==SX.n)return;const r=k.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,24);try{k.animate([{transform:'scale(.95)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],{duration:280,easing:'cubic-bezier(.3,1.6,.5,1)'})}catch(e){}SX.b.click()};
+ pg.appendChild(el);SX.card=el;SX.u=u;SX.ring=u.querySelector('.upf');
  SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:n===12?6500:1100)}
-function sxCheck(){const d=$('#nxd'),b=SX.b;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;document.documentElement.classList.toggle('sxr',r);
- if(r){$('#nxb').textContent=b.textContent.trim()||'Keep going ✨';d.classList.add('rdy');if(document.documentElement.scrollHeight-innerHeight<12)SX.force=1;sxProg()}else{d.classList.remove('rdy','on');SX.on=0}}
-function sxProg(){SX.raf=0;const d=$('#nxd');if(!SX.b||cur!==SX.n)return;const rg=document.documentElement.scrollHeight-innerHeight,
- sp=SX.force?1:rg>12?Math.max(0,Math.min(1,scrollY/Math.max(rg-6,1))):0,on=SX.rdy&&sp>.6?1:0;d.style.setProperty('--sp',sp.toFixed(3));
- if(on!==SX.on){SX.on=on;d.classList.toggle('on',!!on);if(on&&started)SFX.pop()}}
-addEventListener('scroll',()=>{if(SX.b&&!SX.raf)SX.raf=requestAnimationFrame(sxProg)},{passive:true});
-// the hint is only a hint (not tappable): she scrolls herself. Only if the browser gives the page no scroll range at all, unlock so nobody gets stuck
-$('#nxb').onclick=()=>{if(SX.b&&SX.on)SX.b.click()};
+function sxCheck(){const b=SX.b,pg=SX.pg;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;
+ if(r){pg.classList.add('sc');ROOT.classList.add('sxr');pg.addEventListener('scroll',sxOnScroll,{passive:true});
+  requestAnimationFrame(()=>{if(cur!==SX.n||!SX.rdy)return;if(pg.scrollHeight-pg.clientHeight<24){SX.force=1;SX.card.classList.add('force')}sxProg();later(()=>{if(cur===SX.n&&SX.rdy)sxMark(1)},650)})}
+ else{pg.classList.remove('sc');pg.removeEventListener('scroll',sxOnScroll);ROOT.classList.remove('sxr');sxMark(0);SX.live=SX.full=0;if(SX.u){SX.u.classList.remove('live','full');SX.u.style.opacity=''}}}
+function sxMark(on){if(!SX.mk||on===SX.mkOn)return;SX.mkOn=on;SX.mk.classList.toggle('on',!!on)}
+function sxOnScroll(){if(!SX.raf)SX.raf=requestAnimationFrame(sxProg)}
+function sxProg(){SX.raf=0;const pg=SX.pg,u=SX.u;if(!pg||!u||cur!==SX.n||!SX.rdy)return;
+ const st=pg.scrollTop,mx=Math.max(1,pg.scrollHeight-pg.clientHeight),p=SX.force?1:Math.max(0,Math.min(1,st/mx));
+ u.style.opacity=Math.max(0,Math.min(1,(p-.03)/.45)).toFixed(3);
+ u.style.transform='translate3d(0,'+((1-p)*30).toFixed(1)+'px,0) scale('+(.94+.06*p).toFixed(3)+')';
+ SX.ring.style.strokeDashoffset=(RING*(1-p)).toFixed(1);
+ sxMark(st<14&&!SX.force?1:0);
+ const live=p>.5?1:0;if(live!==SX.live){SX.live=live;u.classList.toggle('live',!!live);if(live&&started)SFX.pop()}
+ const full=p>.96?1:0;if(full!==SX.full){SX.full=full;u.classList.toggle('full',!!full);if(full&&started)SFX.chime()}
+ if(p>.33&&!SX.t1){SX.t1=1;if(started)SFX.star(3)}else if(p<.22)SX.t1=0;
+ if(p>.66&&!SX.t2){SX.t2=1;if(started)SFX.star(5)}else if(p<.55)SX.t2=0}
 const init={};
 // ---------- 1: bow & arrow (aim at the hearts) ----------
 const HSV=(i,c,main)=>`<svg viewBox="-4 -4 108 98"><defs><radialGradient id="hg${i}" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path d="M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z" fill="url(#hg${i})" stroke="${main?'#ffd36e':c[2]}" stroke-opacity="${main?1:.35}" stroke-width="${main?3.5:1.5}" stroke-linejoin="round"/><path d="M14 21c0-8 5-13 13-13" stroke="#fff" stroke-opacity=".9" stroke-width="5.5" fill="none" stroke-linecap="round"/><ellipse cx="36" cy="14" rx="8" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-20 36 14)"/><path d="M73 20c3 3 5 6 5 10" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"/>${main?'<path d="M50 30l3.4 7.2 7.8 1-5.7 5.3 1.6 7.7L50 47.4l-7.1 3.8 1.6-7.7-5.7-5.3 7.8-1z" fill="#fff" opacity=".9"/>':''}</svg>`;

@@ -362,8 +362,8 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 .e-to{z-index:3;left:0;right:0;top:75%;text-align:center;font:700 clamp(1.1rem,5vw,1.5rem) Caveat,cursive;color:#8a6a45;pointer-events:none}
 .e-stamp{z-index:3;right:6%;bottom:9%;width:13%;aspect-ratio:4/5;display:grid;place-items:center;background:#fff7e8;border:2px dashed #e07a8a;color:#e0556d;font-size:1rem;rotate:5deg;border-radius:2px;pointer-events:none}
 .fw{left:0;right:0;top:0;height:58%;z-index:4;filter:drop-shadow(0 3px 3px #0004);pointer-events:none}
-.fl{position:absolute;inset:0;transform-origin:50% 0}
-.fl i{position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 100%)}
+.fw .fl{position:absolute;left:0;top:0;right:0;bottom:0;width:auto;height:auto;transform-origin:50% 0;animation:none}
+.fw .fl i{position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 100%)}
 .fo{background:var(--grain),linear-gradient(#fcf0da,#eed5aa)}
 .fi{background:radial-gradient(circle,#ffffff4d 0 1.4px,#0000 2px) 0 0/13px 13px,linear-gradient(#cf6a88,#e690a9);opacity:0}
 .e-seal{left:50%;top:58%;width:19%;aspect-ratio:1;margin:-9.5% 0 0 -9.5%;z-index:7;animation:beat 1.8s infinite;pointer-events:none}
@@ -392,7 +392,7 @@ img{-webkit-user-drag:none;-webkit-touch-callout:none}
 @keyframes cl{0%{transform:none}18%{transform:translate(-2px,0) rotate(-3deg) scale(1.07)}100%{transform:translate(-34px,92px) rotate(-44deg);opacity:0}}
 @keyframes cr{0%{transform:none}18%{transform:translate(2px,0) rotate(3deg) scale(1.07)}100%{transform:translate(34px,100px) rotate(40deg);opacity:0}}
 @keyframes fadeout{to{opacity:0}}
-.run .fl{animation:flip 1.05s .35s cubic-bezier(.45,0,.25,1.22) forwards}
+.run .fw .fl{animation:flip 1.05s .35s cubic-bezier(.45,0,.25,1.22) forwards}
 @keyframes flip{from{transform:perspective(900px) rotateX(0)}to{transform:perspective(900px) rotateX(-180deg)}}
 .run .fo{animation:fo 1.05s .35s steps(1,end) forwards}
 .run .fi{animation:fi 1.05s .35s steps(1,end) forwards}
@@ -830,16 +830,6 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 #rjend{margin:0;font:italic 600 1.5rem/1.35 "Cormorant Garamond",Georgia,serif;color:#8a2a78;text-wrap:balance}
 
 /* ===== scroll-to-continue: finish the page, swipe up, the Next button rises (config scrollNext) ===== */
-html.sx body{min-height:calc(142*var(--vh))}
-html.sx :is(#g3,#p6 .go,#g7,#p10 .go,#g11,#g14,#g16,#g17,#g18,#g19,#g20,#replay){visibility:hidden!important;pointer-events:none!important}
-#nxd{position:fixed;left:0;right:0;bottom:max(18px,calc(var(--sab) + 10px));z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:56px;pointer-events:none;--sp:0}
-#nxd .nh{position:absolute;bottom:0;display:flex;flex-direction:column;align-items:center;border:0;border-radius:99px;padding:.5rem 1.15rem .3rem;background:#ffffffb8;color:#b0286e;font:500 .78rem/1 Fredoka,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:0;visibility:hidden;transition:opacity .25s;pointer-events:none}
-#nxd .nh b{font-size:1.5rem;line-height:.8;margin-top:4px;animation:chb 1.5s ease-in-out infinite}
-#nxd.rdy .nh{visibility:visible;opacity:calc(1 - var(--sp)*2.2)}
-#nxd #nxb{position:relative;visibility:hidden;pointer-events:none;translate:0 calc((1 - var(--sp))*84px);opacity:calc(var(--sp)*1.7 - .35);display:block}
-#nxd.rdy #nxb{visibility:visible}
-#nxd.on #nxb{pointer-events:auto}
-@media (prefers-reduced-motion:reduce){#nxd .nh b{animation:none}}
 /* once a page is finished its drag areas stop swallowing the swipe, so she can scroll from anywhere */
 html.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:pan-x pan-y!important}
 
@@ -855,6 +845,7 @@ html.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:pan-x pan-y!important}
 #vpp.gone{opacity:0;pointer-events:none}
 #vpp:active{scale:.92}
 #vpr{position:absolute;left:18px;right:18px;bottom:16px;height:4px;border-radius:4px;background:#ffffff40;overflow:hidden;z-index:2;pointer-events:none}
+#vpr{transition:opacity .5s}#p11 #vf.end #vpr{opacity:0}
 #vpr i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#ff9ec7,#ffd6a5);transform-origin:0 50%;scale:0 1;transition:scale .3s linear}
 #vend{position:absolute;left:0;right:0;bottom:84px;z-index:2;text-align:center;color:#fff;white-space:nowrap;font:italic 600 clamp(1.5rem,6.6vw,2.1rem)/1.1 "Cormorant Garamond",Georgia,serif;text-shadow:0 2px 16px #2a0f4a99;opacity:0;translate:0 14px;transition:opacity 1s .2s,translate 1s .2s;pointer-events:none}
 #p11 #vf.end #vend{opacity:1;translate:0 0}
@@ -972,5 +963,40 @@ body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
 @media(prefers-reduced-motion:reduce){#tree .tC,#tree .tAura,#tree .tCl{animation:none!important;opacity:1;transform:none}#tree .tG{animation:none}#tree .pt,#tree .hh{animation:none!important;display:none}}
 #tree{width:min(86vw,420px)}
 /* S1: an infinite loop on an invisible element is NOT compositor-driven (it ticks the main thread every frame) -> sleep while hidden */
-#chh:not(.show) b,#nxd:not(.rdy) .nh b,#nxd:not(.on) #nxb:after{animation:none}
-html.sx :is(#g3,#p6 .go,#g7,#p10 .go,#g11,#g14,#g16,#g17,#g18,#g19,#g20,#replay):after{animation:none}
+#chh:not(.show) b{animation:none}
+
+/* ===== S2/S3: scroll-to-continue 2.0 - the PAGE is the scroller; chevron mark + "Up next" glass card ===== */
+button.nxh,.btn.nxh{visibility:hidden!important;pointer-events:none!important}
+.nxh:after{animation:none!important}
+.pg.sc{overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pg.sc::-webkit-scrollbar{display:none}
+.upn{display:none;position:absolute;left:0;right:0;top:100%;height:calc(38*var(--vh));box-sizing:border-box;padding-top:calc(2*var(--vh));justify-content:center;align-items:flex-start;pointer-events:none;text-align:left}
+.sc>.upn{display:flex}
+.upn.force{position:fixed;top:auto;bottom:0;height:auto;padding:0 0 calc(max(var(--sab),14px) + 3*var(--vh));align-items:flex-end;z-index:7}
+.upc{width:min(90vw,372px);box-sizing:border-box;padding:15px;border-radius:28px;display:flex;flex-direction:column;gap:13px;background:linear-gradient(158deg,#fffffff2,#fff4facc 52%,#f6e6ffd9);border:1px solid #ffffffe6;box-shadow:inset 0 1.5px 0 #fff,inset 0 -1.5px 0 #ffffff8c,0 20px 44px #b0286e29,0 5px 16px #b0286e1c;opacity:0;transform:translate3d(0,30px,0) scale(.94);will-change:transform,opacity;pointer-events:none}
+.upc.live{pointer-events:auto}
+.upt{display:flex;align-items:center;gap:13px}
+.upr{flex:none;width:48px;height:48px;overflow:visible}
+.upr circle{fill:none;stroke-width:3.4}
+.upb{stroke:#b0286e2e}
+.upf{stroke:url(#upg);stroke-linecap:round;stroke-dasharray:125.66;stroke-dashoffset:125.66;transform:rotate(-90deg);transform-origin:24px 24px}
+.upm,.upv{fill:none;stroke:#b0286e;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;transition:opacity .25s}
+.upv{opacity:0}.upc.full .upm{opacity:0}.upc.full .upv{opacity:1}
+.upx{display:flex;flex-direction:column;gap:5px;min-width:0}
+.upx small{font:600 .66rem/1 Fredoka,system-ui,sans-serif;letter-spacing:.22em;color:#b0286e9e}
+.upx b{font:600 1.1rem/1.2 Fredoka,system-ui,sans-serif;color:#8f2a74}
+.upc .upk{width:100%;padding:.85rem 1rem;font-size:1.06rem}
+.upc:not(.full) .upk:after{animation:none}
+.upc.full .upk{animation:upkp 2.4s ease-in-out infinite}
+@keyframes upkp{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+#mark{position:fixed;left:50%;bottom:max(18px,calc(var(--sab) + 12px));width:54px;height:54px;margin-left:-27px;border-radius:50%;z-index:8;pointer-events:none;opacity:0;transition:opacity .45s;background:var(--lg-clear),#ffffff40;border:1px solid #ffffff99;box-shadow:var(--lg-rim),var(--lg-drop)}
+#mark.on{opacity:1}
+#mark i{position:absolute;left:50%;width:15px;height:15px;margin-left:-7.5px;border-left:3.6px solid #c2338a;border-top:3.6px solid #c2338a;border-radius:4px 0 0 0;opacity:0;transform:translateY(10px) rotate(45deg)}
+#mark i:nth-child(1){top:12px}#mark i:nth-child(2){top:25px}
+#mark.on i{animation:mk 1.8s cubic-bezier(.4,0,.2,1) infinite}
+#mark.on i+i{animation-delay:.3s}
+/* the decorative floaters stay behind while the page content scrolls over them (no clipped glow edge) */
+.pg.sc>.fl{position:fixed}
+#p12.sc>.fbg,#p12.sc>#sky,#p12.sc>#pet{position:fixed}
+@keyframes mk{0%{opacity:0;transform:translateY(10px) rotate(45deg)}35%{opacity:1}100%{opacity:0;transform:translateY(-10px) rotate(45deg)}}
+@media (prefers-reduced-motion:reduce){#mark.on i{animation:none;opacity:.9;transform:rotate(45deg)}.upc.full .upk{animation:none}}
