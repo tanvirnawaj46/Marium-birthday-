@@ -12,4 +12,5 @@ Output noise from the proxy ("agent-proxy"/fonts) can be ignored: pipe through `
 - `stage1.js`  functional checks: p19 box taps vs empty taps, p5 Continue only, p11 pause button / no tap-replay, go(same page) no-op.
 - `video.js`  p11 end state + Up-next card button (local python server cannot seek video, so it fires `ended` by hand).
 - `glassshots.js W H`  screenshots of p5/p11/p17/p19 to judge the liquid-glass look (/tmp/shots/g2_W_n.png); stitch with PIL and READ them.
-
+- `dbltap.js W H`  double-tap zoom guard with REAL CDP touches: fast 2nd tap cancelled on any element, single/slow/far taps, swipes, long press, 2-finger, pointerdowns still delivered (p6), html.dtw window, touch-action audit of every page. Expect `ALL OK`. (iOS itself is NOT testable here.)
+- `touchmisc.js W H`  REAL touches on the scrollers that are not .sc pages: p2 document scroll (3 start points), p7 carousel sideways (also with the page forced to touch-action:none), p10 letter. Expect `ALL OK`.

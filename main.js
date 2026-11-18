@@ -423,7 +423,7 @@ init[6]=()=>{cancelAnimationFrame(balRAF);const f=$('#bfield'),cd=$('#cards'),R=
  for(let i=0;i<tot;i++){const w=64+Math.random()*42,h=w*1.6,el=document.createElement('div');el.className='bal mv';el.style.width=w+'px';el.style.zIndex=i;el.innerHTML=balSVG(BC[i%5],i);
   const s={el,w,h,x:Math.random()*(FW-w),y:Math.random()*(FH-h),vx:0,vy:0,tx:0,ty:0,nt:0,ph:Math.random()*6,real:real.includes(i)};bs.push(s);f.append(el);
   el.onpointerdown=e=>{e.preventDefault();if(s.dead)return;s.dead=true;const r=el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.35,c=BC[i%5];burst(x,y,25);for(let k=0;k<26;k++){const a=Math.random()*6.28,sp=2+Math.random()*6;P.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,g:.16,l:1,d:.018,r:3+Math.random()*4,c:c[1],rect:true})}
-   el.remove();
+   el.style.display='none';later(()=>el.remove(),900); // NOT removed inside pointerdown: touch events of a removed target never reach window, so the double-tap guard (end of file) would not see this tap
    if(s.real){SFX.good();found++;const d=document.createElement('div');d.className='card';d.innerHTML=`<small>REASON NO.${found} ❤️</small><div>${R[found-1]}</div>`;cd.prepend(d);tagBn(cd);count();if(found===n)later(()=>$('#g6').classList.add('show'),700)}
    else{SFX.pop2();say(['empty one 🎈 keep looking','nothing inside! try another','oops, just air 💨','not this one — keep going ✨'][Math.random()*4|0])}}}
  let last=performance.now();
@@ -918,6 +918,23 @@ function chapter(){const root=document.documentElement,dots=[...$('#chd').childr
  onscroll=upd;upd();
 }
 
-// block double-tap zoom and pinch zoom (iOS Safari ignores user-scalable on its own)
+// ===== no zoom at all (owner: double tap zoomed the page on his iPhone) =====
+// iOS Safari ignores user-scalable=no / maximum-scale. WebKit skips double-tap zoom ONLY for touch-action:none (style.css sets that on every page that does
+// not scroll with the finger, but WebKit bug 218015 can ignore it on positioned boxes), so the 2nd tap of a double tap is ALSO cancelled here, on ANY element
+// (buttons and links too: the old code exempted them and they zoomed). touchend always; touchstart only during the ~0.4s after a tap, because a permanent
+// non-passive touchstart would delay the start of every scroll. Pinch = gesture* events. Pointer events still fire, so games on pointerdown keep every tap.
 ['gesturestart','gesturechange','gestureend'].forEach(t=>addEventListener(t,e=>e.preventDefault(),{passive:false}));
-(()=>{let lt=0;addEventListener('touchend',e=>{const n=Date.now(),t=e.target;if(n-lt<350&&!(t.closest&&t.closest('button,a,input,[onclick]')))e.preventDefault();lt=n},{passive:false})})();
+addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+{const WIN=420,NEAR=60,TAPMS=600,MOVE=16,now=()=>performance.now(),H=document.documentElement;
+ let last=-1e9,lx=0,ly=0,sx=0,sy=0,st=0,eaten=false,multi=false,armed=false,armT=0,scT=-1e9;
+ const eat=e=>{if(eaten&&e.cancelable)e.preventDefault()};
+ // while armed: html.dtw also turns the scrolling pages to touch-action:none (style.css), so WebKit itself drops the 2nd tap's zoom there
+ const arm=()=>{if(!armed){armed=true;H.classList.add('dtw');addEventListener('touchstart',eat,{passive:false,capture:true})}clearTimeout(armT);armT=setTimeout(()=>{armed=false;H.classList.remove('dtw');removeEventListener('touchstart',eat,{capture:true})},WIN+60)};
+ const reset=()=>{eaten=false;last=-1e9};
+ addEventListener('scroll',()=>{scT=now()},{passive:true,capture:true}); // a tap that only stops a momentum scroll is not the 1st tap of a double tap
+ addEventListener('touchstart',e=>{if(e.touches.length>1){multi=true;reset();return}const t=e.touches[0];sx=t.clientX;sy=t.clientY;st=now();eaten=st-last<WIN&&Math.abs(sx-lx)<NEAR&&Math.abs(sy-ly)<NEAR},{passive:true,capture:true});
+ addEventListener('touchend',e=>{if(e.touches.length)return;const t=e.changedTouches[0],n=now();
+  if(multi){multi=false;reset();return}
+  if(eaten){eaten=false;if(e.cancelable)e.preventDefault();last=n;lx=t.clientX;ly=t.clientY;arm();return}
+  if(Math.abs(t.clientX-sx)+Math.abs(t.clientY-sy)<=MOVE&&n-st<=TAPMS&&st-scT>250){last=n;lx=t.clientX;ly=t.clientY;arm()}else last=-1e9},{passive:false,capture:true});
+ addEventListener('touchcancel',()=>{multi=false;reset()},{passive:true,capture:true})}

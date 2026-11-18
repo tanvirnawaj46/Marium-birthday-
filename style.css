@@ -573,9 +573,16 @@ html.ds{overflow:visible}
 @media (prefers-reduced-motion:reduce){#p0 .gcard,#p0 .gcard:after,.bunting,#p12 .flowers,#p12 .cat,#p4 .ck,#p5 .ck{animation:none}}
 .top .em{display:inline-block;-webkit-text-fill-color:initial;background:none}
 
-/* no double-tap / pinch zoom anywhere (explicit touch-action:none areas stay as they are) */
+/* no double-tap / pinch zoom anywhere. iOS Safari ignores user-scalable=no, and WebKit skips double-tap zoom ONLY when touch-action is "none"
+   (not manipulation / pan-x / pan-y). So every page that does not scroll with the finger is "none"; real scrollers (#p2 chapter, .sc pages once their
+   Up-next card is live, #car, #letter) keep pan-x pan-y and rely on the JS guard at the end of main.js. :where() = zero specificity, so any explicit rule wins. */
 *{touch-action:pan-x pan-y;-webkit-tap-highlight-color:transparent}
 html,body,#p2,#sc0{touch-action:pan-x pan-y}
+:where(.pg:not(.sc):not(#p2),.pg:not(.sc):not(#p2) *,#mus,#lb,#lb *){touch-action:none}
+#car,#car *,#letter,#letter *{touch-action:pan-x pan-y}
+/* double-tap window: main.js adds html.dtw for ~0.5s after a tap; the scrolling pages go "none" just then so WebKit itself drops a 2nd tap's zoom (a swipe that starts in that half second does not scroll) */
+html.dtw :is(.pg.sc,#p2,#car,#letter),html.dtw :is(.pg.sc,#p2,#car,#letter) *{touch-action:none}
+html.dtw.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:none!important}
 
 /* ===== final page: minimal, elegant, with wish lanterns that turn into stars ===== */
 #p12{gap:0;justify-content:flex-start;padding-top:calc(var(--sat) + 122px);color:#8a2a78;overflow:hidden}
@@ -797,7 +804,7 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 
 /* ===== p20 reasons jar ===== */
 #t20{color:#9b2f78}
-#rjs{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(14*var(--vh));display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+#rjs{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(14*var(--vh));display:flex;align-items:center;justify-content:center}
 #rjw{position:relative;width:min(80vw,330px);height:calc(min(80vw,330px)*340/300);margin-top:-3vh}
 #rjw:before{content:"";position:absolute;left:-18%;top:-6%;width:136%;height:112%;background:radial-gradient(ellipse at center,#ffffffc0 0,#ffffff60 38%,#ffffff00 68%);animation:rjglow 3.6s ease-in-out infinite alternate;pointer-events:none}
 @keyframes rjglow{from{opacity:.55}to{opacity:1}}
@@ -812,7 +819,7 @@ html,body,#p2,#sc0{touch-action:pan-x pan-y}
 .rfly{position:absolute;z-index:8;pointer-events:none}
 .rfly svg{display:block;width:100%;height:100%}
 #rjhand{left:50%;top:0;margin:0;animation:gtap 1.5s ease-in-out infinite}
-#rjo{position:absolute;left:0;right:0;top:0;bottom:0;z-index:6;display:none;align-items:center;justify-content:center;touch-action:manipulation}
+#rjo{position:absolute;left:0;right:0;top:0;bottom:0;z-index:6;display:none;align-items:center;justify-content:center}
 #rjo.on{display:flex}
 #rjc{position:relative;box-sizing:border-box;width:min(80vw,320px);min-height:210px;padding:1.5rem 1.6rem 1.2rem;margin-top:-4vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;text-align:center;background:linear-gradient(155deg,#fffdfb,#fff6f1 60%,#fffaf6);border-radius:8px;box-shadow:inset 1.5px 1.5px 1px #fff,inset -1px -1px 1px #ffffffb0,0 16px 38px #b0286e2e,0 2px 6px #b0286e1c;rotate:-1.5deg}
 #rjc:before{content:"";position:absolute;inset:9px;border:1.5px dashed #f1b9d3;border-radius:5px;pointer-events:none}
