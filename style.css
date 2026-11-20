@@ -979,6 +979,7 @@ html.dg body{min-height:calc(100*var(--vh) + var(--dgz))}
 html.dg .pg.sc{position:absolute;inset:0 0 auto 0;height:calc(100*var(--vh));overflow:hidden!important;background:none!important}
 .upn{display:none;position:absolute;left:0;right:0;top:calc(100*var(--vh));height:var(--dgz);box-sizing:border-box;padding-top:calc(2*var(--vh));justify-content:center;align-items:flex-start;pointer-events:none;text-align:left;z-index:3}
 html.dg .upn{display:flex}
+.upn.bye{opacity:0;transition:opacity .3s}
 .upn.force{position:fixed;top:auto;bottom:0;height:auto;padding:0 0 calc(max(var(--sab),14px) + 3*var(--vh));align-items:flex-end;z-index:7}
 .upc{width:min(90vw,372px);box-sizing:border-box;padding:15px;border-radius:28px;display:flex;flex-direction:column;gap:13px;background:linear-gradient(158deg,#fffffff2,#fff4facc 52%,#f6e6ffd9);border:1px solid #ffffffe6;box-shadow:inset 0 1.5px 0 #fff,inset 0 -1.5px 0 #ffffff8c,0 20px 44px #b0286e29,0 5px 16px #b0286e1c;opacity:0;transform:translate3d(0,30px,0) scale(.94);will-change:transform,opacity;pointer-events:none}
 .upc.live{pointer-events:auto}
