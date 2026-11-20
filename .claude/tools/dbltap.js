@@ -96,11 +96,11 @@ let bad=0;const ok=(name,cond,extra='')=>{if(!cond)bad++;console.log(cond?'ok  '
  ok('html.dtw: off -> on -> off, page pan-x pan-y -> none -> pan-x pan-y',!d0.dtw&&d1.dtw&&!d2.dtw&&d0.page==='pan-x pan-y'&&d1.page==='none'&&d2.page==='pan-x pan-y',JSON.stringify([d0.page,d1.page,d2.page]));
  ok('p7 carousel follows: pan-x pan-y -> none -> pan-x pan-y',d0.car==='pan-x pan-y'&&d1.car==='none'&&d2.car==='pan-x pan-y',JSON.stringify([d0.car,d1.car,d2.car]));
  // a swipe after the window scrolls the page, a swipe inside the window does not (documented trade-off)
- const sc=()=>p.evaluate(()=>Math.round(document.querySelector('#p7').scrollTop));
- await p.evaluate(()=>{document.querySelector('#p7').scrollTop=0});await sleep(300);await tap(Math.round(W*.5),Math.round(H*.2));await sleep(700);await swipe(Math.round(W*.5),Math.round(H*.78),Math.round(H*.78)-220);await sleep(600);
- const after=await sc();ok('swipe after the window scrolls the page',after>100,'scrollTop='+after);
- await p.evaluate(()=>{document.querySelector('#p7').scrollTop=0});await sleep(300);await tap(Math.round(W*.5),Math.round(H*.2));await sleep(80);await swipe(Math.round(W*.5),Math.round(H*.2),Math.round(H*.2)-220);await sleep(600);
- console.log('info  swipe started 80ms after a tap near it: scrollTop =',await sc(),'(blocked once by design)');
+ const sc=()=>p.evaluate(()=>Math.round(scrollY)); // Job 10: the DOCUMENT scrolls (the page itself never does)
+ await p.evaluate(()=>scrollTo(0,0));await sleep(300);await tap(Math.round(W*.5),Math.round(H*.2));await sleep(700);await swipe(Math.round(W*.5),Math.round(H*.78),Math.round(H*.78)-220);await sleep(600);
+ const after=await sc();ok('swipe after the window scrolls the page',after>100,'scrollY='+after);
+ await p.evaluate(()=>scrollTo(0,0));await sleep(300);await tap(Math.round(W*.5),Math.round(H*.2));await sleep(80);await swipe(Math.round(W*.5),Math.round(H*.2),Math.round(H*.2)-220);await sleep(600);
+ console.log('info  swipe started 80ms after a tap near it: scrollY =',await sc(),'(blocked once by design)');
 
  // 12 computed touch-action audit (visit p7 first so the carousel exists)
  await p.evaluate(()=>{go(7)});await sleep(3000);

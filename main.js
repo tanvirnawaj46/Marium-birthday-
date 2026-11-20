@@ -186,21 +186,29 @@ function go(n,seam){const ir=$('#iris');if(n>20)n=20;if(irisOn&&!seam)return; //
  ir.animate([{transform:'scale(0)',opacity:1},{transform:'scale('+sc+')',opacity:1}],{duration:520,easing:'cubic-bezier(.45,0,.75,.55)',fill:'forwards'}).onfinish=()=>{go0(n,seam,1);
   ir.animate([{transform:'scale('+sc+')',opacity:1},{transform:'scale('+sc+')',opacity:0}],{duration:420,easing:'ease-out',fill:'forwards'}).onfinish=()=>{ir.getAnimations().forEach(a=>a.cancel());irisOn=0}}}
 $$('.go').forEach(b=>{const id=+b.closest('.pg').id.slice(1);b.addEventListener('click',()=>{if(cur===id)go(nextOf(id))})});
-// ---- scroll-to-continue 2.0: the PAGE itself becomes the native scroller (content follows the finger, no document scroll, no Safari bar jumps).
-// On pages with a "Keep going" button the real button is hidden; once the page's own job is done a chevron MARK (no text) hints at scrolling and an
-// "Up next" glass card (next page title + progress ring + the button) rises from below. Its button presses the page's real button. Stray taps do nothing. ----
-const ROOT=document.documentElement;
+// ---- scroll-to-continue 3.0 (Job 10): once a page's own job is done the DOCUMENT scrolls (html.dg), so Safari collapses its bottom bar into the small pill like on any normal website.
+// On pages with a "Keep going" button the real button is hidden; when the job is done a chevron MARK (no text) hints at scrolling and an "Up next" glass card
+// (next page title + progress ring + the button) sits in the document right below the scene and rises as the page scrolls natively with the finger (NO JS-driven
+// scroll transforms). The scene (.pg.sc) becomes an absolute 100svh box, its background moves to the fixed layer #dgbg (bar colours never move), decor stays fixed.
+// Progress = scrollY / D with a CONSTANT D (Safari's bar collapse changes innerHeight mid-gesture). The card's button presses the page's real button. Stray taps do nothing. ----
+const ROOT=document.documentElement,DGB=$('#dgbg');
 const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
 // title shown on the card = the page that comes NEXT (key = page you are on). Override in config.js: nextTitles:{3:"..."}
 const NXT={3:'A little wish ✨',19:'Pop the balloons 🎈',6:'A very serious question 🧐',16:'Our little memories 📸',7:'More memories 🖼️',14:'Planted just for you 🌷',17:'A jar full of reasons 💌',20:'A letter, just for you 💌',10:'A wish in motion 🎬',11:'Connect our stars ✨',18:'Happy Birthday, '+(C.name||'you')+' 🎂'};
-const SX={n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:null,mo:null,rdy:0,raf:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0};
+const SX={n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:null,mo:null,rdy:0,raf:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0,D:0};
 const RING=125.66; // circumference of the r=20 progress ring
+// document-scroll mode on/off. dgOn copies the page's background onto the fixed layer #dgbg BEFORE the page loses it (.pg.sc{background:none}); a page without its own
+// background (p16-p20) shows the html gradient (setTheme), which is copied instead, so nothing changes visually when the mode switches on.
+function dgOn(pg){const cs=getComputedStyle(pg),own=cs.backgroundImage!=='none'||!/^(rgba\(0, 0, 0, 0\)|transparent)$/.test(cs.backgroundColor),s=own?cs:getComputedStyle(ROOT);
+ DGB.style.cssText='background-image:'+s.backgroundImage+';background-color:'+s.backgroundColor+';background-size:'+s.backgroundSize+';background-position:'+s.backgroundPosition+';background-repeat:'+s.backgroundRepeat+';z-index:'+(own?1:0);
+ pg.classList.add('sc');ROOT.classList.add('dg','sxr')}
+function dgOff(){ROOT.classList.remove('dg','sxr')}
 function sxClear(){const pg=SX.pg,card=SX.card;if(SX.mo){SX.mo.disconnect();SX.mo=null}
- if(pg){pg.removeEventListener('scroll',sxOnScroll);
-  // the old page is still fading out: reset it only after it is gone (no visible jump back to the top)
-  setTimeout(()=>{if(SX.pg!==pg){pg.classList.remove('sc');pg.scrollTop=0}if(card)card.remove()},1300)}
- ROOT.classList.remove('sxr');const mk=$('#mark');if(mk)mk.classList.remove('on');
- Object.assign(SX,{n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:mk,rdy:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0})}
+ removeEventListener('scroll',sxOnScroll);if(SX.raf){cancelAnimationFrame(SX.raf);SX.raf=0}
+ // leaving: go back to the normal fixed-page layout at once (the iris wipe / page fade covers the switch; go0 already did scrollTo(0,0))
+ if(pg)pg.classList.remove('sc');if(card)card.remove();dgOff();
+ const mk=$('#mark');if(mk)mk.classList.remove('on');
+ Object.assign(SX,{n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:mk,rdy:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0,D:0})}
 function sxArm(n){sxClear();SX.n=n;const q=NXB[n];if(!q||C.scrollNext===false)return;const b=$(q),pg=$('#p'+n);if(!b||!pg)return;
  SX.b=b;SX.pg=pg;b.classList.add('nxh');
  const nt=C.nextTitles||{},kick=n===12?'THE END ♡':'UP NEXT',ttl=n===12?(nt[12]||'Watch it all again'):(nt[n]||NXT[n]||'Keep going'),lab=n===12?'Play again ✨':(b.textContent.trim()||'Keep going ✨');
@@ -208,16 +216,18 @@ function sxArm(n){sxClear();SX.n=n;const q=NXB[n];if(!q||C.scrollNext===false)re
  el.innerHTML='<div class="upc"><div class="upt"><svg class="upr" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="upg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff7aa8"/><stop offset="1" stop-color="#9b6dff"/></linearGradient></defs><circle class="upb" cx="24" cy="24" r="20"/><circle class="upf" cx="24" cy="24" r="20"/><path class="upm" d="M16.5 28.5l7.5-7.5 7.5 7.5"/><path class="upv" d="M16 24.5l5.6 5.6L32.5 19"/></svg><div class="upx"><small></small><b></b></div></div><button class="btn upk" type="button"></button></div>';
  const u=el.firstChild;u.querySelector('small').textContent=kick;u.querySelector('b').textContent=ttl;const k=u.querySelector('.upk');k.textContent=lab;k.setAttribute('aria-label',lab.replace(/[^\w\s,.!'’-]/g,'').trim()+': '+ttl.replace(/[^\w\s,.!'’-]/g,'').trim());
  k.onclick=()=>{if(!SX.live||cur!==SX.n)return;const r=k.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,24);try{k.animate([{transform:'scale(.95)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],{duration:280,easing:'cubic-bezier(.3,1.6,.5,1)'})}catch(e){}SX.b.click()};
- pg.appendChild(el);SX.card=el;SX.u=u;SX.ring=u.querySelector('.upf');
+ document.body.appendChild(el);SX.card=el;SX.u=u;SX.ring=u.querySelector('.upf'); // body level: it must sit OUTSIDE the clipped scene so it extends the document's scroll range
  SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:n===12?6500:1100)}
 function sxCheck(){const b=SX.b,pg=SX.pg;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;
- if(r){pg.classList.add('sc');ROOT.classList.add('sxr');pg.addEventListener('scroll',sxOnScroll,{passive:true});
-  requestAnimationFrame(()=>{if(cur!==SX.n||!SX.rdy)return;if(pg.scrollHeight-pg.clientHeight<24){SX.force=1;SX.card.classList.add('force')}sxProg();later(()=>{if(cur===SX.n&&SX.rdy)sxMark(1)},650)})}
- else{pg.classList.remove('sc');pg.removeEventListener('scroll',sxOnScroll);ROOT.classList.remove('sxr');sxMark(0);SX.live=SX.full=0;if(SX.u){SX.u.classList.remove('live','full');SX.u.style.opacity=''}}}
+ if(r){dgOn(pg);addEventListener('scroll',sxOnScroll,{passive:true});
+  requestAnimationFrame(()=>{if(cur!==SX.n||!SX.rdy)return;const se=document.scrollingElement;SX.D=Math.max(60,(SX.card.offsetTop||innerHeight)*.34); // full = 34% of a screen of scrolling
+   if(se.scrollHeight-innerHeight<24){SX.force=1;SX.card.classList.add('force')}sxProg();later(()=>{if(cur===SX.n&&SX.rdy)sxMark(1)},650)})}
+ else{pg.classList.remove('sc');removeEventListener('scroll',sxOnScroll);scrollTo(0,0);dgOff();sxMark(0);SX.live=SX.full=0;if(SX.u){SX.u.classList.remove('live','full');SX.u.style.opacity=''}}}
 function sxMark(on){if(!SX.mk||on===SX.mkOn)return;SX.mkOn=on;SX.mk.classList.toggle('on',!!on)}
 function sxOnScroll(){if(!SX.raf)SX.raf=requestAnimationFrame(sxProg)}
 function sxProg(){SX.raf=0;const pg=SX.pg,u=SX.u;if(!pg||!u||cur!==SX.n||!SX.rdy)return;
- const st=pg.scrollTop,mx=Math.max(1,pg.scrollHeight-pg.clientHeight),p=SX.force?1:Math.max(0,Math.min(1,st/mx));
+ const se=document.scrollingElement,st=se.scrollTop,mx=Math.max(1,se.scrollHeight-innerHeight),D=Math.max(1,Math.min(SX.D||mx,mx*.98)), // constant D; mx only guards a tiny scroll range
+  p=SX.force?1:Math.max(0,Math.min(1,st/D));
  u.style.opacity=Math.max(0,Math.min(1,(p-.03)/.45)).toFixed(3);
  u.style.transform='translate3d(0,'+((1-p)*30).toFixed(1)+'px,0) scale('+(.94+.06*p).toFixed(3)+')';
  SX.ring.style.strokeDashoffset=(RING*(1-p)).toFixed(1);

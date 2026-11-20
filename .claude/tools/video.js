@@ -7,6 +7,6 @@ await p.evaluate(()=>{const v=$('#vid');v.pause();v.dispatchEvent(new Event('end
 const end=await p.evaluate(()=>({cls:$('#vf').className,g:getComputedStyle($('#g11')).display,sc:$('#p11').classList.contains('sc'),mark:$('#mark').className,skip:getComputedStyle($('#skip')).display,txt:$('#vend').textContent}));
 await p.screenshot({path:`/tmp/shots/v11_${W}_d.png`});
 await p.mouse.move(200,300);await p.mouse.wheel(0,600);await p.waitForTimeout(700);await p.screenshot({path:`/tmp/shots/v11_${W}_e.png`});
-const kr=await p.evaluate(()=>{const r=$('#p11 .upk').getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]});await p.touchscreen.tap(kr[0],kr[1]);await p.waitForTimeout(3000);
+const kr=await p.evaluate(()=>{const r=$('.upn .upk').getBoundingClientRect();return [r.x+r.width/2,r.y+r.height/2]});await p.touchscreen.tap(kr[0],kr[1]);await p.waitForTimeout(3000);
 console.log(W,JSON.stringify(end),'-> after card button cur',await p.evaluate(()=>cur),'(expect 18)',er);await c.close()}
 await b.close()})();
