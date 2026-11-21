@@ -1,4 +1,4 @@
-// Scroll-to-continue 3.0 test (Job 10: DOCUMENT scroll, Safari collapses its bar): per gated page -> ready -> html.dg + mark -> native wheel scroll of the DOCUMENT
+// Scroll-to-continue 3.1 test (Job 10 + 11: DOCUMENT scroll, Safari collapses its bar; dg is on FROM PAGE OPEN, ready adds sxr + card + mark): per gated page -> open (dg/sc on, small range) -> ready (sxr + mark) -> native wheel scroll of the DOCUMENT
 // -> 'Up next' card (ring/live/full) -> tap its button -> nextOf. Also asserts: the page itself (.pg.sc) never scrolls (scrollTop 0), it is position:absolute 100svh,
 // #dgbg carries the background, the card sits below the scene, and the page returns to normal (no dg, scrollY 0) after leaving.
 // usage: node .claude/tools/scrollnext.js [W H] [pages]   (shots: /tmp/shots/sx_W_n_{h,m,e}.png)
@@ -11,7 +11,7 @@ const Q={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16'
 require('fs').mkdirSync('/tmp/shots',{recursive:true});let bad=0;
 for(const n of pages){
  await p.evaluate(n=>{started=true;go(n)},n);await p.waitForTimeout(2300);
- const pre=await p.evaluate(n=>{const pg=document.querySelector('#p'+n);return{dg:document.documentElement.classList.contains('dg'),sc:pg.classList.contains('sc'),pos:getComputedStyle(pg).position,real:getComputedStyle(document.querySelector(NXB[n])).visibility,btnShown:getComputedStyle(document.querySelector(NXB[n])).display!=='none',docH:document.scrollingElement.scrollHeight,innerH:innerHeight}},n);
+ const pre=await p.evaluate(n=>{const pg=document.querySelector('#p'+n);return{dg:document.documentElement.classList.contains('dg'),sc:pg.classList.contains('sc'),pos:getComputedStyle(pg).position,real:getComputedStyle(document.querySelector(NXB[n])).visibility,btnShown:getComputedStyle(document.querySelector(NXB[n])).display!=='none',sxr:document.documentElement.classList.contains('sxr'),range:document.scrollingElement.scrollHeight-innerHeight,docH:document.scrollingElement.scrollHeight,innerH:innerHeight}},n);
  // pretend the page's own job is done
  await p.evaluate(q=>{const g=document.querySelector(q);g.classList.remove('hid');g.classList.add('show')},Q[n]);
  await p.waitForTimeout(1300);
@@ -33,7 +33,10 @@ for(const n of pages){
  const exp=n===12?1:await p.evaluate(n=>nextOf(n),n); // p12 'Play again' restarts at page 1
  // assertions
  const why=[];
- if((pre.dg||pre.sc)&&!pre.btnShown)why.push('dg/sc on although the page job is not done');
+ if(!pre.dg||!pre.sc)why.push('dg/sc not on from the moment the page opened');
+ if(pre.pos!=='absolute')why.push('page not absolute before ready');
+ if(pre.sxr&&!pre.btnShown)why.push('sxr on although the page job is not done');
+ if(!pre.btnShown&&(pre.range<120||pre.range>260))why.push('pre-ready range '+pre.range+' (expected ~170)');
  if(!hint.dg||!hint.sc)why.push('dg/sc not on when ready');
  if(hint.pos!=='absolute')why.push('page not absolute');
  if(Math.abs(hint.pgH-H)>2)why.push('page height '+hint.pgH+' != '+H);

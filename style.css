@@ -298,7 +298,7 @@ h1.bn.bn,h2.bn.bn{font-family:'Galada','Hind Siliguri',cursive;font-weight:400;z
 /* balloon game */
 #p6{justify-content:flex-start;padding-top:calc(calc(6*var(--vh)) + 3.4rem);gap:.6rem}
 #p6 .bcnt{font:600 1.05rem Fredoka;color:#ffe9a8;min-height:1.5rem}
-#p6 #bfield{width:min(94vw,440px);height:min(calc(40*var(--vh)),370px);border:1.5px dashed #ffffff55;border-radius:22px;background:#ffffff12;overflow:hidden;touch-action:none}
+#p6 #bfield{width:min(94vw,440px);height:min(calc(40*var(--vh)),370px);border:1.5px dashed #ffffff55;border-radius:22px;background:#ffffff12;overflow:hidden;touch-action:pan-x pan-y}
 .bal.mv{left:0;top:0;margin:0;animation:none;transform-origin:50% 45%;pointer-events:none;will-change:translate,rotate}
 .bal.mv svg .body{pointer-events:auto;cursor:pointer}
 #p6 #cards{gap:.4rem}
@@ -712,7 +712,7 @@ html.dtw.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:none!important}
 
 /* ===== p17 garden ===== */
 #fcn,#rjn{position:absolute;left:50%;translate:-50% 0;top:calc(var(--top) + 3rem);margin:0;padding:.3rem 1rem;border-radius:99px;background:#ffffffb0;color:#9b2f78;font:600 .95rem Fredoka,system-ui,sans-serif;letter-spacing:.1em;z-index:3}
-#gst{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(14*var(--vh));touch-action:none}
+#gst{position:absolute;left:0;right:0;top:calc(14*var(--vh));bottom:calc(14*var(--vh));touch-action:pan-y}
 #gw{position:absolute;inset:0;pointer-events:none}
 #gw.br{animation:gbr 2.6s ease-in-out forwards}
 @keyframes gbr{50%{scale:.92}to{scale:.95}}
@@ -743,7 +743,7 @@ html.dtw.sxr :is(#bfield,#cst,#gst,#lmw){touch-action:none!important}
 #lmh.shake{animation:lmhs .09s linear infinite alternate}
 @keyframes lmhs{from{rotate:-4deg}to{rotate:4deg}}
 #lmv{position:absolute;left:0;right:0;top:calc(57*var(--vh));margin:0;text-align:center;font:600 3.4rem/1.1 Fredoka,system-ui,sans-serif;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,#b0286e,#ec5aa0,#ff8a4a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
-#lmw{position:absolute;left:0;right:0;top:calc(67*var(--vh));height:76px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:pointer}
+#lmw{position:absolute;left:0;right:0;top:calc(67*var(--vh));height:76px;display:flex;align-items:center;justify-content:center;touch-action:pan-y;cursor:pointer}
 #lmt{position:relative;width:min(80vw,420px);height:18px}
 #lmbar{position:absolute;inset:0;border-radius:9px;background:#ffffff8c;overflow:hidden}
 #lmf{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#ff8ab4,#ff5c93 55%,#ffa35c)}
@@ -966,19 +966,21 @@ body:has(#p11.on) #mus{-webkit-backdrop-filter:none;backdrop-filter:none}
 #tree{width:min(86vw,420px)}
 /* S1: an infinite loop on an invisible element is NOT compositor-driven (it ticks the main thread every frame) -> sleep while hidden */
 
-/* ===== S2/S3 + Job 10: scroll-to-continue. Once a page is ready (.pg.sc) the DOCUMENT scrolls (html.dg) so Safari collapses its bottom bar like on a normal site.
+/* ===== S2/S3 + Job 10 + Job 11: scroll-to-continue. From the moment a page opens (p3 + p4 on, .pg.sc) the DOCUMENT scrolls (html.dg) so Safari collapses its bottom bar like on a normal site;
+   when the page's job is done html.sxr adds the Up-next card + a bigger range (--dgz).
    The scene turns into an absolute 100svh box that moves natively with the finger; its background lives on the fixed layer #dgbg (copied by dgOn in main.js,
    so bg + bar colours never move; the .edge strips stay); the glass "Up next" card (.upn) sits in the document right below the scene. ===== */
 button.nxh,.btn.nxh{visibility:hidden!important;pointer-events:none!important}
 .nxh:after{animation:none!important}
-:root{--dgz:calc(36*var(--vh) + 150px)} /* scroll range under the scene; > the ~100px Safari bar-collapse delta so the card can always reach 100% */
+:root{--dgz:170px} /* Job 11: scroll range under the scene from the moment a page opens = a bit more than the ~100px Safari bar-collapse delta, little empty space */
+html.sxr{--dgz:calc(36*var(--vh) + 150px)} /* page job done: the Up-next card needs room to reach 100% */
 #dgbg{display:none;position:fixed;inset:0;z-index:1;pointer-events:none}
 html.dg #dgbg{display:block}
 html.dg,html.dg body{overscroll-behavior:auto}
 html.dg body{min-height:calc(100*var(--vh) + var(--dgz))}
 html.dg .pg.sc{position:absolute;inset:0 0 auto 0;height:calc(100*var(--vh));overflow:hidden!important;background:none!important}
 .upn{display:none;position:absolute;left:0;right:0;top:calc(100*var(--vh));height:var(--dgz);box-sizing:border-box;padding-top:calc(2*var(--vh));justify-content:center;align-items:flex-start;pointer-events:none;text-align:left;z-index:3}
-html.dg .upn{display:flex}
+html.sxr .upn{display:flex}
 .upn.bye{opacity:0;transition:opacity .3s}
 .upn.force{position:fixed;top:auto;bottom:0;height:auto;padding:0 0 calc(max(var(--sab),14px) + 3*var(--vh));align-items:flex-end;z-index:7}
 .upc{width:min(90vw,372px);box-sizing:border-box;padding:15px;border-radius:28px;display:flex;flex-direction:column;gap:13px;background:linear-gradient(158deg,#fffffff2,#fff4facc 52%,#f6e6ffd9);border:1px solid #ffffffe6;box-shadow:inset 0 1.5px 0 #fff,inset 0 -1.5px 0 #ffffff8c,0 20px 44px #b0286e29,0 5px 16px #b0286e1c;opacity:0;transform:translate3d(0,30px,0) scale(.94);will-change:transform,opacity;pointer-events:none}

@@ -173,7 +173,7 @@ const parkT=new WeakMap(),isInf=a=>{try{return a.effect.getComputedTiming().iter
 function pgPark(p,ms){clearTimeout(parkT.get(p));parkT.set(p,setTimeout(()=>{if(p.classList.contains('on'))return;p.classList.add('off');p.getAnimations({subtree:true}).forEach(a=>{if(a.playState==='running'&&isInf(a)){a._pk=1;a.pause()}})},ms==null?1300:ms))}
 function pgWake(p){clearTimeout(parkT.get(p));p.classList.remove('off');p.getAnimations({subtree:true}).forEach(a=>{if(a._pk){a._pk=0;a.play()}})}
 setTimeout(()=>$$('.pg').forEach(p=>{if(!p.classList.contains('on'))pgPark(p,0)}),500);
-function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p)){if(p.classList.contains('on'))pgPark(p);p.classList.remove('on')}});if(seam)setTimeout(()=>old.forEach(p=>{p.classList.remove('on');pgPark(p,400)}),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');const frz=!fast&&document.documentElement.classList.contains('dg'); // direct switch (no iris) away from a scrolled page: keep it frozen while it fades out
+function go0(n,seam,fast){if(n>20)n=20;const old=seam?$$('.pg.on'):[];voice.pause();$('#vid').pause();hold=0;bgmResume();timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];stopRain();$$('.pg').forEach(p=>{if(!old.includes(p)){if(p.classList.contains('on'))pgPark(p);p.classList.remove('on')}});if(seam)setTimeout(()=>old.forEach(p=>{p.classList.remove('on');pgPark(p,400)}),900);cur=n;setTheme(n);document.documentElement.classList.remove('ds');const frz=!fast&&document.documentElement.classList.contains('dg')&&scrollY>2; // direct switch (no iris) away from a SCROLLED page: keep it frozen while it fades out
  if(!frz)scrollTo(0,0);sxArm(n,frz?1000:0);$('#chd').classList.remove('show');
  later(()=>{pgWake($('#p'+n));$('#p'+n).classList.add('on');(init[n]||(()=>{}))();tagBn($('#p'+n));wrapEmoji($('#p'+n))},seam||cur===0&&!started?0:fast?40:350)}
 // ---- N8d: iris wipe between pages (pink circle grows from the last tap, page swaps under it, then it fades) ----
@@ -192,28 +192,36 @@ $$('.go').forEach(b=>{const id=+b.closest('.pg').id.slice(1);b.addEventListener(
 // (next page title + progress ring + the button) sits in the document right below the scene and rises as the page scrolls natively with the finger (NO JS-driven
 // scroll transforms). The scene (.pg.sc) becomes an absolute 100svh box, its background moves to the fixed layer #dgbg (bar colours never move), decor stays fixed.
 // Progress = scrollY / D with a CONSTANT D (Safari's bar collapse changes innerHeight mid-gesture). The card's button presses the page's real button. Stray taps do nothing. ----
+// Job 11 (owner: "cake page and every page after it has no scroll"): every page from the tree on is document-scrollable FROM THE MOMENT IT OPENS (dgOn in sxArm), not only after its
+// job is done, so Safari can collapse its bar everywhere. Ready (job done) only adds html.sxr + the Up-next card + the chevron. p0/p1 = intro, p2/p13 = chapter (html.ds) stay as they are.
+const UDP=[3,4,5,19,6,16,7,14,17,20,8,10,11,18,12];
 const ROOT=document.documentElement,DGB=$('#dgbg');
 const NXB={3:'#g3',6:'#p6 .go',7:'#g7',10:'#p10 .go',11:'#g11',14:'#g14',16:'#g16',17:'#g17',18:'#g18',19:'#g19',20:'#g20',12:'#replay'};
 // title shown on the card = the page that comes NEXT (key = page you are on). Override in config.js: nextTitles:{3:"..."}
 const NXT={3:'A little wish ✨',19:'Pop the balloons 🎈',6:'A very serious question 🧐',16:'Our little memories 📸',7:'More memories 🖼️',14:'Planted just for you 🌷',17:'A jar full of reasons 💌',20:'A letter, just for you 💌',10:'A wish in motion 🎬',11:'Connect our stars ✨',18:'Happy Birthday, '+(C.name||'you')+' 🎂'};
-const SX={n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:null,mo:null,rdy:0,raf:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0,D:0};
+const SX={n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:null,mo:null,rdy:0,raf:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0,D:0,ud:0,hold:0,ft:0};
 const RING=125.66; // circumference of the r=20 progress ring
 // document-scroll mode on/off. dgOn copies the page's background onto the fixed layer #dgbg BEFORE the page loses it (.pg.sc{background:none}); a page without its own
 // background (p16-p20) shows the html gradient (setTheme), which is copied instead, so nothing changes visually when the mode switches on.
 function dgOn(pg){if(scrollY>0)scrollTo(0,0);const cs=getComputedStyle(pg),own=cs.backgroundImage!=='none'||!/^(rgba\(0, 0, 0, 0\)|transparent)$/.test(cs.backgroundColor),s=own?cs:getComputedStyle(ROOT);
  DGB.style.cssText='background-image:'+s.backgroundImage+';background-color:'+s.backgroundColor+';background-size:'+s.backgroundSize+';background-position:'+s.backgroundPosition+';background-repeat:'+s.backgroundRepeat+';z-index:'+(own?1:0);
- pg.classList.add('sc');ROOT.classList.add('dg','sxr')}
+ pg.classList.add('sc');ROOT.classList.add('dg')}
 function dgOff(){ROOT.classList.remove('dg','sxr')}
 function sxClear(frz){const pg=SX.pg,card=SX.card;if(SX.mo){SX.mo.disconnect();SX.mo=null}
- removeEventListener('scroll',sxOnScroll);if(SX.raf){cancelAnimationFrame(SX.raf);SX.raf=0}
- // leaving: go back to the normal fixed-page layout at once (the iris wipe covers the switch; go0 already did scrollTo(0,0)).
- // frz = no iris (p20->p8, reduced motion): the old page stays scrolled while it fades out, the card fades, then everything is reset
- if(frz&&pg){if(card)card.classList.add('bye');setTimeout(()=>{if(SX.pg===pg)return;pg.classList.remove('sc');if(card)card.remove();if(!SX.rdy){dgOff();scrollTo(0,0)}},frz)}
- else{if(pg)pg.classList.remove('sc');if(card)card.remove();dgOff()}
+ removeEventListener('scroll',sxOnScroll);if(SX.raf){cancelAnimationFrame(SX.raf);SX.raf=0}clearTimeout(SX.ft);SX.ft=0;
+ if(frz&&SX.hold){frz=0;scrollTo(0,0)} // a 2nd switch while the 1st freeze still runs: nothing worth keeping any more
+ // leaving: back to the normal fixed-page layout at once (the iris wipe covers the switch; go0 already did scrollTo(0,0)); whatever an earlier freeze left behind goes too.
+ // frz = direct switch (no iris: ->5 ->8 ->10, seam, reduced motion) away from a SCROLLED page: that page stays scrolled while it fades out and its card fades; the new page opens in
+ // the normal layout meanwhile and enters document-scroll mode (sxStart) when the freeze is over, so a scrolled old page never jumps and a new page never starts scrolled.
+ $$('.pg.sc').forEach(p=>{if(!(frz&&p===pg))p.classList.remove('sc')});$$('.upn').forEach(u=>{if(!(frz&&u===card))u.remove()});
+ if(frz&&pg){if(card)card.classList.add('bye');SX.ft=setTimeout(()=>{SX.ft=0;pg.classList.remove('sc');if(card)card.remove();dgOff();scrollTo(0,0);sxStart()},frz)}
+ else dgOff();
  const mk=$('#mark');if(mk)mk.classList.remove('on');
- Object.assign(SX,{n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:mk,rdy:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0,D:0})}
-function sxArm(n,frz){sxClear(frz);SX.n=n;const q=NXB[n];if(!q||C.scrollNext===false)return;const b=$(q),pg=$('#p'+n);if(!b||!pg)return;
- SX.b=b;SX.pg=pg;b.classList.add('nxh');
+ Object.assign(SX,{n:-1,b:null,pg:null,card:null,u:null,ring:null,mk:mk,rdy:0,live:0,full:0,mkOn:0,t1:0,t2:0,force:0,D:0,ud:0,hold:0});return frz&&pg?1:0}
+function sxArm(n,frz){const fz=sxClear(frz);SX.n=n;if(C.scrollNext===false)return;const pg=$('#p'+n);if(!pg)return;const ud=UDP.includes(n),q=NXB[n],b=q&&$(q);if(!ud&&!b)return;
+ SX.pg=pg;SX.ud=ud?1:0;if(ud){if(fz)SX.hold=1;else dgOn(pg)} // document scroll from the moment the page opens (Job 11); after a freeze sxStart does it
+ if(!b)return; // p4 p5 p8: just the scroll range (bar collapse), no card
+ SX.b=b;b.classList.add('nxh');
  const nt=C.nextTitles||{},kick=n===12?'THE END ♡':'UP NEXT',ttl=n===12?(nt[12]||'Watch it all again'):(nt[n]||NXT[n]||'Keep going'),lab=n===12?'Play again ✨':(b.textContent.trim()||'Keep going ✨');
  const el=document.createElement('div');el.className='upn';
  el.innerHTML='<div class="upc"><div class="upt"><svg class="upr" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="upg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff7aa8"/><stop offset="1" stop-color="#9b6dff"/></linearGradient></defs><circle class="upb" cx="24" cy="24" r="20"/><circle class="upf" cx="24" cy="24" r="20"/><path class="upm" d="M16.5 28.5l7.5-7.5 7.5 7.5"/><path class="upv" d="M16 24.5l5.6 5.6L32.5 19"/></svg><div class="upx"><small></small><b></b></div></div><button class="btn upk" type="button"></button></div>';
@@ -221,11 +229,12 @@ function sxArm(n,frz){sxClear(frz);SX.n=n;const q=NXB[n];if(!q||C.scrollNext===f
  k.onclick=()=>{if(!SX.live||cur!==SX.n)return;const r=k.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,24);try{k.animate([{transform:'scale(.95)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],{duration:280,easing:'cubic-bezier(.3,1.6,.5,1)'})}catch(e){}SX.b.click()};
  document.body.appendChild(el);SX.card=el;SX.u=u;SX.ring=u.querySelector('.upf'); // body level: it must sit OUTSIDE the clipped scene so it extends the document's scroll range
  SX.mo=new MutationObserver(sxCheck);SX.mo.observe(b,{attributes:true,attributeFilter:['class','style']});later(sxCheck,n===3?5200:n===12?6500:1100)}
-function sxCheck(){const b=SX.b,pg=SX.pg;if(!b||cur!==SX.n)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;
- if(r){dgOn(pg);addEventListener('scroll',sxOnScroll,{passive:true});
+function sxStart(){if(!SX.pg||cur!==SX.n)return;SX.hold=0;if(SX.ud)dgOn(SX.pg);sxCheck()} // end of a freeze (see sxClear): the new page enters document-scroll mode now
+function sxCheck(){const b=SX.b,pg=SX.pg;if(!b||cur!==SX.n||SX.hold)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;
+ if(r){if(!SX.ud)dgOn(pg);ROOT.classList.add('sxr');addEventListener('scroll',sxOnScroll,{passive:true});
   requestAnimationFrame(()=>{if(cur!==SX.n||!SX.rdy)return;const se=document.scrollingElement;SX.D=Math.max(60,(SX.card.offsetTop||innerHeight)*.34); // full = 34% of a screen of scrolling
    if(se.scrollHeight-innerHeight<24){SX.force=1;SX.card.classList.add('force')}sxProg();later(()=>{if(cur===SX.n&&SX.rdy&&!SX.force)sxMark(1)},650)})}
- else{pg.classList.remove('sc');removeEventListener('scroll',sxOnScroll);scrollTo(0,0);dgOff();sxMark(0);SX.live=SX.full=0;if(SX.u){SX.u.classList.remove('live','full');SX.u.style.opacity=''}}}
+ else{removeEventListener('scroll',sxOnScroll);ROOT.classList.remove('sxr');sxMark(0);SX.live=SX.full=0;if(SX.u){SX.u.classList.remove('live','full');SX.u.style.opacity=''}}}
 function sxMark(on){if(!SX.mk||on===SX.mkOn)return;SX.mkOn=on;SX.mk.classList.toggle('on',!!on)}
 function sxOnScroll(){if(!SX.raf)SX.raf=requestAnimationFrame(sxProg)}
 function sxProg(){SX.raf=0;const pg=SX.pg,u=SX.u;if(!pg||!u||cur!==SX.n||!SX.rdy)return;
