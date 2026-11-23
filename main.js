@@ -233,7 +233,7 @@ function sxStart(){if(!SX.pg||cur!==SX.n)return;SX.hold=0;if(SX.ud)dgOn(SX.pg);s
 function sxCheck(){const b=SX.b,pg=SX.pg;if(!b||cur!==SX.n||SX.hold)return;const r=getComputedStyle(b).display!=='none';if(r===!!SX.rdy)return;SX.rdy=r?1:0;
  if(r){if(!SX.ud)dgOn(pg);ROOT.classList.add('sxr');addEventListener('scroll',sxOnScroll,{passive:true});
   requestAnimationFrame(()=>{if(cur!==SX.n||!SX.rdy)return;const se=document.scrollingElement;SX.D=Math.max(60,(SX.card.offsetTop||innerHeight)*.34); // full = 34% of a screen of scrolling
-   if(se.scrollHeight-innerHeight<24){SX.force=1;SX.card.classList.add('force')}sxProg();later(()=>{if(cur===SX.n&&SX.rdy&&!SX.force)sxMark(1)},650)})}
+   if(se.scrollHeight-innerHeight<24){SX.force=1;SX.card.classList.add('force')}sxProg();later(()=>{if(cur===SX.n&&SX.rdy&&!SX.force&&document.scrollingElement.scrollTop<14)sxMark(1)},650)})} // the page scrolls from the moment it opens (Job 11): no chevron when she is already scrolled
  else{removeEventListener('scroll',sxOnScroll);ROOT.classList.remove('sxr');sxMark(0);SX.live=SX.full=0;if(SX.u){SX.u.classList.remove('live','full');SX.u.style.opacity=''}}}
 function sxMark(on){if(!SX.mk||on===SX.mkOn)return;SX.mkOn=on;SX.mk.classList.toggle('on',!!on)}
 function sxOnScroll(){if(!SX.raf)SX.raf=requestAnimationFrame(sxProg)}
@@ -960,3 +960,15 @@ addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
   if(eaten){eaten=false;if(e.cancelable)e.preventDefault();last=n;lx=t.clientX;ly=t.clientY;arm();return}
   if(Math.abs(t.clientX-sx)+Math.abs(t.clientY-sy)<=MOVE&&n-st<=TAPMS&&st-scT>250){last=n;lx=t.clientX;ly=t.clientY;arm()}else last=-1e9},{passive:false,capture:true});
  addEventListener('touchcancel',()=>{multi=false;reset()},{passive:true,capture:true})}
+
+// ===== no pull-to-refresh (Job 11) =====
+// Every page from the tree on scrolls the DOCUMENT now (so Safari can collapse its bar). A long pull DOWN at the very top (or a big swipe down that overshoots the top after
+// scrolling) would start Safari's pull-to-refresh and reload the whole gift from the first page; CSS cannot stop it on iOS (WebKit bug 275947: overscroll-behavior is ignored).
+// A downward drag that starts at the top of a scrolling page (html.dg / html.ds) is cancelled here: touchmove preventDefault BEFORE the pan begins. Upward drags, taps,
+// horizontal drags and the letter's own scroll are untouched; the listener only acts while a gesture started at the top (the 1st touchmove is the only one that waits for us).
+if(C.noPull!==false){const R=document.documentElement;let o=null;
+ addEventListener('touchstart',e=>{const t=e.touches[0];o=e.touches.length===1&&(R.classList.contains('dg')||R.classList.contains('ds'))&&document.scrollingElement.scrollTop<=0?{x:t.clientX,y:t.clientY}:null},{passive:true,capture:true});
+ addEventListener('touchmove',e=>{if(!o)return;const t=e.touches[0],dy=t.clientY-o.y;
+  if(e.touches.length>1||dy<-4){o=null;return}
+  if(dy>8&&dy>Math.abs(t.clientX-o.x)*1.2&&e.cancelable){const l=e.target.closest&&e.target.closest('#letter');if(!(l&&l.scrollTop>0))e.preventDefault()}},{passive:false,capture:true});
+ addEventListener('touchend',()=>{o=null},{passive:true,capture:true});addEventListener('touchcancel',()=>{o=null},{passive:true,capture:true})}

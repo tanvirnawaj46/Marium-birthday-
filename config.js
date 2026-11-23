@@ -95,6 +95,9 @@ window.CONFIG = {
   // scrollNext: true = prottek page-e (jekhane "Keep going" ache) page-er kaj shesh hole niche ekta chhoto chevron mark ashbe; upore scroll korle
   // "UP NEXT" glass card (porer page-er naam + progress ring + button) uthe ashbe. false = ager moto shorashori Keep going button
   scrollNext: true,
+  // noPull: true = page-er sobar upore thaka obosthay niche tanle (pull-to-refresh) Safari pura website reload kore dey, ta atkano hoy (kebol niche-tana, upore-scroll/tap thik thake).
+  // Jodi kono page-e swipe-e ajib lage, false kore dekho
+  noPull: true,
   // nextTitles: card-e porer page-er naam. Key = ekhon je page-e acho, value = je lekha dekhabe. Khali {} = default naam. Example: {6:"Balloons are done 🎈", 12:"Watch it all again"}
   nextTitles: {},
   finalLine: "Another year of you, my favourite part of every single day.",   // last page, name er niche
