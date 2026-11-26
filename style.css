@@ -39,11 +39,10 @@ button.fade:not(.vis){pointer-events:none}
 @keyframes glowb{50%{scale:1.035}}
 
 /* p1: bow & arrow */
-#arena{position:relative;width:100%;max-width:520px;height:calc(72*var(--vh));touch-action:none;cursor:grab}
+#arena{position:absolute;inset:0;touch-action:none;cursor:grab}
 #heart{position:absolute;left:50%;top:3%;width:min(40vw,190px);margin-left:calc(min(40vw,190px)/-2);filter:drop-shadow(0 0 30px #ff5c8a);animation:beat 1.2s infinite;pointer-events:none}
 #heart svg{width:100%;display:block}
 @keyframes beat{50%{scale:1.07}}
-#aim{position:absolute;inset:0;pointer-events:none;overflow:visible}
 
 /* p2 */
 .pre{font-style:italic;opacity:0;animation:up 1s .1s forwards;font-size:1rem;letter-spacing:.08em}
@@ -274,23 +273,61 @@ h1.bn.bn,h2.bn.bn{font-family:'Galada','Hind Siliguri',cursive;font-weight:400;z
 @keyframes flt{50%{translate:0 -8px}}
 #lb img{box-shadow:0 20px 60px #000a,0 0 50px #ffb6d855}
 
-/* ---- bow & arrow game (v3) ---- */
-#aim{filter:drop-shadow(0 4px 6px #8a2a5a26)}
+/* ---- bow & arrow game (v4 "Cupid's Bow", Job 12): scene layers + art are built by init[1]; animate transform/opacity ONLY ---- */
+:root{--hm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 88'%3E%3Cpath d='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z'/%3E%3C/svg%3E")}
+#bsc,#bsig,#btg,#brib{position:absolute;inset:0;pointer-events:none}
+#bsc i{position:absolute;display:block}
+.bcl{border-radius:50%;background:radial-gradient(closest-side,#ffffffdd,#ffffff00);opacity:.78;animation:bdr 52s ease-in-out infinite alternate}
+.bcl.c1{width:78vw;height:30vw;left:-26vw;top:11%}
+.bcl.c2{width:92vw;height:32vw;right:-36vw;top:35%;animation-duration:66s;animation-direction:alternate-reverse}
+.bcl.c3{width:72vw;height:26vw;left:-18vw;top:63%;animation-duration:58s}
+@keyframes bdr{to{translate:18vw 0}}
+.bk{border-radius:50%;background:radial-gradient(#fff,#ffffff00 70%);opacity:.7}
+.bk.t{animation:bkt 3.4s ease-in-out infinite}
+@keyframes bkt{50%{opacity:.15;scale:.7}}
+#bmist{left:-12%;right:-12%;bottom:4%;height:42%;background:radial-gradient(54% 52% at 50% 68%,#e0ccffd0,#e0ccff00 72%)}
+#bsig{inset:auto;width:260px;height:260px;margin:-130px 0 0 -130px;transform:scaleY(.26)}
+#bsig svg{position:absolute;inset:0;width:100%;height:100%}
+#bsig .rot{position:absolute;inset:0;animation:spin 40s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+/* hearts: 1 archery-target heart (main) + 2 gem decoys */
 .hrt{position:absolute;pointer-events:none;transition:opacity .25s,scale .3s;animation:hbob var(--d,3s) ease-in-out infinite alternate}
-.hrt svg{display:block;width:100%;animation:beat 1.2s infinite;filter:drop-shadow(0 0 20px var(--g))}
+.hrt svg{position:relative;display:block;width:100%}
+.hrt.main svg{animation:beat 1.4s ease-in-out infinite}
+.hgl{position:absolute;inset:-36% -32%;border-radius:50%;background:radial-gradient(closest-side,var(--g),#ff3d7f00);opacity:.38}
 @keyframes hbob{to{translate:0 -9px}}
 .hrt.gone{opacity:0;scale:1.7;animation:none}
 .hrt.spawn{animation:spawn .7s cubic-bezier(.3,1.6,.5,1) backwards,hbob var(--d,3s) ease-in-out .7s infinite alternate}
 @keyframes spawn{from{scale:.1;opacity:0}}
-.hrt.main:before{content:"";position:absolute;inset:-14% -12%;border:2px dashed #ffc94d;border-radius:50%;opacity:.85;animation:spin 14s linear infinite}
-.hrt.main:after{content:"✨";position:absolute;top:-10%;right:-6%;font-size:1.7rem;line-height:1;animation:tw2 1.6s ease-in-out infinite}
-@keyframes spin{to{rotate:360deg}}
-@keyframes tw2{50%{scale:1.35;opacity:.55}}
+.hrt.main:before{content:"";position:absolute;inset:-12% -10%;border:2px dashed #ffc94d;border-radius:50%;opacity:.85;animation:spin 16s linear infinite}
+.hor{position:absolute;inset:-17% -13%;animation:spin 9s linear infinite}
+.hor b{position:absolute;font:700 1.1rem/1 Fredoka,sans-serif;color:#ffc93d;text-shadow:0 0 6px #fff,0 0 12px #ffe39a}
+.hor b:nth-child(1){left:50%;top:0;margin-left:-.5rem}
+.hor b:nth-child(2){left:6%;top:72%}
+.hor b:nth-child(3){right:6%;top:72%}
+/* bow + arrow */
+#aim{position:absolute;inset:0;pointer-events:none;overflow:visible}
 #arrow.nock{animation:nockin .35s both}
 @keyframes nockin{from{opacity:0}}
-.toast{position:absolute;left:0;right:0;top:52%;text-align:center;font:700 1.6rem Caveat;color:#d6407f;text-shadow:0 2px 10px #fff;opacity:0;pointer-events:none}
-.toast.show{animation:toast 1.9s ease both}
-@keyframes toast{0%{opacity:0;translate:0 14px}15%,70%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -10px}}
+.rt{position:absolute;width:20px;height:44px;transform-origin:50% 0;rotate:var(--a);animation:rsw 3.4s ease-in-out infinite alternate}
+.rt svg{display:block;width:100%;height:100%}
+@keyframes rsw{to{rotate:calc(var(--a) + 11deg)}}
+/* power meter: 5 hearts light up while the string is drawn */
+#pm{position:absolute;display:flex;flex-direction:column-reverse;gap:6px;pointer-events:none;opacity:0;transition:opacity .25s}
+#pm.on{opacity:1}
+#pm i{display:block;width:18px;height:16px;background:#f6bcd6;-webkit-mask:var(--hm) center/contain no-repeat;mask:var(--hm) center/contain no-repeat}
+#pm i.on{background:linear-gradient(#ff8fb5,#e8336f);animation:pmp .32s cubic-bezier(.3,1.7,.5,1)}
+#pm i.on.full{background:linear-gradient(#fff3b0,#f7bf3f)}
+@keyframes pmp{from{scale:.4}}
+/* glass toast + hint chip + title */
+.toast{position:absolute;left:50%;top:51%;translate:-50% 0;white-space:nowrap;padding:.45rem 1.1rem .5rem;border-radius:999px;font:700 1.35rem/1.1 Caveat,cursive;color:var(--lg-ink);background:var(--lg-clear);border:1px solid #ffffff8c;box-shadow:var(--lg-rim),var(--lg-drop);opacity:0;pointer-events:none;z-index:6}
+.toast.show{animation:toast 2s ease both}
+@keyframes toast{0%{opacity:0;translate:-50% 14px}14%,72%{opacity:1;translate:-50% 0}100%{opacity:0;translate:-50% -10px}}
+#p1 .top,#p1 .hint{pointer-events:none}
+#p1 .top{font:italic 600 clamp(1.75rem,7.8vw,2.3rem)/1.12 'Cormorant Garamond',Georgia,serif}
+#p1 .hint{left:50%;translate:-50% 0;padding:.5rem 1.15rem;border-radius:999px;font:600 .72rem/1 Fredoka,sans-serif;letter-spacing:.17em;text-transform:uppercase;white-space:nowrap;color:var(--lg-ink);background:var(--lg-clear);border:1px solid #ffffff8c;box-shadow:var(--lg-rim),var(--lg-drop);opacity:.95;animation:bhp 2.6s ease-in-out infinite;transition:opacity .4s}
+#p1 .hint.off{opacity:0;animation:none}
+@keyframes bhp{50%{opacity:.55}}
 
 /* video: tap-for-sound chip */
 #unm{position:absolute;top:10px;left:50%;translate:-50% 0;padding:.45rem 1rem;font-size:.9rem;z-index:4}

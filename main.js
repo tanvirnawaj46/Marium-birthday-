@@ -145,7 +145,7 @@ function fireworks(){const i=setInterval(()=>{if(!rainOn&&cur!==12&&cur!==5)retu
 // ---------- floating dreamy layer (per page) ----------
 const FLT={
  0:{e:['🦋','🎀','⭐','🫧','🌸','💗','✨'],m:['bob'],o:['#ff9ec9','#b9a3ff','#9fd2ff']},
- 1:{e:['💗','🎀','🫧','✨','🦋','💕'],m:['rise'],o:['#ffb3d1','#cfe3ff','#e3d1ff']},
+ 1:{e:['💗','🫧','✨','🦋','💕'],m:['rise'],o:['#ffb3d1','#cfe3ff','#e3d1ff']},
  2:{e:['🫧','✨','💖','🌟','🎀'],m:['rise','bob'],o:['#ffb8dc','#c4b5fd','#ff9ed1']},
  3:{e:['🌸','🦋','🌷','🍃','✨','💮'],m:['fall','bob'],o:['#ffd9a8','#ffb8d9','#fff0b8']},
  4:{e:['✨','💫','⭐','🫧','💗'],m:['rise','bob'],o:['#ff7ab8','#ffa05a','#a78bfa']},
@@ -249,27 +249,59 @@ function sxProg(){SX.raf=0;const pg=SX.pg,u=SX.u;if(!pg||!u||cur!==SX.n||!SX.rdy
  if(p>.33&&!SX.t1){SX.t1=1;if(started)SFX.star(3)}else if(p<.22)SX.t1=0;
  if(p>.66&&!SX.t2){SX.t2=1;if(started)SFX.star(5)}else if(p<.55)SX.t2=0}
 const init={};
-// ---------- 1: bow & arrow (aim at the hearts) ----------
-const HSV=(i,c,main)=>`<svg viewBox="-4 -4 108 98"><defs><radialGradient id="hg${i}" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path d="M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z" fill="url(#hg${i})" stroke="${main?'#ffd36e':c[2]}" stroke-opacity="${main?1:.35}" stroke-width="${main?3.5:1.5}" stroke-linejoin="round"/><path d="M14 21c0-8 5-13 13-13" stroke="#fff" stroke-opacity=".9" stroke-width="5.5" fill="none" stroke-linecap="round"/><ellipse cx="36" cy="14" rx="8" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-20 36 14)"/><path d="M73 20c3 3 5 6 5 10" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"/>${main?'<path d="M50 30l3.4 7.2 7.8 1-5.7 5.3 1.6 7.7L50 47.4l-7.1 3.8 1.6-7.7-5.7-5.3 7.8-1z" fill="#fff" opacity=".9"/>':''}</svg>`;
-init[1]=()=>{const A=$('#arena'),arc=$('#bowArc'),str=$('#str'),sh=$('#shaft'),shl=$('#shl'),shg=$('#shg'),hd=$('#head'),ft=$('#fth'),arw=$('#arrow'),gd=$('#guide'),tt=$('#toast');
- A.querySelectorAll('.hrt').forEach(x=>x.remove());
- const w=A.clientWidth,h=A.clientHeight,bx=w/2,by=h-110,tl=[bx-64,by+14],tr=[bx+64,by+14],rest=[bx,by+14],L=96,MAXP=135;
- arc.setAttribute('d',`M${tl} Q${bx},${by-76} ${tr}`);
- [['#capL',tl],['#capR',tr],['#grip',[bx,by-31]],['#bowglow',[bx,by-10]]].forEach(([q,p])=>{const e=$(q);e.setAttribute('cx',p[0]);e.setAttribute('cy',p[1])});
- // hearts: 1 big golden one = goes to next page, 2 small = just pop
- const mw=Math.min(w*.36,168),dw=Math.min(w*.17,78);
- const HD=[{m:1,x:.5,y:.025,w:mw,c:['#fff0c2','#ff4d84','#a80f55'],g:'#ff3d7f'},{x:.17,y:.4,w:dw,c:['#f3e6ff','#b78cff','#5b2fa0'],g:'#b78cff'},{x:.83,y:.27,w:dw*1.1,c:['#ffe3d1','#ff9a76','#c2410c'],g:'#ff9a76'}];
- const hearts=HD.map((d,i)=>{const el=document.createElement('div');el.className='hrt'+(d.m?' main':'');el.style.cssText=`width:${d.w}px;left:${d.x*w-d.w/2}px;top:${d.y*h}px;--g:${d.g};--d:${(2.6+i*.7).toFixed(1)}s`;el.innerHTML=HSV(i,d.c,d.m);A.insertBefore(el,A.firstChild);return{el,m:!!d.m}});
- let P=rest.slice(),u=[0,-1],state=0,sx=0,sy=0;
+// ---------- 1: Cupid's Bow v4 (aim at the hearts) - Job 12 ----------
+const HRT='M50 88C10 55 0 35 0 22 0 9 10 0 24 0c11 0 21 6 26 15C55 6 65 0 76 0c14 0 24 9 24 22 0 13-10 33-50 66z'; // 100x88 heart
+const hsc=(s,cx=50,cy=42)=>`transform="translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})"`;
+const GLOSS='<path d="M14 21c0-8 5-13 13-13" stroke="#fff" stroke-opacity=".9" stroke-width="5.5" fill="none" stroke-linecap="round"/><ellipse cx="36" cy="14" rx="8" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-20 36 14)"/><path d="M73 20c3 3 5 6 5 10" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"/>';
+const STAR5='M50 30l3.4 7.2 7.8 1-5.7 5.3 1.6 7.7L50 47.4l-7.1 3.8 1.6-7.7-5.7-5.3 7.8-1z'; // 5-point star centred on (50,41)
+// main target = heart-shaped archery target: rose rim, cream / rose / cream rings, gold bullseye heart with a star
+const TGTSVG=()=>`<svg viewBox="-6 -6 112 100"><defs><radialGradient id="tg0" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="#ff9fc0"/><stop offset=".55" stop-color="#ff4d84"/><stop offset="1" stop-color="#b3125c"/></radialGradient><radialGradient id="tg1" cx="35%" cy="30%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".55" stop-color="#f7bf3f"/><stop offset="1" stop-color="#b9770e"/></radialGradient></defs><path d="${HRT}" fill="url(#tg0)" stroke="#ffd36e" stroke-width="3.6" stroke-linejoin="round"/>${[[.8,'#fff4e8'],[.6,'#e8336f'],[.4,'#fff4e8']].map(([s,c])=>`<path d="${HRT}" ${hsc(s)} fill="${c}" stroke="#ffffffb3" stroke-width="${(1.1/s).toFixed(2)}" stroke-linejoin="round"/>`).join('')}<path d="${HRT}" ${hsc(.23)} fill="url(#tg1)" stroke="#fff" stroke-width="${(1.8/.23).toFixed(1)}" stroke-linejoin="round"/><path d="${STAR5}" ${hsc(.42,50,41)} fill="#fff" opacity=".95"/>${GLOSS}</svg>`;
+// decoys = glossy gem hearts (each one hides a love note)
+const GEMSVG=(i,c)=>`<svg viewBox="-4 -4 108 98"><defs><radialGradient id="hg${i}" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path d="${HRT}" fill="url(#hg${i})" stroke="${c[2]}" stroke-opacity=".4" stroke-width="1.6" stroke-linejoin="round"/><path d="${HRT}" ${hsc(.66)} fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-linejoin="round"/>${GLOSS}</svg>`;
+init[1]=()=>{const A=$('#arena'),svg=$('#aim'),tt=$('#toast'),pm=$('#pm'),pmh=[...pm.children],hint=$('#bhint');
+ ['#bsc','#bsig','#btg','#brib'].forEach(q=>{$(q).innerHTML=''});svg.innerHTML='';pm.className='';hint.classList.remove('off');pmh.forEach(e=>e.className='');
+ const w=A.clientWidth,h=A.clientHeight,bx=w/2,by=h*.74,HW=Math.min(100,w*.245),gy=by-50,rest=[bx,by+18],L=104,MAXP=150,MINP=52,K=[bx-31,gy+1];
+ const f1=v=>v.toFixed(1),pf=p=>f1(p[0])+' '+f1(p[1]);
+ // ---- scene: soft clouds, bokeh, mist, the magic circle under the bow, ribbon tails
+ let sd=1411;const rn=()=>(sd=sd*16807%2147483647)/2147483647;
+ $('#bsc').innerHTML='<i class="bcl c1"></i><i class="bcl c2"></i><i class="bcl c3"></i><i id="bmist"></i>'+Array.from({length:14},(_,i)=>{const s=5+rn()*10;return`<i class="bk${i%3===0?' t':''}" style="left:${(rn()*96+2).toFixed(1)}%;top:${(9+rn()*76).toFixed(1)}%;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;animation-delay:${(rn()*3).toFixed(1)}s"></i>`}).join('');
+ const sg=$('#bsig'),hm=(a,r,s)=>`<path d="${HRT}" transform="translate(${(Math.cos(a)*r).toFixed(1)} ${(Math.sin(a)*r).toFixed(1)}) rotate(${(a*57.29578+90).toFixed(0)}) scale(${s}) translate(-50 -44)" fill="#ec5aa0" opacity=".55"/>`,tri=o=>[0,2,4].map(i=>{const a=(i+o)/6*6.2832-1.5708;return(Math.cos(a)*80).toFixed(1)+','+(Math.sin(a)*80).toFixed(1)}).join(' ');
+ sg.style.cssText=`left:${bx}px;top:${by+66}px`;
+ sg.innerHTML=`<svg viewBox="-130 -130 260 260"><defs><radialGradient id="sgG"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><circle r="127" fill="url(#sgG)"/><circle r="124" fill="none" stroke="#ec5aa0" stroke-opacity=".78" stroke-width="2.2"/><circle r="113" fill="none" stroke="#ec5aa0" stroke-opacity=".42" stroke-width="1.2"/>${Array.from({length:12},(_,i)=>hm(i/12*6.2832,119,.1)).join('')}</svg><div class="rot"><svg viewBox="-130 -130 260 260"><circle r="96" fill="none" stroke="#f0b73b" stroke-opacity=".8" stroke-width="2.6" stroke-dasharray="1 9.5" stroke-linecap="round"/><polygon points="${tri(0)}" fill="none" stroke="#f0b73b" stroke-opacity=".6" stroke-width="1.5" stroke-linejoin="round"/><polygon points="${tri(1)}" fill="none" stroke="#f0b73b" stroke-opacity=".6" stroke-width="1.5" stroke-linejoin="round"/><circle r="40" fill="none" stroke="#ec5aa0" stroke-opacity=".35" stroke-width="1.2"/></svg></div>`;
+ $('#brib').innerHTML=[['26deg',0],['-8deg',1.7]].map(([a,dl])=>`<div class="rt" style="left:${f1(K[0]-10)}px;top:${f1(K[1]+1)}px;--a:${a};animation-delay:-${dl}s"><svg viewBox="0 0 20 44"><path d="M3 0h12c-1 12 1 26 3 40l-9-6-8 6C3 26 2 12 3 0z" fill="#e8408a" stroke="#ffd0e3" stroke-width=".9" stroke-linejoin="round"/><path d="M6 2c-.6 12 0 24-1.6 34" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1" stroke-linecap="round"/></svg></div>`).join('');
+ pm.style.cssText=`left:${f1(bx+HW+24)}px;top:${f1(by-50)}px`;
+ // ---- hearts: 1 big golden archery target (goes to the next page) + 2 gem decoys (just pop)
+ const HD=[{m:1,cx:.5,cy:.24,w:Math.min(w*.4,180),g:'#ff3d7f',s:TGTSVG()},{cx:.17,cy:.46,w:Math.min(w*.18,80),g:'#b78cff',s:GEMSVG(1,['#f3e6ff','#b78cff','#5b2fa0'])},{cx:.84,cy:.36,w:Math.min(w*.2,88),g:'#ff9a76',s:GEMSVG(2,['#ffe3d1','#ff9a76','#c2410c'])}];
+ const hearts=HD.map((d,i)=>{const el=document.createElement('div'),ht=d.w*(d.m?100/112:98/108);el.className='hrt'+(d.m?' main':'');el.style.cssText=`width:${d.w}px;left:${f1(d.cx*w-d.w/2)}px;top:${f1(d.cy*h-ht/2)}px;--g:${d.g};--d:${(2.6+i*.7).toFixed(1)}s`;el.innerHTML='<i class="hgl"></i>'+(d.m?'<div class="hor"><b>✦</b><b>✦</b><b>✦</b></div>':'')+d.s;$('#btg').appendChild(el);return{el,m:!!d.m}});
+ // ---- bow + arrow art (rendering layer: renderBow(string nock) flexes the limbs, the arrow is one rigid group)
+ const defs=`<defs><linearGradient id="bwG" gradientUnits="userSpaceOnUse" x1="${f1(bx-HW)}" y1="0" x2="${f1(bx+HW)}" y2="0"><stop offset="0" stop-color="#b9675f"/><stop offset=".22" stop-color="#e9a78a"/><stop offset=".5" stop-color="#ffe9d8"/><stop offset=".78" stop-color="#e9a78a"/><stop offset="1" stop-color="#b9675f"/></linearGradient><radialGradient id="gdG" cx="35%" cy="30%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".6" stop-color="#f7bf3f"/><stop offset="1" stop-color="#b9770e"/></radialGradient><linearGradient id="gpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0689c"/><stop offset="1" stop-color="#a81456"/></linearGradient><radialGradient id="rbG" cx="35%" cy="28%"><stop offset="0" stop-color="#ffa3c2"/><stop offset=".55" stop-color="#ff3d7f"/><stop offset="1" stop-color="#8f0e48"/></radialGradient><linearGradient id="shG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf2"/><stop offset=".5" stop-color="#f6dcb8"/><stop offset="1" stop-color="#d9a96c"/></linearGradient><linearGradient id="fdG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7fae"/><stop offset="1" stop-color="#ffd6e5"/></linearGradient><clipPath id="gpC"><rect x="-27" y="-10" width="54" height="20" rx="10"/></clipPath></defs>`;
+ const body='<path id="bwS" fill="#8a2a5a" opacity=".16" transform="translate(3 7)"/><path id="bwS2" fill="none" stroke="#8a2a5a" stroke-opacity=".07" stroke-width="9" stroke-linejoin="round" transform="translate(2 5)"/><path id="bwL" fill="url(#bwG)" stroke="#9c5550" stroke-width=".9" stroke-linejoin="round"/><path id="bwH" fill="none" stroke="#fff" stroke-opacity=".62" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle id="tpL" r="5.2" fill="url(#gdG)" stroke="#b9770e" stroke-width=".8"/><circle id="tpR" r="5.2" fill="url(#gdG)" stroke="#b9770e" stroke-width=".8"/>';
+ const grip=`<g transform="translate(${f1(bx)} ${f1(gy)})"><rect x="-27" y="-10" width="54" height="20" rx="10" fill="url(#gpG)" stroke="#f7bf3f" stroke-width="1.3"/><g clip-path="url(#gpC)"><path d="M-26 11l10-22M-14 11l10-22M-2 11l10-22M10 11l10-22M22 11l10-22" stroke="#ffd0e3" stroke-opacity=".5" stroke-width="2.6"/></g><rect x="-25" y="-8" width="50" height="16" rx="8" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".7" stroke-dasharray="1.4 2.6"/><circle cx="-13" cy="0" r="2.4" fill="url(#gdG)" stroke="#b9770e" stroke-width=".6"/><path d="${HRT}" transform="translate(14 -.5) scale(.215) translate(-50 -44)" fill="url(#rbG)" stroke="#ffe6a8" stroke-width="5" stroke-linejoin="round"/><ellipse cx="11.6" cy="-3.2" rx="2.2" ry="1.1" fill="#fff" opacity=".85" transform="rotate(-25 11.6 -3.2)"/></g><g transform="translate(${f1(K[0])} ${f1(K[1])})"><path d="M0 0C-4-9-15-10-15-3-15 3-6 3 0 0Z" fill="#ec4f8f" stroke="#ffd0e3" stroke-width=".7"/><path d="M0 0C4-9 15-10 15-3 15 3 6 3 0 0Z" fill="#ec4f8f" stroke="#ffd0e3" stroke-width=".7"/><circle r="3.2" fill="#c0286e" stroke="#ffd0e3" stroke-width=".7"/></g>`;
+ const strS='<polyline id="strG" fill="none" stroke="#ff7aa8" stroke-opacity="0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><polyline id="str" fill="none" stroke="#6e3d2e" stroke-width="2.1" stroke-linejoin="round" stroke-linecap="round"/><polyline id="strH" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".6" stroke-linejoin="round"/><line id="guide" stroke="#ec4899" stroke-width="5" stroke-linecap="round" stroke-dasharray="0.1 13" style="opacity:0"/>';
+ const feath=[2,15].map(k=>`M${k} -2L${k+13} -11.5L${k+26} -11.5L${k+12} -2ZM${k} 2L${k+13} 11.5L${k+26} 11.5L${k+12} 2Z`).join('');
+ const arrow=`<g id="arrow"><rect x="-3" y="-7" width="${L-8}" height="14" rx="7" fill="#ff7aa8" opacity=".2"/><path d="${feath}" fill="url(#fdG)" stroke="#fff" stroke-width=".9" stroke-linejoin="round"/><rect x="0" y="-1.9" width="${L-15}" height="3.8" rx="1.9" fill="url(#shG)" stroke="#c98a55" stroke-width=".6"/><rect x="${L-34}" y="-2.2" width="2.4" height="4.4" fill="#ff7aa8"/><rect x="${L-29}" y="-2.2" width="1.6" height="4.4" fill="#ffd36e"/><circle cx="1.6" cy="0" r="3.1" fill="url(#gdG)" stroke="#b9770e" stroke-width=".6"/><path d="${HRT}" transform="translate(${L} 0) rotate(-90) scale(.245) translate(-50 -88)" fill="url(#gdG)" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></g>`;
+ svg.innerHTML=defs+body+grip+strS+arrow;
+ const bwL=$('#bwL'),bwS=$('#bwS'),bwS2=$('#bwS2'),bwH=$('#bwH'),tpL=$('#tpL'),tpR=$('#tpR'),str=$('#str'),strG=$('#strG'),strH=$('#strH'),gd=$('#guide'),arw=$('#arrow');
+ const cub=(a,b,c,d,t)=>{const m=1-t,m3=m*m*m,a3=3*m*m*t,b3=3*m*t*t,c3=t*t*t;return[m3*a[0]+a3*b[0]+b3*c[0]+c3*d[0],m3*a[1]+a3*b[1]+b3*c[1]+c3*d[1]]};
+ const NS=13;
+ const renderBow=Pn=>{const p=Math.min(1,Math.hypot(Pn[0]-rest[0],Pn[1]-rest[1])/MAXP),ty=by+18+18*p,xi=8*p,tl=[bx-HW+xi,ty],tr=[bx+HW-xi,ty],g=[bx,gy],
+   l1=[tl[0]-14+16*p,ty-44+10*p],l2=[bx-HW*.55,gy],r2=[bx+HW*.55,gy],r1=[tr[0]+14-16*p,ty-44+10*p],pts=[];
+  for(let i=0;i<=NS;i++)pts.push(cub(tl,l1,l2,g,i/NS));for(let i=1;i<=NS;i++)pts.push(cub(g,r2,r1,tr,i/NS));
+  const n=pts.length,o=[],q=[],hl=[];
+  for(let i=0;i<n;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(n-1,i+1)];let dx=b[0]-a[0],dy=b[1]-a[1];const m=Math.hypot(dx,dy)||1;dx/=m;dy/=m;const t=1-Math.abs(i-NS)/NS,wd=2.6+5.6*Math.pow(t,1.3);o.push([pts[i][0]+dy*wd,pts[i][1]-dx*wd]);q.push([pts[i][0]-dy*wd,pts[i][1]+dx*wd]);if(i>1&&i<n-2)hl.push([pts[i][0]+dy*wd*.5,pts[i][1]-dx*wd*.5])}
+  const d='M'+o.map(pf).join('L')+'L'+q.reverse().map(pf).join('L')+'Z';
+  bwL.setAttribute('d',d);bwS.setAttribute('d',d);bwS2.setAttribute('d',d);bwH.setAttribute('d','M'+hl.map(pf).join('L'));
+  tpL.setAttribute('cx',f1(tl[0]));tpL.setAttribute('cy',f1(tl[1]));tpR.setAttribute('cx',f1(tr[0]));tpR.setAttribute('cy',f1(tr[1]));
+  const sp=pf(tl)+' '+pf(Pn)+' '+pf(tr);str.setAttribute('points',sp);strH.setAttribute('points',sp);strG.setAttribute('points',sp);strG.setAttribute('stroke-opacity',(.05+.3*p).toFixed(2))};
+ let P=rest.slice(),u=[0,-1],state=0,sx=0,sy=0,lit=0;
  const toast=t=>{tt.textContent=t;tt.classList.remove('show');void tt.offsetWidth;tt.classList.add('show')};
- const draw=(sp,tp)=>{str.setAttribute('points',`${tl} ${sp} ${tr}`);const tip=[tp[0]+u[0]*L,tp[1]+u[1]*L],n=[-u[1],u[0]],pt=(b,a,c)=>`${(b[0]+u[0]*a+n[0]*c).toFixed(1)},${(b[1]+u[1]*a+n[1]*c).toFixed(1)}`,se=[tip[0]-u[0]*10,tip[1]-u[1]*10];
-  [[sh,0],[shg,0],[shl,-1.3]].forEach(([e,o])=>{e.setAttribute('x1',tp[0]+n[0]*o);e.setAttribute('y1',tp[1]+n[1]*o);e.setAttribute('x2',se[0]+n[0]*o);e.setAttribute('y2',se[1]+n[1]*o)});
-  hd.setAttribute('d',`M${pt(tip,0,0)} L${pt(tip,-22,9.5)} L${pt(tip,-15,0)} L${pt(tip,-22,-9.5)}Z`);
-  ft.setAttribute('d',[2,15].map(k=>`M${pt(tp,k,0)} L${pt(tp,k+15,11)} L${pt(tp,k+25,11)} L${pt(tp,k+10,0)}Z M${pt(tp,k,0)} L${pt(tp,k+15,-11)} L${pt(tp,k+25,-11)} L${pt(tp,k+10,0)}Z`).join(' '))};
+ const ang=()=>Math.atan2(u[1],u[0])*57.29578;
+ const draw=(sp,tail)=>{renderBow(sp);arw.setAttribute('transform',`translate(${f1(tail[0])} ${f1(tail[1])}) rotate(${ang().toFixed(2)})`)};
  const aim=()=>{const vx=rest[0]-P[0],vy=rest[1]-P[1],vm=Math.hypot(vx,vy);u=vm>4?[vx/vm,vy/vm]:[0,-1]};
  const pull=()=>Math.hypot(P[0]-rest[0],P[1]-rest[1]);
- const guide=()=>{const p=pull(),tp=[P[0]+u[0]*L,P[1]+u[1]*L],len=Math.min(430,60+p*3);gd.setAttribute('x1',tp[0]+u[0]*18);gd.setAttribute('y1',tp[1]+u[1]*18);gd.setAttribute('x2',tp[0]+u[0]*(18+len));gd.setAttribute('y2',tp[1]+u[1]*(18+len));gd.setAttribute('stroke',p>=70?'#f59e0b':'#ec4899');gd.style.opacity=p<12?0:Math.min(.9,p/60)};
- const nock=()=>{P=rest.slice();u=[0,-1];draw(P,P);arw.style.display='';arw.classList.remove('nock');void arw.getBoundingClientRect();arw.classList.add('nock');state=0};
+ const setLit=n=>{if(n===lit)return;lit=n;pmh.forEach((e,i)=>{e.classList.toggle('on',i<n);e.classList.toggle('full',n===5)});pm.classList.toggle('on',n>0)};
+ const guide=()=>{const p=pull(),tp=[P[0]+u[0]*L,P[1]+u[1]*L],len=Math.min(430,60+p*3);gd.setAttribute('x1',tp[0]+u[0]*18);gd.setAttribute('y1',tp[1]+u[1]*18);gd.setAttribute('x2',tp[0]+u[0]*(18+len));gd.setAttribute('y2',tp[1]+u[1]*(18+len));gd.setAttribute('stroke',p>=MAXP*.7?'#f59e0b':'#ec4899');gd.style.opacity=p<12?0:Math.min(.9,p/60)};
+ const nock=()=>{P=rest.slice();u=[0,-1];draw(P,P);arw.style.display='';arw.classList.remove('nock');void arw.getBoundingClientRect();arw.classList.add('nock');state=0;setLit(0)};
  const land=b=>{
   if(!b){arw.style.display='none';toast(['so close 💫','try again ✨','almost! 💕'][Math.random()*3|0]);later(nock,450);return}
   const r=b.h.el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.45;b.h.el.classList.add('gone');
@@ -277,17 +309,17 @@ init[1]=()=>{const A=$('#arena'),arc=$('#bowArc'),str=$('#str'),sh=$('#shaft'),s
   b.h.dead=true;arw.style.display='none';burst(x,y,45,true);SFX.pop2();toast(['oops, not this one 💕','the big one! 💘','aim higher ✨'][Math.random()*3|0]);later(nock,600);
   later(()=>{b.h.el.classList.remove('gone');b.h.el.classList.add('spawn');b.h.dead=false},3000)};
  nock();later(()=>toast('hit the big golden heart 💘'),900);
- A.onpointerdown=e=>{if(state)return;startMusic();state=1;sx=e.clientX;sy=e.clientY;A.setPointerCapture(e.pointerId)};
- A.onpointermove=e=>{if(state!==1)return;let dx=e.clientX-sx,dy=Math.max(0,e.clientY-sy),m=Math.hypot(dx,dy);if(m>MAXP){dx*=MAXP/m;dy*=MAXP/m}P=[rest[0]+dx,rest[1]+dy];aim();draw(P,P);guide();const nw=performance.now();if(nw-(A._st||0)>110&&pull()>12){A._st=nw;SFX.stretch(pull())}};
- A.onpointerup=A.onpointercancel=()=>{if(state!==1)return;gd.style.opacity=0;
-  if(pull()<70){state=2;const p0=P.slice(),t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/400),q=(1-k)*Math.cos(k*14);P=[rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q];aim();draw(P,P);if(k<1)requestAnimationFrame(f);else{P=rest.slice();aim();draw(P,P);state=0}})(t0);return}
+ A.onpointerdown=e=>{if(state)return;startMusic();state=1;sx=e.clientX;sy=e.clientY;hint.classList.add('off');try{A.setPointerCapture(e.pointerId)}catch(_){}};
+ A.onpointermove=e=>{if(state!==1)return;let dx=e.clientX-sx,dy=Math.max(0,e.clientY-sy),m=Math.hypot(dx,dy);if(m>MAXP){dx*=MAXP/m;dy*=MAXP/m}P=[rest[0]+dx,rest[1]+dy];aim();draw(P,P);guide();const pw=pull()/MAXP;setLit(pw<.2?0:pw<.4?1:pw<.6?2:pw<.8?3:pw<.98?4:5);const nw=performance.now();if(nw-(A._st||0)>110&&pull()>12){A._st=nw;SFX.stretch(pull())}};
+ A.onpointerup=A.onpointercancel=()=>{if(state!==1)return;gd.style.opacity=0;setLit(0);
+  if(pull()<MINP){state=2;const p0=P.slice(),t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/400),q=(1-k)*Math.cos(k*14);P=[rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q];aim();draw(P,P);if(k<1&&cur===1)requestAnimationFrame(f);else{P=rest.slice();aim();draw(P,P);state=0}})(t0);return}
   state=3;SFX.shoot();
   const ab=A.getBoundingClientRect(),from=[P[0]+u[0]*L,P[1]+u[1]*L],p0=P.slice(),u0=u.slice();let best=null;
   hearts.forEach(h=>{if(h.dead)return;const r=h.el.getBoundingClientRect(),c=[r.left+r.width/2-ab.left,r.top+r.height*.46-ab.top],R=Math.min(r.width,r.height)*.47,dx=c[0]-from[0],dy=c[1]-from[1],t=dx*u0[0]+dy*u0[1];if(t<0)return;const d=Math.abs(dx*u0[1]-dy*u0[0]);if(d>R)return;const s=Math.max(0,t-Math.sqrt(R*R-d*d)*.6);if(!best||s<best.s)best={h,s}});
   const S=best?best.s:1500,D=Math.max(260,Math.min(600,S/2)),t0=performance.now();
   (function f(t){const k=Math.min(1,(t-t0)/D),s=S*k*k,tipP=[from[0]+u0[0]*s,from[1]+u0[1]*s],q=Math.max(0,1-k*4)*Math.cos(k*60);
    draw([rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q],[tipP[0]-u0[0]*L,tipP[1]-u0[1]*L]);
-   if(k<1)return requestAnimationFrame(f);land(best)})(t0)}};
+   if(k<1&&cur===1)return requestAnimationFrame(f);if(cur===1)land(best)})(t0)}};
 // ---------- 2: HB ----------
 init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach((w,i,a)=>{[...w].forEach((c,j)=>{const s=document.createElement('span');s.textContent=c;s.style.setProperty('--d',(i*.7+j*.08).toFixed(2)+'s');s.style.setProperty('--i',i*5+j);e.append(s)});if(!i)e.append(document.createElement('br'))});SFX.chime();chapter()};
 // ---------- 3: tree ----------
