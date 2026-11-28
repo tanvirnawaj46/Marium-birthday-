@@ -73,8 +73,10 @@ const SFX={
  cake(){tone(520+Math.random()*200,.25,'triangle',.18,0,0,.25)},
  open(){noise(.5,.32,{bp:1800,bp2:600,q:.6,a:.1,rv:.2});tone(200,.6,'sawtooth',.09,500,0,.1);tone(800,.8,'sine',.11,0,0,.4);tone(1320,.9,'sine',.08,0,.25,.5)},
  chime(){[660,880,1100].forEach((f,i)=>tone(f,.6,'sine',.17,0,i*.09,.4))},
- shoot(){tone(420,.35,'triangle',.2,120,0,.1);tone(210,.5,'sine',.16,90,0,0);noise(.22,.25,{bp:2500,bp2:6000,q:.9,rv:.1})},
+ shoot(p=.6){tone(130+140*p,.3,'triangle',.24,58,0,.1);tone(520+300*p,.12,'sine',.1,250,0,.2);noise(.05,.3,{bp:3000,q:1.1,a:.002});noise(.42,.24,{bp:700,bp2:3200,q:.6,a:.07,rv:.12})}, // bow release: string twang + arrow whoosh (stronger pull = higher twang)
  stretch(p){tone(150+p*2.2,.09,'sawtooth',.03,0,0,0);noise(.1,.1,{bp:650+p*7,q:2.2,a:.01})},
+ bwTick(i=0){const f=[392,466,523,587,698,880][Math.max(0,Math.min(5,i|0))];tone(f,.16,'triangle',.12,0,0,.15);noise(.025,.14,{bp:3200,q:1.2,a:.001});if(i>=4){tone(f*2,.55,'sine',.07,0,.03,.5);tone(f*3,.4,'sine',.03,0,.06,.5)}}, // power heart lights up (pentatonic ladder, the last one shimmers)
+ thunk(){tone(160,.24,'sine',.5,55,0,0);noise(.07,.3,{bp:1100,q:.9,a:.002});tone(2093,.5,'sine',.07,0,.03,.5)}, // arrow sticks into the target
  scrF(sp,pr){const c=2800+pr*3200+Math.random()*600;noise(.17,.2+.22*sp,{bp:c,q:1.1,a:.03,hp:1400});noise(.15,.16+.16*sp,{bp:1100+Math.random()*500,q:.8,a:.03});if(Math.random()<.4)tone(3200+Math.random()*2800,.09,'sine',.05,0,0,.3)},
  scrM(sp){ // watery: soft liquid swish over wet glass + bubbly water droplets + faint glass squeak
   noise(.26,.14+.2*sp,{bp:1500+Math.random()*700,bp2:900+Math.random()*500,q:.5,lp:4200,hp:350,a:.09});
@@ -106,8 +108,8 @@ const SFX={
  frostDone(){noise(.55,.2,{bp:2600,bp2:900,q:.4,hp:600,a:.12,rv:.3});noise(.4,.1,{hp:6000,a:.1,dl:.05});[1318,1976,2637,3322].forEach((f,i)=>tone(f,1.4,'sine',.07/(1+i*.3),0,.12+i*.09,.7));[0,.17,.31].forEach(d=>noise(.012,.18,{bp:5200,q:2,a:.001,dl:.25+d}))}
 };
 // priority: scratch (loudest effect) > typing > arrow/heart > ui clicks ; each effect also dips the music briefly so it always cuts through
-const CAT={star:1.3,puff:1.2,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
-const DIP={star:[.6,400],puff:[.6,600],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
+const CAT={star:1.3,puff:1.2,mb:1.2,meter:1.2,plant:1.2,meteor:1.2,ret:1.1,scrF:6.5,scrM:6.5,foilDone:.9,frostDone:.9,key:1.5,keyS:1.4,enter:1.4,back:1.3,scribble:1.6,sign:1,shoot:1.1,stretch:9,bwTick:1.2,thunk:1.2,pop:1.1,pop2:1.1,good:1.05,burst:.8,btn:.95,seal:.9,photo:1.4,chime:1.2,open:1.4,whoosh:1.4,paper:1.3,sign:1.4,flap:1.5,slide:1.5,unfold:1.5};
+const DIP={star:[.6,400],puff:[.6,600],mb:[.55,700],meter:[.6,1700],plant:[.6,350],meteor:[.55,1000],ret:[.55,500],scrF:[.5,380],scrM:[.5,380],foilDone:[.45,1400],frostDone:[.5,1200],key:[.55,420],keyS:[.55,420],enter:[.55,500],back:[.6,300],scribble:[.6,900],sign:[.55,800],shoot:[.5,600],stretch:[.6,300],bwTick:[.7,220],thunk:[.5,600],pop:[.5,600],pop2:[.55,500],good:[.5,900],burst:[.45,1200],tap:[.6,450],btn:[.55,550],photo:[.6,500],cake:[.7,300],open:[.55,900],chime:[.6,700],seal:[.5,600],whoosh:[.55,800],paper:[.6,500],flap:[.6,700],slide:[.6,1100],unfold:[.6,900]};
 Object.keys(SFX).forEach(k=>{const f=SFX[k],g=CAT[k]||1,d=DIP[k];SFX[k]=(...a)=>{const o=LVL;LVL=g;try{if(d)dip(d[0],d[1]);return f(...a)}finally{LVL=o}}});
 const bgm=new Audio(C.music);bgm.loop=true;bgm.preload='auto';let musOn=true,started=false,bgmOk=true,hold=0;
 bgm.onerror=()=>bgmOk=false;
@@ -137,7 +139,9 @@ let rainOn=null;
 function heartPath(x,y,r){cx.beginPath();cx.moveTo(x,y+r*.4);cx.bezierCurveTo(x-r,y-r*.4,x-r*.5,y-r*1.1,x,y-r*.4);cx.bezierCurveTo(x+r*.5,y-r*1.1,x+r,y-r*.4,x,y+r*.4);cx.fill()}
 // the particle loop only runs while there is something to draw: a rAF loop that never stops forces a style recalc of every running CSS animation each frame
 let dirty=0,lpOn=0;function kick(){if(!lpOn){lpOn=1;requestAnimationFrame(loop)}}
-function loop(){if(P.length||dirty){cx.clearRect(0,0,W,H);dirty=P.length>0;P=P.filter(p=>p.l>0&&p.y<H+20);if(P.length>420)P=P.slice(-420);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}requestAnimationFrame(loop)}else lpOn=0}
+function loop(){if(P.length||dirty){cx.clearRect(0,0,W,H);dirty=P.length>0;P=P.filter(p=>p.l>0&&p.y<H+20);if(P.length>420)P=P.slice(-420);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.l-=p.d;cx.globalAlpha=Math.max(0,Math.min(1,p.l));cx.fillStyle=p.c;if(p.h)heartPath(p.x,p.y,p.r*1.6);else if(p.rect)cx.fillRect(p.x,p.y,p.r,p.r*1.6);else if(p.st){const r=p.r*1.7;cx.beginPath();cx.moveTo(p.x,p.y-r);cx.quadraticCurveTo(p.x,p.y,p.x+r,p.y);cx.quadraticCurveTo(p.x,p.y,p.x,p.y+r);cx.quadraticCurveTo(p.x,p.y,p.x-r,p.y);cx.quadraticCurveTo(p.x,p.y,p.x,p.y-r);cx.fill()}else{cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.28);cx.fill()}}requestAnimationFrame(loop)}else lpOn=0}
+// one sparkle of the arrow trail (gold / pink stars + a few hearts), drawn on the particle canvas
+function spark(x,y,vx,vy){P.push({x,y,vx,vy,g:.025,l:1,d:.045,r:1.5+Math.random()*2.1,c:['#ffd36e','#ff8fb5','#fff3b0','#ffffff','#ff5c93'][Math.random()*5|0],h:Math.random()<.25,st:Math.random()<.55});kick()}
 function startRain(hearts,rate=400){stopRain();rainOn=setInterval(()=>rain(1,hearts&&Math.random()<.7),RM?900:rate*.4)}
 function stopRain(){clearInterval(rainOn);rainOn=null}
 let QUIET=0; // 1 while the microphone listens (no chimes then, they would be heard as a blow)
@@ -258,8 +262,9 @@ const STAR5='M50 30l3.4 7.2 7.8 1-5.7 5.3 1.6 7.7L50 47.4l-7.1 3.8 1.6-7.7-5.7-5
 const TGTSVG=()=>`<svg viewBox="-6 -6 112 100"><defs><radialGradient id="tg0" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="#ff9fc0"/><stop offset=".55" stop-color="#ff4d84"/><stop offset="1" stop-color="#b3125c"/></radialGradient><radialGradient id="tg1" cx="35%" cy="30%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".55" stop-color="#f7bf3f"/><stop offset="1" stop-color="#b9770e"/></radialGradient></defs><path d="${HRT}" fill="url(#tg0)" stroke="#ffd36e" stroke-width="3.6" stroke-linejoin="round"/>${[[.8,'#fff4e8'],[.6,'#e8336f'],[.4,'#fff4e8']].map(([s,c])=>`<path d="${HRT}" ${hsc(s)} fill="${c}" stroke="#ffffffb3" stroke-width="${(1.1/s).toFixed(2)}" stroke-linejoin="round"/>`).join('')}<path d="${HRT}" ${hsc(.23)} fill="url(#tg1)" stroke="#fff" stroke-width="${(1.8/.23).toFixed(1)}" stroke-linejoin="round"/><path d="${STAR5}" ${hsc(.42,50,41)} fill="#fff" opacity=".95"/>${GLOSS}</svg>`;
 // decoys = glossy gem hearts (each one hides a love note)
 const GEMSVG=(i,c)=>`<svg viewBox="-4 -4 108 98"><defs><radialGradient id="hg${i}" cx="34%" cy="24%" r="85%"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient></defs><path d="${HRT}" fill="url(#hg${i})" stroke="${c[2]}" stroke-opacity=".4" stroke-width="1.6" stroke-linejoin="round"/><path d="${HRT}" ${hsc(.66)} fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.5" stroke-linejoin="round"/>${GLOSS}</svg>`;
-init[1]=()=>{const A=$('#arena'),svg=$('#aim'),tt=$('#toast'),pm=$('#pm'),pmh=[...pm.children],hint=$('#bhint');
- ['#bsc','#bsig','#btg','#brib'].forEach(q=>{$(q).innerHTML=''});svg.innerHTML='';pm.className='';hint.classList.remove('off');pmh.forEach(e=>e.className='');
+let T1=0; // run token of the bow page: a re-opened page kills the old rAF loop
+init[1]=()=>{const A=$('#arena'),p1=$('#p1'),svg=$('#aim'),tt=$('#toast'),pm=$('#pm'),pmh=[...pm.children],hint=$('#bhint');
+ ['#bsc','#bsig','#btg','#brib'].forEach(q=>{$(q).innerHTML=''});svg.innerHTML='';pm.className='';hint.classList.remove('off');pmh.forEach(e=>e.className='');A.style.cssText='';p1.classList.remove('slow');
  const w=A.clientWidth,h=A.clientHeight,bx=w/2,by=h*.74,HW=Math.min(100,w*.245),gy=by-50,rest=[bx,by+18],L=104,MAXP=150,MINP=52,K=[bx-31,gy+1];
  const f1=v=>v.toFixed(1),pf=p=>f1(p[0])+' '+f1(p[1]);
  // ---- scene: soft clouds, bokeh, mist, the magic circle under the bow, ribbon tails
@@ -277,14 +282,16 @@ init[1]=()=>{const A=$('#arena'),svg=$('#aim'),tt=$('#toast'),pm=$('#pm'),pmh=[.
  const defs=`<defs><linearGradient id="bwG" gradientUnits="userSpaceOnUse" x1="${f1(bx-HW)}" y1="0" x2="${f1(bx+HW)}" y2="0"><stop offset="0" stop-color="#b9675f"/><stop offset=".22" stop-color="#e9a78a"/><stop offset=".5" stop-color="#ffe9d8"/><stop offset=".78" stop-color="#e9a78a"/><stop offset="1" stop-color="#b9675f"/></linearGradient><radialGradient id="gdG" cx="35%" cy="30%"><stop offset="0" stop-color="#fff6c2"/><stop offset=".6" stop-color="#f7bf3f"/><stop offset="1" stop-color="#b9770e"/></radialGradient><linearGradient id="gpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0689c"/><stop offset="1" stop-color="#a81456"/></linearGradient><radialGradient id="rbG" cx="35%" cy="28%"><stop offset="0" stop-color="#ffa3c2"/><stop offset=".55" stop-color="#ff3d7f"/><stop offset="1" stop-color="#8f0e48"/></radialGradient><linearGradient id="shG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf2"/><stop offset=".5" stop-color="#f6dcb8"/><stop offset="1" stop-color="#d9a96c"/></linearGradient><linearGradient id="fdG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7fae"/><stop offset="1" stop-color="#ffd6e5"/></linearGradient><clipPath id="gpC"><rect x="-27" y="-10" width="54" height="20" rx="10"/></clipPath></defs>`;
  const body='<path id="bwS" fill="#8a2a5a" opacity=".16" transform="translate(3 7)"/><path id="bwS2" fill="none" stroke="#8a2a5a" stroke-opacity=".07" stroke-width="9" stroke-linejoin="round" transform="translate(2 5)"/><path id="bwL" fill="url(#bwG)" stroke="#9c5550" stroke-width=".9" stroke-linejoin="round"/><path id="bwH" fill="none" stroke="#fff" stroke-opacity=".62" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle id="tpL" r="5.2" fill="url(#gdG)" stroke="#b9770e" stroke-width=".8"/><circle id="tpR" r="5.2" fill="url(#gdG)" stroke="#b9770e" stroke-width=".8"/>';
  const grip=`<g transform="translate(${f1(bx)} ${f1(gy)})"><rect x="-27" y="-10" width="54" height="20" rx="10" fill="url(#gpG)" stroke="#f7bf3f" stroke-width="1.3"/><g clip-path="url(#gpC)"><path d="M-26 11l10-22M-14 11l10-22M-2 11l10-22M10 11l10-22M22 11l10-22" stroke="#ffd0e3" stroke-opacity=".5" stroke-width="2.6"/></g><rect x="-25" y="-8" width="50" height="16" rx="8" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".7" stroke-dasharray="1.4 2.6"/><circle cx="-13" cy="0" r="2.4" fill="url(#gdG)" stroke="#b9770e" stroke-width=".6"/><path d="${HRT}" transform="translate(14 -.5) scale(.215) translate(-50 -44)" fill="url(#rbG)" stroke="#ffe6a8" stroke-width="5" stroke-linejoin="round"/><ellipse cx="11.6" cy="-3.2" rx="2.2" ry="1.1" fill="#fff" opacity=".85" transform="rotate(-25 11.6 -3.2)"/></g><g transform="translate(${f1(K[0])} ${f1(K[1])})"><path d="M0 0C-4-9-15-10-15-3-15 3-6 3 0 0Z" fill="#ec4f8f" stroke="#ffd0e3" stroke-width=".7"/><path d="M0 0C4-9 15-10 15-3 15 3 6 3 0 0Z" fill="#ec4f8f" stroke="#ffd0e3" stroke-width=".7"/><circle r="3.2" fill="#c0286e" stroke="#ffd0e3" stroke-width=".7"/></g>`;
- const strS='<polyline id="strG" fill="none" stroke="#ff7aa8" stroke-opacity="0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><polyline id="str" fill="none" stroke="#6e3d2e" stroke-width="2.1" stroke-linejoin="round" stroke-linecap="round"/><polyline id="strH" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".6" stroke-linejoin="round"/><line id="guide" stroke="#ec4899" stroke-width="5" stroke-linecap="round" stroke-dasharray="0.1 13" style="opacity:0"/>';
+ const strS='<polyline id="strG" fill="none" stroke="#ff7aa8" stroke-opacity="0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><polyline id="str" fill="none" stroke="#6e3d2e" stroke-width="2.1" stroke-linejoin="round" stroke-linecap="round"/><polyline id="strH" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".6" stroke-linejoin="round"/>';
  const feath=[2,15].map(k=>`M${k} -2L${k+13} -11.5L${k+26} -11.5L${k+12} -2ZM${k} 2L${k+13} 11.5L${k+26} 11.5L${k+12} 2Z`).join('');
  const arrow=`<g id="arrow"><rect x="-3" y="-7" width="${L-8}" height="14" rx="7" fill="#ff7aa8" opacity=".2"/><path d="${feath}" fill="url(#fdG)" stroke="#fff" stroke-width=".9" stroke-linejoin="round"/><rect x="0" y="-1.9" width="${L-15}" height="3.8" rx="1.9" fill="url(#shG)" stroke="#c98a55" stroke-width=".6"/><rect x="${L-34}" y="-2.2" width="2.4" height="4.4" fill="#ff7aa8"/><rect x="${L-29}" y="-2.2" width="1.6" height="4.4" fill="#ffd36e"/><circle cx="1.6" cy="0" r="3.1" fill="url(#gdG)" stroke="#b9770e" stroke-width=".6"/><path d="${HRT}" transform="translate(${L} 0) rotate(-90) scale(.245) translate(-50 -88)" fill="url(#gdG)" stroke="#fff" stroke-width="4.5" stroke-linejoin="round"/></g>`;
- svg.innerHTML=defs+body+grip+strS+arrow;
- const bwL=$('#bwL'),bwS=$('#bwS'),bwS2=$('#bwS2'),bwH=$('#bwH'),tpL=$('#tpL'),tpR=$('#tpR'),str=$('#str'),strG=$('#strG'),strH=$('#strH'),gd=$('#guide'),arw=$('#arrow');
+ const pvh=Array.from({length:16},(_,k)=>k%2?'<path d="M50 0Q54 40 100 44Q54 48 50 88Q46 48 0 44Q46 40 50 0Z"/>':`<path d="${HRT}"/>`).join('');
+ svg.innerHTML=defs+'<g id="pv" style="display:none">'+pvh+'</g>'+body+grip+strS;
+ {const o=$('#arw');if(o)o.remove();const d=document.createElement('div');d.id='arw';d.innerHTML=`<svg width="${L+36}" height="44" viewBox="-14 -22 ${L+36} 44">${arrow}</svg>`;svg.after(d)}   // the arrow = its own layer: moved by transform only (no SVG repaint per frame)
+ const bwL=$('#bwL'),bwS=$('#bwS'),bwS2=$('#bwS2'),bwH=$('#bwH'),tpL=$('#tpL'),tpR=$('#tpR'),str=$('#str'),strG=$('#strG'),strH=$('#strH'),arw=$('#arrow'),aw=$('#arw');
  const cub=(a,b,c,d,t)=>{const m=1-t,m3=m*m*m,a3=3*m*m*t,b3=3*m*t*t,c3=t*t*t;return[m3*a[0]+a3*b[0]+b3*c[0]+c3*d[0],m3*a[1]+a3*b[1]+b3*c[1]+c3*d[1]]};
  const NS=13;
- const renderBow=Pn=>{const p=Math.min(1,Math.hypot(Pn[0]-rest[0],Pn[1]-rest[1])/MAXP),ty=by+18+18*p,xi=8*p,tl=[bx-HW+xi,ty],tr=[bx+HW-xi,ty],g=[bx,gy],
+ const renderBow=(Pn,fx)=>{const p=Math.max(-.35,Math.min(1,fx===undefined?Math.hypot(Pn[0]-rest[0],Pn[1]-rest[1])/MAXP:fx)),ty=by+18+18*p,xi=8*p,tl=[bx-HW+xi,ty],tr=[bx+HW-xi,ty],g=[bx,gy],
    l1=[tl[0]-14+16*p,ty-44+10*p],l2=[bx-HW*.55,gy],r2=[bx+HW*.55,gy],r1=[tr[0]+14-16*p,ty-44+10*p],pts=[];
   for(let i=0;i<=NS;i++)pts.push(cub(tl,l1,l2,g,i/NS));for(let i=1;i<=NS;i++)pts.push(cub(g,r2,r1,tr,i/NS));
   const n=pts.length,o=[],q=[],hl=[];
@@ -292,34 +299,105 @@ init[1]=()=>{const A=$('#arena'),svg=$('#aim'),tt=$('#toast'),pm=$('#pm'),pmh=[.
   const d='M'+o.map(pf).join('L')+'L'+q.reverse().map(pf).join('L')+'Z';
   bwL.setAttribute('d',d);bwS.setAttribute('d',d);bwS2.setAttribute('d',d);bwH.setAttribute('d','M'+hl.map(pf).join('L'));
   tpL.setAttribute('cx',f1(tl[0]));tpL.setAttribute('cy',f1(tl[1]));tpR.setAttribute('cx',f1(tr[0]));tpR.setAttribute('cy',f1(tr[1]));
-  const sp=pf(tl)+' '+pf(Pn)+' '+pf(tr);str.setAttribute('points',sp);strH.setAttribute('points',sp);strG.setAttribute('points',sp);strG.setAttribute('stroke-opacity',(.05+.3*p).toFixed(2))};
- let P=rest.slice(),u=[0,-1],state=0,sx=0,sy=0,lit=0;
+  const sp=pf(tl)+' '+pf(Pn)+' '+pf(tr);str.setAttribute('points',sp);strH.setAttribute('points',sp);strG.setAttribute('points',sp);strG.setAttribute('stroke-opacity',(.05+.3*Math.max(0,p)).toFixed(2))};
+ // ---- physics: launch speed grows with the pull, gravity bends the flight. The path is an exact parabola of time, so the aim preview,
+ //      the (invisible) aim assist and the real flight always agree. Arena coordinates in px, t in seconds.
+ const V0=720,V1=900,GR=900,TMAX=1.1,EMB=0,rad=Math.PI/180;
+ let P=rest.slice(),u=[0,-1],state=0,sx=0,sy=0,lit=0,miss=0,asc=1,raf=0,last=0,fl=null,vib=null,np=null,stk=null,dirty=0,pvOn=0,T=[];   // state: 0 idle, 1 drawing, 2 string springs back (no shot), 3 arrow flying, 4 arrow stuck
+ const tok=++T1;
  const toast=t=>{tt.textContent=t;tt.classList.remove('show');void tt.offsetWidth;tt.classList.add('show')};
- const ang=()=>Math.atan2(u[1],u[0])*57.29578;
- const draw=(sp,tail)=>{renderBow(sp);arw.setAttribute('transform',`translate(${f1(tail[0])} ${f1(tail[1])}) rotate(${ang().toFixed(2)})`)};
+ const angOf=v=>Math.atan2(v[1],v[0])/rad;
+ const setArrow=(x,y,a,s)=>{aw.style.transform=`translate(${f1(x)}px,${f1(y)}px) rotate(${a.toFixed(2)}deg)${s===1?'':' scale('+s.toFixed(3)+')'}`};
+ const draw=(sp,a,fx)=>{renderBow(sp,fx);setArrow(sp[0],sp[1],a,asc)};
  const aim=()=>{const vx=rest[0]-P[0],vy=rest[1]-P[1],vm=Math.hypot(vx,vy);u=vm>4?[vx/vm,vy/vm]:[0,-1]};
  const pull=()=>Math.hypot(P[0]-rest[0],P[1]-rest[1]);
  const setLit=n=>{if(n===lit)return;lit=n;pmh.forEach((e,i)=>{e.classList.toggle('on',i<n);e.classList.toggle('full',n===5)});pm.classList.toggle('on',n>0)};
- const guide=()=>{const p=pull(),tp=[P[0]+u[0]*L,P[1]+u[1]*L],len=Math.min(430,60+p*3);gd.setAttribute('x1',tp[0]+u[0]*18);gd.setAttribute('y1',tp[1]+u[1]*18);gd.setAttribute('x2',tp[0]+u[0]*(18+len));gd.setAttribute('y2',tp[1]+u[1]*(18+len));gd.setAttribute('stroke',p>=MAXP*.7?'#f59e0b':'#ec4899');gd.style.opacity=p<12?0:Math.min(.9,p/60)};
- const nock=()=>{P=rest.slice();u=[0,-1];draw(P,P);arw.style.display='';arw.classList.remove('nock');void arw.getBoundingClientRect();arw.classList.add('nock');state=0;setLit(0)};
- const land=b=>{
-  if(!b){arw.style.display='none';toast(['so close 💫','try again ✨','almost! 💕'][Math.random()*3|0]);later(nock,450);return}
-  const r=b.h.el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.45;b.h.el.classList.add('gone');
-  if(b.h.m){later(()=>arw.style.display='none',250);burst(x,y,130,true);SFX.burst();later(()=>go(3),1700);return}
-  b.h.dead=true;arw.style.display='none';burst(x,y,45,true);SFX.pop2();toast(['oops, not this one 💕','the big one! 💘','aim higher ✨'][Math.random()*3|0]);later(nock,600);
-  later(()=>{b.h.el.classList.remove('gone');b.h.el.classList.add('spawn');b.h.dead=false},3000)};
- nock();later(()=>toast('hit the big golden heart 💘'),900);
- A.onpointerdown=e=>{if(state)return;startMusic();state=1;sx=e.clientX;sy=e.clientY;hint.classList.add('off');try{A.setPointerCapture(e.pointerId)}catch(_){}};
- A.onpointermove=e=>{if(state!==1)return;let dx=e.clientX-sx,dy=Math.max(0,e.clientY-sy),m=Math.hypot(dx,dy);if(m>MAXP){dx*=MAXP/m;dy*=MAXP/m}P=[rest[0]+dx,rest[1]+dy];aim();draw(P,P);guide();const pw=pull()/MAXP;setLit(pw<.2?0:pw<.4?1:pw<.6?2:pw<.8?3:pw<.98?4:5);const nw=performance.now();if(nw-(A._st||0)>110&&pull()>12){A._st=nw;SFX.stretch(pull())}};
- A.onpointerup=A.onpointercancel=()=>{if(state!==1)return;gd.style.opacity=0;setLit(0);
-  if(pull()<MINP){state=2;const p0=P.slice(),t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/400),q=(1-k)*Math.cos(k*14);P=[rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q];aim();draw(P,P);if(k<1&&cur===1)requestAnimationFrame(f);else{P=rest.slice();aim();draw(P,P);state=0}})(t0);return}
-  state=3;SFX.shoot();
-  const ab=A.getBoundingClientRect(),from=[P[0]+u[0]*L,P[1]+u[1]*L],p0=P.slice(),u0=u.slice();let best=null;
-  hearts.forEach(h=>{if(h.dead)return;const r=h.el.getBoundingClientRect(),c=[r.left+r.width/2-ab.left,r.top+r.height*.46-ab.top],R=Math.min(r.width,r.height)*.47,dx=c[0]-from[0],dy=c[1]-from[1],t=dx*u0[0]+dy*u0[1];if(t<0)return;const d=Math.abs(dx*u0[1]-dy*u0[0]);if(d>R)return;const s=Math.max(0,t-Math.sqrt(R*R-d*d)*.6);if(!best||s<best.s)best={h,s}});
-  const S=best?best.s:1500,D=Math.max(260,Math.min(600,S/2)),t0=performance.now();
-  (function f(t){const k=Math.min(1,(t-t0)/D),s=S*k*k,tipP=[from[0]+u0[0]*s,from[1]+u0[1]*s],q=Math.max(0,1-k*4)*Math.cos(k*60);
-   draw([rest[0]+(p0[0]-rest[0])*q,rest[1]+(p0[1]-rest[1])*q],[tipP[0]-u0[0]*L,tipP[1]-u0[1]*L]);
-   if(k<1&&cur===1)return requestAnimationFrame(f);if(cur===1)land(best)})(t0)}};
+ const lau=(Pn,uu)=>{const p=Math.min(1,Math.hypot(Pn[0]-rest[0],Pn[1]-rest[1])/MAXP),s=V0+V1*p;return{x:Pn[0]+uu[0]*L,y:Pn[1]+uu[1]*L,vx:uu[0]*s,vy:uu[1]*s,p}};   // tip start + velocity
+ const at=(l,t)=>[l.x+l.vx*t,l.y+l.vy*t+.5*GR*t*t];
+ const rot=(v,d)=>{const c=Math.cos(d),s=Math.sin(d);return[v[0]*c-v[1]*s,v[0]*s+v[1]*c]};
+ const sgd=(a,b,c)=>{const dx=b[0]-a[0],dy=b[1]-a[1],m=dx*dx+dy*dy,t=m?Math.max(0,Math.min(1,((c[0]-a[0])*dx+(c[1]-a[1])*dy)/m)):0;return Math.hypot(a[0]+dx*t-c[0],a[1]+dy*t-c[1])};
+ // hit circles of the live hearts, read at release (the 9px bob is ignored while the arrow flies)
+ const readT=()=>{const ab=A.getBoundingClientRect();T=hearts.filter(q=>!q.dead).map(q=>{const r=q.el.getBoundingClientRect(),R=Math.min(r.width,r.height)*.47;return{h:q,c:[r.left+r.width/2-ab.left,r.top+r.height*.46-ab.top],R,Rh:R*(q.m?1:1.1)}})};
+ // first heart the path enters (exact segment/circle test on 8ms slices)
+ const scan=l=>{const H=.008;for(let t=0;t<TMAX;t+=H){const a=at(l,t),b=at(l,t+H);if(a[1]>h+400||a[0]<-300||a[0]>w+300)break;let best=null;
+   for(const q of T){const dx=a[0]-q.c[0],dy=a[1]-q.c[1],ex=b[0]-a[0],ey=b[1]-a[1],A2=ex*ex+ey*ey,B=dx*ex+dy*ey,C2=dx*dx+dy*dy-q.Rh*q.Rh;let s;if(C2<=0)s=0;else{const D=B*B-A2*C2;if(!A2||D<0)continue;s=(-B-Math.sqrt(D))/A2;if(s<0||s>1)continue}if(!best||s<best.s)best={q,s}}
+   if(best){let tt=t+best.s*H;
+    if(best.q.h.m){const c=best.q.c;let dm=1e9;for(let v=tt;v<=tt+.16;v+=.004){const pp=at(l,v),d=Math.hypot(pp[0]-c[0],pp[1]-c[1]);if(d<dm){dm=d;tt=v}else if(d>dm+1)break}}   // the big heart: the arrow keeps flying until it is as close to the centre as its path gets (a bullseye ends dead centre)
+    return{q:best.q,t:tt,pt:at(l,tt)}}}return null};
+ const near=(l,c)=>{let m=1e9;for(let t=0;t<TMAX;t+=.008){const d=sgd(at(l,t),at(l,t+.008),c);if(d<m)m=d}return m};
+ // invisible "love guides the arrow": a near miss of the big heart is nudged (<= 7 degrees) so it still lands; more help after 3 / 5 misses (config bowAssist:false = off)
+ const assist=(Pn,uu)=>{const l=lau(Pn,uu),M=T.find(q=>q.h.m);if(!M||C.bowAssist===false)return{l,uu,as:0};
+  const mul=miss>=5?1.5:miss>=3?1.25:1,d0=near(l,M.c);if(d0<=M.R*.5||d0>=M.R*1.55*mul)return{l,uu,as:0};
+  let bd=d0,bu=uu,got=0;
+  for(let k=1;k*.5<=7*mul&&!got;k++)for(const sgn of[-1,1]){const u2=rot(uu,sgn*k*.5*rad),d=near(lau(Pn,u2),M.c);if(d<bd){bd=d;bu=u2}if(d<=M.R*.5){got=1;break}}
+  return bd<M.R*.9?{l:lau(Pn,bu),uu:bu,as:1}:{l,uu,as:0}};
+ // aim preview: 16 little hearts / stars on the predicted path (raw path, no assist), one every 45ms of flight
+ const pv=$('#pv'),pvk=[...pv.children];
+ const preview=()=>{const p=pull()/MAXP;if(p<.2){if(pvOn){pv.style.display='none';pvOn=0}return}
+  if(!pvOn){pv.style.display='';pvOn=1}pv.classList.toggle('full',p>=.98);const l=lau(P,u),ht=scan(l),te=ht?ht.t:9;   // the dots stop where the path reaches a heart
+  for(let k=0;k<16;k++){if((k+1)*.045>te){pvk[k].setAttribute('opacity',0);continue}const q=at(l,(k+1)*.045),r=6.6-3.6*k/15;pvk[k].setAttribute('transform',`translate(${f1(q[0])} ${f1(q[1])}) scale(${(r/50).toFixed(3)}) translate(-50 -44)`);pvk[k].setAttribute('opacity',(1-.85*k/15).toFixed(2))}};
+ // slow-mo finish: the arena pushes in 6% about the big heart + a soft rose vignette (not with reduced motion)
+ const camera=c=>{A.style.transformOrigin=f1(c[0])+'px '+f1(c[1])+'px';A.style.transition='transform .6s cubic-bezier(.2,.7,.2,1)';A.style.transform='scale(1.06)';p1.classList.add('slow')};
+ const uncam=()=>{A.style.cssText='';p1.classList.remove('slow')};
+ // the arrow sticks in the heart (a clone inside the heart element, so it bobs / squashes / pulses with it) and wobbles
+ const stkT=th=>`translate(${f1(stk.x)} ${f1(stk.y)}) rotate(${(stk.a+th).toFixed(2)}) translate(${EMB-L} 0)`;
+ const stkStep=now=>{const k=Math.max(0,(now-stk.t0)/1000);if(k>.8){stk.g.setAttribute('transform',stkT(0));stk=null;return}stk.g.setAttribute('transform',stkT(7*Math.exp(-5*k)*Math.sin(k*44)))};
+ const stick=(q,pt,a)=>{const ab=A.getBoundingClientRect(),sA=ab.width/A.offsetWidth||1,r=q.el.getBoundingClientRect(),sH=r.width/q.el.offsetWidth||1,cl=arw.cloneNode(true),s=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  cl.removeAttribute('id');s.setAttribute('class','stk');s.appendChild(cl);q.el.appendChild(s);
+  stk={g:cl,x:(ab.left+pt[0]*sA-r.left)/sH,y:(ab.top+pt[1]*sA-r.top)/sH,a,t0:performance.now()};stkStep(stk.t0)};
+ const squash=el=>{try{el.animate([{scale:1},{scale:1.2},{scale:.93},{scale:1.07},{scale:1}],{duration:520,easing:'ease-out'})}catch(_){}};
+ const nock=first=>{P=rest.slice();u=[0,-1];fl=null;vib=null;stk=null;state=0;setLit(0);uncam();aw.style.display='';
+  if(first===1){asc=1;aw.style.opacity=1;draw(P,-90,0);return}
+  asc=.6;aw.style.opacity=0;np={t0:performance.now()};draw(P,-90,0);
+  if(!RM){const ab=A.getBoundingClientRect();burst(ab.left+rest[0],ab.top+rest[1]-L/2,6)}kickLoop()};
+ const onHit=(hit,a)=>{const q=hit.q.h,r=q.el.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height*.45;
+  if(q.m){stick(q,hit.pt,a);aw.style.display='none';state=4;SFX.thunk();later(()=>SFX.burst(),120);squash(q.el);burst(x,y,130,true);later(()=>{tapPt=[x,y,performance.now()];go(3)},1700);return}
+  q.dead=true;q.el.classList.add('gone');aw.style.display='none';miss++;burst(x,y,45,true);SFX.pop2();toast(['oops, not this one 💕','the big one! 💘','aim higher ✨'][Math.random()*3|0]);later(nock,600);
+  later(()=>{q.el.classList.remove('gone');q.el.classList.add('spawn');q.dead=false},3000)};
+ const onMiss=()=>{aw.style.display='none';miss++;toast(['so close 💫','try again ✨','almost! 💕'][Math.random()*3|0]);later(nock,450)};
+ // ---- own rAF loop: runs ONLY while drawing / flying / settling, dies with the page
+ const kickLoop=()=>{if(!raf){last=performance.now();raf=requestAnimationFrame(frame)}};
+ const vibStep=now=>{const k=Math.max(0,(now-vib.t0)/1000);
+  if(k>=.4){const a=vib.after;vib=null;if(a)a();else renderBow(rest,0);return}
+  const q=Math.exp(-7*k)*Math.cos(6.2832*k/.16),pn=[rest[0]+(vib.p0[0]-rest[0])*q,rest[1]+(vib.p0[1]-rest[1])*q];   // damped string, limbs overshoot with it
+  renderBow(pn,vib.f0*q);if(vib.arrow)setArrow(pn[0],pn[1],-90+(vib.a0+90)*q,asc)};
+ const npStep=now=>{const k=(now-np.t0)/1000,D=.36;
+  if(k>=D){np=null;asc=1;aw.style.opacity=1;if(state!==1&&!vib)setArrow(P[0],P[1],angOf(u),1);return}
+  const e=k/D;asc=e<.6?.6+.48*(1-Math.pow(1-e/.6,2)):1.08-.08*(1-Math.pow(1-(e-.6)/.4,2));aw.style.opacity=Math.min(1,k/.12).toFixed(2);if(state!==1&&!vib)setArrow(P[0],P[1],angOf(u),asc)};
+ const stepFlight=dt=>{const f=fl;let pos=at(f.l,f.t);
+  if(f.slow&&f.M){const d=Math.hypot(pos[0]-f.M.c[0],pos[1]-f.M.c[1]);if(d<f.M.R*3.4){f.tsT=.3;if(!f.cam){f.cam=1;camera(f.M.c)}}}   // last stretch to the big heart plays at ~1/3 speed
+  f.ts+=(f.tsT-f.ts)*Math.min(1,dt*18);
+  const nt=f.t+dt*f.ts,hit=f.hit&&nt>=f.hit.t,t2=hit?f.hit.t:nt;pos=at(f.l,t2);f.t=t2;
+  const va=Math.atan2(f.l.vy+GR*t2,f.l.vx);let da=va-f.ang;da=Math.atan2(Math.sin(da),Math.cos(da));f.ang+=da*Math.min(1,dt*30);   // arrow turns with its velocity
+  const dx=Math.cos(f.ang),dy=Math.sin(f.ang);setArrow(pos[0]-dx*L,pos[1]-dy*L,f.ang/rad,1);
+  if(f.cam){const b=A.getBoundingClientRect();f.sA=b.width/A.offsetWidth||1;f.ox=b.left;f.oy=b.top}
+  for(let i=f.ts<.6?1:2;i>0;i--){const j=Math.random()*26;spark(f.ox+(pos[0]-dx*j+(Math.random()-.5)*5)*f.sA,f.oy+(pos[1]-dy*j+(Math.random()-.5)*5)*f.sA,(Math.random()-.5)*1.4-dx*.6,(Math.random()-.5)*1.4-dy*.6+.1)}   // sparkle trail
+  if(hit){fl=null;onHit(f.hit,f.ang/rad);return 0}
+  if(t2>=TMAX||pos[0]<-L-40||pos[0]>w+L+40||pos[1]<-L-20||pos[1]>h+L+60){fl=null;onMiss();return 0}
+  return 1};
+ const frame=now=>{raf=0;if(tok!==T1||cur!==1)return;const dt=Math.min(.05,Math.max(.001,(now-last)/1000));last=now;let busy=0;
+  if(state===1){busy=1;if(dirty){dirty=0;draw(P,angOf(u));preview()}}
+  if(vib){busy=1;vibStep(now)}
+  if(np){busy=1;npStep(now)}
+  if(fl&&stepFlight(dt))busy=1;
+  if(stk){busy=1;stkStep(now)}
+  if(busy)raf=requestAnimationFrame(frame)};
+ const fire=(Pn,uu)=>{readT();const as=assist(Pn,uu),hit=scan(as.l),M=T.find(q=>q.h.m),ab=A.getBoundingClientRect();
+  state=3;fl={l:as.l,t:0,ts:1,tsT:1,hit,M,slow:!!(hit&&hit.q.h.m)&&!RM,ang:Math.atan2(uu[1],uu[0]),ox:ab.left,oy:ab.top,sA:1};
+  vib={t0:performance.now(),p0:Pn,f0:as.l.p};SFX.shoot(as.l.p);kickLoop()};
+ const release=cancel=>{if(state!==1)return;const pw=pull();pv.style.display='none';pvOn=0;setLit(0);
+  if(pw<6){state=0;draw(rest,-90,0);return}
+  if(cancel||pw<MINP){state=2;vib={t0:performance.now(),p0:P.slice(),f0:pw/MAXP,a0:angOf(u),arrow:1,after:()=>{P=rest.slice();u=[0,-1];state=0;draw(P,-90,0)}};kickLoop();return}
+  fire(P.slice(),u.slice())};
+ nock(1);later(()=>toast('hit the big golden heart 💘'),900);
+ A.onpointerdown=e=>{if(state===2){vib=null;P=rest.slice();state=0}if(state)return;startMusic();readT();state=1;sx=e.clientX;sy=e.clientY;hint.classList.add('off');try{A.setPointerCapture(e.pointerId)}catch(_){}kickLoop()};
+ A.onpointermove=e=>{if(state!==1)return;let dx=e.clientX-sx,dy=Math.max(0,e.clientY-sy),m=Math.hypot(dx,dy);if(m>MAXP){dx*=MAXP/m;dy*=MAXP/m}P=[rest[0]+dx,rest[1]+dy];aim();dirty=1;
+  const p=pull()/MAXP,n=p<.2?0:p<.4?1:p<.6?2:p<.8?3:p<.98?4:5;if(n!==lit){if(n>lit)SFX.bwTick(n-1);setLit(n)}};
+ A.onpointerup=()=>release(0);A.onpointercancel=()=>release(1);
+ // test hook (only with ?dbg in the address): what would a drag of (dx,dy) do?
+ if(/[?&]dbg\b/.test(location.search))window.__bow={rest,w,h,MAXP,MINP,L,state:()=>state,miss:()=>miss,setMiss:n=>{miss=n},
+  plan:(dx,dy)=>{dy=Math.max(0,dy);const m=Math.hypot(dx,dy),k=m>MAXP?MAXP/m:1,Pn=[rest[0]+dx*k,rest[1]+dy*k],vx=rest[0]-Pn[0],vy=rest[1]-Pn[1],vm=Math.hypot(vx,vy),uu=vm>4?[vx/vm,vy/vm]:[0,-1];readT();
+   const nm=x=>x?(x.q.h.m?'main':'decoy'):'miss',raw=scan(lau(Pn,uu)),as=assist(Pn,uu),hit=scan(as.l);return{p:Math.hypot(Pn[0]-rest[0],Pn[1]-rest[1])/MAXP,raw:nm(raw),hit:nm(hit),as:as.as,t:hit&&hit.t}}};};
 // ---------- 2: HB ----------
 init[2]=()=>{const e=$('#hb');e.innerHTML='';'Happy|Birthday'.split('|').forEach((w,i,a)=>{[...w].forEach((c,j)=>{const s=document.createElement('span');s.textContent=c;s.style.setProperty('--d',(i*.7+j*.08).toFixed(2)+'s');s.style.setProperty('--i',i*5+j);e.append(s)});if(!i)e.append(document.createElement('br'))});SFX.chime();chapter()};
 // ---------- 3: tree ----------

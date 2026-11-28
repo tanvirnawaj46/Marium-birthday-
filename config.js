@@ -90,6 +90,11 @@ window.CONFIG = {
   // dob: "YYYY-MM-DD" (jonmodin) dile "19 years = 6,939 days" ashbe. Khali "" = kichu dekhabe na
   dob: "",
 
+  // ---- BOW GAME (p1) ----
+  // bowAssist: true = "love guides the arrow": boro heart-er khub kachhe jaoa tir-ta ektu (max 7 degree) ghure heart-e lage (miss korle ar-o beshi help).
+  // false = ekdom nijer aim, kono help nai
+  bowAssist: true,
+
   // ---- LETTER ----
   letter: "I keep thinking about how lucky I got with you. You have seen me at my worst and stayed anyway, and I do not say thank you nearly enough for that. This year, I hope life is gentle with you, that your days are full of laughter, and that you always know how loved you are.",
   // scrollNext: true = prottek page-e (jekhane "Keep going" ache) page-er kaj shesh hole niche ekta chhoto chevron mark ashbe; upore scroll korle

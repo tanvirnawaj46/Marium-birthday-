@@ -307,8 +307,16 @@ h1.bn.bn,h2.bn.bn{font-family:'Galada','Hind Siliguri',cursive;font-weight:400;z
 .hor b:nth-child(3){right:6%;top:72%}
 /* bow + arrow */
 #aim{position:absolute;inset:0;pointer-events:none;overflow:visible}
-#arrow.nock{animation:nockin .35s both}
-@keyframes nockin{from{opacity:0}}
+#arw{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0;pointer-events:none;will-change:transform}
+#arw svg{position:absolute;left:-14px;top:-22px;overflow:visible;display:block}
+/* aim preview (16 little hearts / stars on the predicted path) */
+#pv path{fill:#ec3f86;stroke:#fff;stroke-width:1.6;vector-effect:non-scaling-stroke;paint-order:stroke}
+#pv.full path{fill:#f2a900}
+/* the arrow that sticks in the big heart is a child of the heart (moves, squashes and pulses with it) */
+.hrt svg.stk{position:absolute;left:0;top:0;height:100%;overflow:visible;pointer-events:none}
+/* slow-mo vignette: soft rose at the left / right edges only (top + bottom stay pastel for the bar match) */
+#bvig{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;background:linear-gradient(90deg,#b8286f,#b8286f00 30%,#b8286f00 70%,#b8286f);-webkit-mask:linear-gradient(#0000,#000 20%,#000 80%,#0000);mask:linear-gradient(#0000,#000 20%,#000 80%,#0000)}
+#p1.slow #bvig{opacity:.35}
 .rt{position:absolute;width:20px;height:44px;transform-origin:50% 0;rotate:var(--a);animation:rsw 3.4s ease-in-out infinite alternate}
 .rt svg{display:block;width:100%;height:100%}
 @keyframes rsw{to{rotate:calc(var(--a) + 11deg)}}
